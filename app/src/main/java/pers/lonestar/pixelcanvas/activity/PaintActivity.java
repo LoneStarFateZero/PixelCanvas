@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -39,6 +40,7 @@ public class PaintActivity extends AppCompatActivity {
     private PixelCanvas pixelCanvas;
     private StrokeCanvas strokeCanvas;
     private ImageView pencil;
+    private ImageView thumbnail;
     private BorderIndicator borderIndicator;
     private Button dotButton;
     private FloatingActionButton fab;
@@ -95,6 +97,7 @@ public class PaintActivity extends AppCompatActivity {
                         clearCanvas();
                         break;
                     case R.id.paint_nav_export:
+                        exportSVG();
                         break;
                     case R.id.paint_nav_publish:
                         break;
@@ -106,6 +109,29 @@ public class PaintActivity extends AppCompatActivity {
                         break;
                 }
                 return true;
+            }
+        });
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+                if (thumbnail == null)
+                    thumbnail = findViewById(R.id.thumbnail);
+                thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
             }
         });
     }
@@ -184,10 +210,6 @@ public class PaintActivity extends AppCompatActivity {
                             ParameterUtils.pixelColor[y][x] = pencilColor;
                             pixelCanvas.setPixelSize(pixelSize);
                             pixelCanvas.invalidate();
-
-                            ImageView thumbnail = findViewById(R.id.thumbnail);
-                            if (thumbnail != null)
-                                thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
                         }
 
                         // 记录当前的位置
@@ -295,5 +317,19 @@ public class PaintActivity extends AppCompatActivity {
         view.layout(0, 0, view.getWidth(), view.getHeight());
         view.draw(c);
         return bmp;
+    }
+
+    private void exportSVG() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
+                "<svg version=\"1.1\" width=\"12\" height=\"12\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+        for (int i = 0; i < ParameterUtils.pixelColor.length; i++) {
+            for (int j = 0; j < ParameterUtils.pixelColor.length; j++) {
+                if (ParameterUtils.pixelColor[i][j] != 0)
+                    stringBuilder.append("<rect x=\"" + j + "\" y=\"" + i + "\" width=\"1\" height=\"1\" fill=\"#" + Integer.toHexString((ParameterUtils.pixelColor[i][j] & 0xff0000) >> 16) + Integer.toHexString((ParameterUtils.pixelColor[i][j] & 0x00ff00) >> 8) + Integer.toHexString(ParameterUtils.pixelColor[i][j] & 0x0000ff) + "\" />\n");
+            }
+        }
+        stringBuilder.append("</svg>");
+        Log.d("SVG测试", "exportSVG: " + stringBuilder.toString());
     }
 }

@@ -12,6 +12,8 @@ import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class LineCanvas extends View {
     private int pixelCount;
+    private Paint linePaint;
+    private int pixelWidth;
 
     public void reDrawLine() {
         invalidate();
@@ -19,15 +21,13 @@ public class LineCanvas extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int pixelWidth = ParameterUtils.canvasWidth / pixelCount;
-        Paint paint = new Paint();
-        paint.setStrokeWidth(1);
-        paint.setColor(Color.BLACK);
+        if (linePaint == null)
+            initPaint();
         for (int i = 1; i < pixelCount; i++) {
-            canvas.drawLine(0, i * pixelWidth, ParameterUtils.canvasWidth, i * pixelWidth, paint);
+            canvas.drawLine(0, i * pixelWidth, ParameterUtils.canvasWidth, i * pixelWidth, linePaint);
         }
         for (int i = 1; i < pixelCount; i++) {
-            canvas.drawLine(i * pixelWidth, 0, i * pixelWidth, ParameterUtils.canvasWidth, paint);
+            canvas.drawLine(i * pixelWidth, 0, i * pixelWidth, ParameterUtils.canvasWidth, linePaint);
         }
     }
 
@@ -54,5 +54,12 @@ public class LineCanvas extends View {
 
     public void setPixelCount(int pixelCount) {
         this.pixelCount = pixelCount;
+    }
+
+    private void initPaint() {
+        linePaint = new Paint();
+        linePaint.setStrokeWidth(1);
+        linePaint.setColor(Color.BLACK);
+        pixelWidth = ParameterUtils.canvasWidth / pixelCount;
     }
 }

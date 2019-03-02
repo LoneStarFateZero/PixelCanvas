@@ -11,17 +11,18 @@ import androidx.annotation.Nullable;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class StrokeCanvas extends View {
+    private Paint strokePaint;
+    private int strokeWidth;
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Paint paint = new Paint();
-        paint.setStrokeWidth(6);
-        paint.setColor(Color.BLACK);
-        int width = getWidth();
-        canvas.drawLine(0, 0, 0, width, paint);
-        canvas.drawLine(0, 0, width, 0, paint);
-        canvas.drawLine(width, width, 0, width, paint);
-        canvas.drawLine(width, width, width, 0, paint);
+        if (strokePaint == null)
+            iniPaint();
+        canvas.drawLine(0, 0, 0, strokeWidth, strokePaint);
+        canvas.drawLine(0, 0, strokeWidth, 0, strokePaint);
+        canvas.drawLine(strokeWidth, strokeWidth, 0, strokeWidth, strokePaint);
+        canvas.drawLine(strokeWidth, strokeWidth, strokeWidth, 0, strokePaint);
     }
 
     public StrokeCanvas(Context context) {
@@ -43,5 +44,12 @@ public class StrokeCanvas extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(ParameterUtils.canvasWidth, ParameterUtils.canvasWidth);
+    }
+
+    private void iniPaint() {
+        strokePaint = new Paint();
+        strokePaint.setStrokeWidth(6);
+        strokePaint.setColor(Color.BLACK);
+        strokeWidth = getWidth();
     }
 }
