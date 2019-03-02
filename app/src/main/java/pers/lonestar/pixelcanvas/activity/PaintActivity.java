@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -92,6 +91,7 @@ public class PaintActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
                     case R.id.paint_nav_clear:
                         clearCanvas();
@@ -330,6 +330,6 @@ public class PaintActivity extends AppCompatActivity {
             }
         }
         stringBuilder.append("</svg>");
-        Log.d("SVG测试", "exportSVG: " + stringBuilder.toString());
+        //生成SVG文件
     }
 }
