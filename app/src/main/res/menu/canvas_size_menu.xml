@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/tiny"
+            android:title="Tiny (16x16 pixels)" />
+        <item
+            android:id="@+id/extra_small"
+            android:title="Extra Small (24x24 pixels)" />
+        <item
+            android:id="@+id/small"
+            android:title="Small (32x32 pixels)" />
+        <item
+            android:id="@+id/medium"
+            android:title="Medium (48x48 pixels)" />
+        <item
+            android:id="@+id/large"
+            android:title="Large (64x64 pixels)" />
+        <item
+            android:id="@+id/extra_large"
+            android:title="Extra Large (96x96 pixels)" />
+    </group>
+</menu>

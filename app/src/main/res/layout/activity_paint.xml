@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/paint_drawer"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/paint_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary" />
+
+        <FrameLayout
+            android:id="@+id/paint_framelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/paint_toolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp">
+
+            <pers.lonestar.pixelcanvas.CustomView.PixelCanvas
+                android:id="@+id/pixel_canvas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <pers.lonestar.pixelcanvas.CustomView.StrokeCanvas
+                android:id="@+id/stroke_canvas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent" />
+
+            <pers.lonestar.pixelcanvas.CustomView.LineCanvas
+                android:id="@+id/line_canvas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent" />
+
+            <pers.lonestar.pixelcanvas.CustomView.BorderIndicator
+                android:id="@+id/border"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/draw_pencil"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_pencil" />
+        </FrameLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/paint_activity_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dot_button"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_palette" />
+
+        <Button
+            android:id="@+id/dot_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="10dp"
+            android:background="@color/colorPrimary"
+            android:text="DOT"
+            android:textSize="40sp" />
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/paint_nav"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/paint_nav_header"
+        app:menu="@menu/paint_nav_menu"
+        app:theme="@style/NavTextSize" />
+</androidx.drawerlayout.widget.DrawerLayout>
