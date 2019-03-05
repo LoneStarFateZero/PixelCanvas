@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
@@ -20,17 +21,25 @@ import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import pers.lonestar.pixelcanvas.CustomView.BorderIndicator;
-import pers.lonestar.pixelcanvas.CustomView.LineCanvas;
-import pers.lonestar.pixelcanvas.CustomView.PixelCanvas;
-import pers.lonestar.pixelcanvas.CustomView.StrokeCanvas;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.R;
+import pers.lonestar.pixelcanvas.customview.BorderIndicator;
+import pers.lonestar.pixelcanvas.customview.LineCanvas;
+import pers.lonestar.pixelcanvas.customview.PixelCanvas;
+import pers.lonestar.pixelcanvas.customview.StrokeCanvas;
+import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
+import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
@@ -48,13 +57,35 @@ public class PaintActivity extends AppCompatActivity {
     private int pixelCount;
     private int pixelSize;
     private int pencilColor;
+    private LitePalCanvas litePalCanvas;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_paint);
+
+        //优先初始化View
+        initView();
+        //设置自定义Toolbar
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayShowTitleEnabled(false);
+
+        initListener();
+        initCanvas();
+        initPencil();
+        createCanvasFile();
+    }
+
+    //Toolbar菜单项
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.paint_toolbar_menu, menu);
         return true;
     }
 
+    //Toolbar菜单项监听
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -67,27 +98,16 @@ public class PaintActivity extends AppCompatActivity {
             case R.id.colorPicker:
                 pickColor();
                 break;
+            case R.id.linetoggle:
+                toggleLine();
+                break;
         }
         return true;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_paint);
-
-        initView();
-
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.setDisplayShowTitleEnabled(false);
-        initListener();
-        initCanvas();
-        initPencil();
-    }
-
+    //初始化监听
     private void initListener() {
+        //导航栏菜单项监听
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -100,6 +120,7 @@ public class PaintActivity extends AppCompatActivity {
                         exportSVG();
                         break;
                     case R.id.paint_nav_publish:
+                        postCanvasFile();
                         break;
                     case R.id.paint_nav_rename:
                         break;
@@ -111,6 +132,7 @@ public class PaintActivity extends AppCompatActivity {
                 return true;
             }
         });
+        //抽屉滑动监听，用于缩略图重绘的处理
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -121,7 +143,6 @@ public class PaintActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
-
             }
 
             @Override
@@ -136,6 +157,7 @@ public class PaintActivity extends AppCompatActivity {
         });
     }
 
+    //初始化画笔，包括画笔颜色，滑动监听等
     private void initPencil() {
         pencilColor = Color.BLACK;
         pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
@@ -220,8 +242,9 @@ public class PaintActivity extends AppCompatActivity {
                 return true;
             }
         };
+        pixelCanvas.setOnTouchListener(onTouchListener);
 
-        lineCanvas.setOnTouchListener(onTouchListener);
+        //浮动按钮点击，弹出颜色选择对话框
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,11 +266,11 @@ public class PaintActivity extends AppCompatActivity {
 
                     }
                 }).build().show();
-
             }
         });
     }
 
+    //初始化画布，包括边框，线条，格子数目，格子大小
     private void initCanvas() {
         Intent intent = getIntent();
         pixelCount = intent.getIntExtra("pixelCount", 16);
@@ -261,9 +284,11 @@ public class PaintActivity extends AppCompatActivity {
         borderIndicator.setPixelCount(pixelCount);
         borderIndicator.reDrawLine();
 
+        //初始化画布像素颜色信息
         ParameterUtils.pixelColor = new int[pixelCount][pixelCount];
     }
 
+    //初始化View组件
     private void initView() {
         lineCanvas = findViewById(R.id.line_canvas);
         pixelCanvas = findViewById(R.id.pixel_canvas);
@@ -277,12 +302,15 @@ public class PaintActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.paint_drawer);
     }
 
+
+    //Toolbar菜单项方法
+    //清除画布
     private void clearCanvas() {
         ParameterUtils.pixelColor = new int[pixelCount][pixelCount];
         pixelCanvas.invalidate();
     }
 
-    //TODO
+    //取色
     private void pickColor() {
         int left = pencil.getLeft();
         int bottom = pencil.getBottom();
@@ -305,10 +333,21 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-    //TODO
+    //平移画布
     private void moveCanvas() {
 
     }
+
+    //切换显示线条
+    private void toggleLine() {
+        if (lineCanvas.getVisibility() == View.INVISIBLE)
+            lineCanvas.setVisibility(View.VISIBLE);
+        else
+            lineCanvas.setVisibility(View.INVISIBLE);
+    }
+
+
+    //导航栏菜单项方法
 
     private Bitmap loadBitmapFromView(View view) {
         Bitmap bmp = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
@@ -331,5 +370,40 @@ public class PaintActivity extends AppCompatActivity {
         }
         stringBuilder.append("</svg>");
         //生成SVG文件
+    }
+
+    //TODO
+    private void createCanvasFile() {
+        //获取本地日期时间格式
+        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+        //获取当前时间
+        Date date = new Date(System.currentTimeMillis());
+        litePalCanvas = new LitePalCanvas();
+        litePalCanvas.setCanvasName("canvas_1");
+        litePalCanvas.setPixelCount(pixelCount);
+        litePalCanvas.setCreator("LoneStar");
+        litePalCanvas.setCreatedAt(dateFormat.format(date));
+        litePalCanvas.setUpdatedAt(dateFormat.format(date));
+        litePalCanvas.setJsonData(new Gson().toJson(ParameterUtils.pixelColor));
+        litePalCanvas.save();
+    }
+
+    private void postCanvasFile() {
+        BmobCanvas bmobCanvas = new BmobCanvas();
+        bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
+        bmobCanvas.setCreator(litePalCanvas.getCreator());
+        bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
+        bmobCanvas.setJsonData(litePalCanvas.getJsonData());
+
+        bmobCanvas.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId, BmobException e) {
+                if (e == null) {
+                    Toast.makeText(PaintActivity.this, "作品发布成功！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PaintActivity.this, "作品发布失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

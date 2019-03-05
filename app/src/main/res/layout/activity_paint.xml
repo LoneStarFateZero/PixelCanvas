@@ -23,24 +23,24 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp">
 
-            <pers.lonestar.pixelcanvas.CustomView.PixelCanvas
+            <pers.lonestar.pixelcanvas.customview.PixelCanvas
                 android:id="@+id/pixel_canvas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <pers.lonestar.pixelcanvas.CustomView.StrokeCanvas
+            <pers.lonestar.pixelcanvas.customview.StrokeCanvas
                 android:id="@+id/stroke_canvas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorTransparent" />
 
-            <pers.lonestar.pixelcanvas.CustomView.LineCanvas
+            <pers.lonestar.pixelcanvas.customview.LineCanvas
                 android:id="@+id/line_canvas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorTransparent" />
 
-            <pers.lonestar.pixelcanvas.CustomView.BorderIndicator
+            <pers.lonestar.pixelcanvas.customview.BorderIndicator
                 android:id="@+id/border"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

@@ -1,4 +1,4 @@
-package pers.lonestar.pixelcanvas.CustomView;
+package pers.lonestar.pixelcanvas.customview;
 
 import android.content.Context;
 import android.graphics.Canvas;

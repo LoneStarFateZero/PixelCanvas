@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_picker"
         android:title="picker"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/linetoggle"
+        android:icon="@drawable/ic_line"
+        android:title="picker"
+        app:showAsAction="always" />
 </menu>
