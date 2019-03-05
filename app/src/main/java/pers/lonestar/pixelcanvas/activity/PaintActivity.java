@@ -1,6 +1,5 @@
 package pers.lonestar.pixelcanvas.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,13 +14,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.OnColorSelectedListener;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
+
+import net.margaritov.preference.colorpicker.ColorPickerDialog;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -136,13 +133,14 @@ public class PaintActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                if (thumbnail == null)
-                    thumbnail = findViewById(R.id.thumbnail);
-                thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
             }
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
+                //thumbnail只会在抽屉滑动时初始化一次
+                if (thumbnail == null)
+                    thumbnail = findViewById(R.id.thumbnail);
+                thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
             }
 
             @Override
@@ -238,6 +236,12 @@ public class PaintActivity extends AppCompatActivity {
                         lastX = (int) event.getRawX();
                         lastY = (int) event.getRawY();
                         break;
+                    case MotionEvent.ACTION_UP:
+                        //覆盖修改
+                        litePalCanvas.setJsonData(new Gson().toJson(ParameterUtils.pixelColor));
+                        litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
+                        litePalCanvas.save();
+                        break;
                 }
                 return true;
             }
@@ -248,24 +252,19 @@ public class PaintActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ColorPickerDialogBuilder.with(PaintActivity.this).setTitle("Choose Color")
-                        .initialColor(pencilColor).wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
-                        .density(12).setOnColorSelectedListener(new OnColorSelectedListener() {
+
+                //更换颜色对话框库
+                ColorPickerDialog colorPickerDialog = new ColorPickerDialog(PaintActivity.this, pencilColor);
+                colorPickerDialog.setAlphaSliderVisible(true);
+                colorPickerDialog.setHexValueEnabled(true);
+                colorPickerDialog.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
                     @Override
-                    public void onColorSelected(int selectedColor) {
-                    }
-                }).showAlphaSlider(false).showColorPreview(true).setPositiveButton("ok", new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int selectedColor, Integer[] integers) {
-                        pencilColor = selectedColor;
+                    public void onColorChanged(int color) {
+                        pencilColor = color;
                         pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
                     }
-                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).build().show();
+                });
+                colorPickerDialog.show();
             }
         });
     }

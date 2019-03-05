@@ -9,6 +9,7 @@ public class LitePalCanvas extends LitePalSupport {
     private String jsonData;
     private String createdAt;
     private String updatedAt;
+    private byte[] thumbnail;
 
     public String getCanvasName() {
         return canvasName;
@@ -56,5 +57,13 @@ public class LitePalCanvas extends LitePalSupport {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public byte[] getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(byte[] thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

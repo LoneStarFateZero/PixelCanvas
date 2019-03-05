@@ -13,17 +13,17 @@
         android:src="@drawable/avatar" />
 
     <TextView
-        android:id="@+id/nav_name"
+        android:id="@+id/nav_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/nav_profile"
+        android:layout_above="@+id/nav_introduction"
         android:layout_marginBottom="15dp"
         android:text="用户名"
         android:textColor="@color/colorFont"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/nav_profile"
+        android:id="@+id/nav_introduction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
