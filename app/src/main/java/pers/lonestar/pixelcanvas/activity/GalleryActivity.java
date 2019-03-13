@@ -3,6 +3,8 @@ package pers.lonestar.pixelcanvas.activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.litepal.LitePal;
@@ -25,11 +27,16 @@ public class GalleryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Toolbar toolbar;
     private List<LitePalCanvas> litePalCanvasList;
+    private static GalleryActivity instance;
 
+    public static GalleryActivity getInstance() {
+        return instance;
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
+        YoYo.with(Techniques.ZoomIn).duration(400).playOn(fab);
         initCanvasList();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -41,6 +48,7 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+        instance = this;
 
         toolbar = findViewById(R.id.gallery_activity_toolbar);
         setSupportActionBar(toolbar);

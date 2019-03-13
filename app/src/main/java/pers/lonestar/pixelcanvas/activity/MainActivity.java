@@ -6,7 +6,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -37,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
             actionBar.setDisplayShowTitleEnabled(false);
-
-
+        
         initView();
         initListener();
     }
@@ -102,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
                         intent = new Intent(MainActivity.this, SettingsActivity.class);
                         break;
                 }
-                startActivity(intent);
                 drawerLayout.closeDrawers();
+                startActivity(intent);
                 return true;
             }
         });

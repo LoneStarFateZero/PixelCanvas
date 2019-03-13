@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -333,6 +334,7 @@ public class PaintActivity extends AppCompatActivity {
     }
 
     //平移画布
+    //TODO
     private void moveCanvas() {
 
     }
@@ -357,6 +359,7 @@ public class PaintActivity extends AppCompatActivity {
         return bmp;
     }
 
+    //导出SVG格式
     private void exportSVG() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
@@ -369,6 +372,11 @@ public class PaintActivity extends AppCompatActivity {
         }
         stringBuilder.append("</svg>");
         //生成SVG文件
+    }
+
+    //TODO
+    private void exportPng() {
+
     }
 
     //TODO
