@@ -6,9 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
             actionBar.setDisplayShowTitleEnabled(false);
-        
+
         initView();
         initListener();
     }
@@ -53,37 +51,41 @@ public class MainActivity extends AppCompatActivity {
     private void initListener() {
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            public void onDrawerSlide(@NonNull final View drawerView, float slideOffset) {
                 if (avatar == null) {
                     avatar = findViewById(R.id.nav_avatar);
+                    avatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            startActivity(intent);
+                            drawerLayout.closeDrawers();
+                        }
+                    });
                 }
                 if (nickName == null) {
                     nickName = findViewById(R.id.nav_nickname);
+                    nickName.setText(pixelUser.getNickname());
                 }
                 if (introduction == null) {
                     introduction = findViewById(R.id.nav_introduction);
+                    if (pixelUser.getIntroduction() != null)
+                        introduction.setText(pixelUser.getIntroduction());
                 }
-                nickName.setText(pixelUser.getNickname());
-                if (pixelUser.getIntroduction() != null)
-                    introduction.setText(pixelUser.getIntroduction());
             }
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
-
             }
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
-
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
-
             }
         });
-
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

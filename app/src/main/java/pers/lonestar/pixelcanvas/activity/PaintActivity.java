@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -14,14 +15,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
 import net.margaritov.preference.colorpicker.ColorPickerDialog;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
@@ -350,6 +353,7 @@ public class PaintActivity extends AppCompatActivity {
 
     //导航栏菜单项方法
 
+    //获取View的Bitmap，用于图像生成和设置
     private Bitmap loadBitmapFromView(View view) {
         Bitmap bmp = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bmp);
@@ -412,5 +416,35 @@ public class PaintActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    //导出PNG格式
+    private void viewSaveToImage(View view) {
+        view.setDrawingCacheEnabled(true);
+        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        view.setDrawingCacheBackgroundColor(Color.WHITE);
+
+        // 把一个View转换成图片
+        Bitmap cachebmp = loadBitmapFromView(view);
+        FileOutputStream fos;
+        String imagePath = "";
+        try {
+            // 判断手机设备是否有SD卡
+            boolean isHasSDCard = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+            if (isHasSDCard) {
+                // SD卡根目录
+                File sdRoot = Environment.getExternalStorageDirectory();
+                File file = new File(sdRoot, Calendar.getInstance().getTimeInMillis() + ".png");
+                fos = new FileOutputStream(file);
+                imagePath = file.getAbsolutePath();
+            } else
+                throw new Exception("创建文件失败!");
+            cachebmp.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        view.destroyDrawingCache();
     }
 }

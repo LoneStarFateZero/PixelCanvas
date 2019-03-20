@@ -3,9 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="#FFF"
+    android:background="#F5F5F5"
     android:clickable="true"
-    android:elevation="8dp">
+    android:elevation="4dp"
+    android:foreground="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/item_canvas_image"
