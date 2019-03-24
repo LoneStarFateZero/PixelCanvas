@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         pixelUser = BmobUser.getCurrentUser(PixelUser.class);
+        PixelApp.pixelUser = pixelUser;
         drawerLayout = findViewById(R.id.main_drawerlayout);
         navigationView = findViewById(R.id.nav_view);
     }
@@ -76,6 +79,15 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
+                if (pixelUser.getAvatarUrl() == null) {
+                    Glide.with(MainActivity.this)
+                            .load(R.drawable.avatar)
+                            .into(avatar);
+                } else {
+                    Glide.with(MainActivity.this)
+                            .load(pixelUser.getAvatarUrl())
+                            .into(avatar);
+                }
             }
 
             @Override

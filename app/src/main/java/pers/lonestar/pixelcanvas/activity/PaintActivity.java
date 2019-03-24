@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.R;
+import pers.lonestar.pixelcanvas.customview.BackgroundCanvas;
 import pers.lonestar.pixelcanvas.customview.BorderIndicator;
 import pers.lonestar.pixelcanvas.customview.LineCanvas;
 import pers.lonestar.pixelcanvas.customview.PixelCanvas;
@@ -48,6 +50,8 @@ public class PaintActivity extends AppCompatActivity {
     private LineCanvas lineCanvas;
     private PixelCanvas pixelCanvas;
     private StrokeCanvas strokeCanvas;
+    private BackgroundCanvas backgroundCanvas;
+    private FrameLayout pixelFramelayout;
     private ImageView pencil;
     private ImageView thumbnail;
     private BorderIndicator borderIndicator;
@@ -58,6 +62,7 @@ public class PaintActivity extends AppCompatActivity {
     private int pixelCount;
     private int pixelSize;
     private int pencilColor;
+    private boolean eraserStatus = false;
     private LitePalCanvas litePalCanvas;
 
     @Override
@@ -92,6 +97,9 @@ public class PaintActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.clearCanvas:
                 clearCanvas();
+                break;
+            case R.id.eraser:
+                setEraser();
                 break;
             case R.id.moveCanvas:
                 moveCanvas();
@@ -144,7 +152,7 @@ public class PaintActivity extends AppCompatActivity {
                 //thumbnail只会在抽屉滑动时初始化一次
                 if (thumbnail == null)
                     thumbnail = findViewById(R.id.thumbnail);
-                thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
+                thumbnail.setImageBitmap(loadBitmapFromView(pixelFramelayout));
             }
 
             @Override
@@ -265,6 +273,7 @@ public class PaintActivity extends AppCompatActivity {
                     @Override
                     public void onColorChanged(int color) {
                         pencilColor = color;
+                        pencil.setImageResource(R.drawable.ic_pencil);
                         pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
                     }
                 });
@@ -278,6 +287,11 @@ public class PaintActivity extends AppCompatActivity {
         Intent intent = getIntent();
         pixelCount = intent.getIntExtra("pixelCount", 16);
         pixelSize = ParameterUtils.canvasWidth / pixelCount;
+
+
+        //绘制画布背景
+        backgroundCanvas.setPixelCount(pixelCount);
+        backgroundCanvas.reDrawBackground();
 
         //绘制画布线条
         lineCanvas.setPixelCount(pixelCount);
@@ -296,6 +310,8 @@ public class PaintActivity extends AppCompatActivity {
         lineCanvas = findViewById(R.id.line_canvas);
         pixelCanvas = findViewById(R.id.pixel_canvas);
         strokeCanvas = findViewById(R.id.stroke_canvas);
+        backgroundCanvas = findViewById(R.id.background_canvas);
+        pixelFramelayout = findViewById(R.id.paint_framelayout);
         pencil = findViewById(R.id.draw_pencil);
         borderIndicator = findViewById(R.id.border);
         dotButton = findViewById(R.id.dot_button);
@@ -311,6 +327,22 @@ public class PaintActivity extends AppCompatActivity {
     private void clearCanvas() {
         ParameterUtils.pixelColor = new int[pixelCount][pixelCount];
         pixelCanvas.invalidate();
+    }
+
+    //橡皮擦
+    private void setEraser() {
+        //TODO
+        if (!eraserStatus) {
+            eraserStatus = true;
+            pencilColor = Color.TRANSPARENT;
+            pencil.setImageResource(R.drawable.ic_eraser);
+            pencil.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+        } else {
+            eraserStatus = false;
+            pencilColor = Color.WHITE;
+            pencil.setImageResource(R.drawable.ic_pencil);
+            pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
+        }
     }
 
     //取色
@@ -344,10 +376,13 @@ public class PaintActivity extends AppCompatActivity {
 
     //切换显示线条
     private void toggleLine() {
-        if (lineCanvas.getVisibility() == View.INVISIBLE)
+        if (lineCanvas.getVisibility() == View.INVISIBLE) {
+            backgroundCanvas.setVisibility(View.VISIBLE);
             lineCanvas.setVisibility(View.VISIBLE);
-        else
+        } else {
+            backgroundCanvas.setVisibility(View.INVISIBLE);
             lineCanvas.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -358,7 +393,7 @@ public class PaintActivity extends AppCompatActivity {
         Bitmap bmp = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bmp);
         c.drawColor(Color.WHITE);
-        view.layout(0, 0, view.getWidth(), view.getHeight());
+//        view.layout(0, 0, view.getWidth(), view.getHeight());
         view.draw(c);
         return bmp;
     }

@@ -7,6 +7,11 @@
         android:title="Clear"
         app:showAsAction="always" />
     <item
+        android:id="@+id/eraser"
+        android:icon="@drawable/ic_eraser"
+        android:title="Eraser"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/moveCanvas"
         android:icon="@drawable/ic_move"
         android:title="Move"
