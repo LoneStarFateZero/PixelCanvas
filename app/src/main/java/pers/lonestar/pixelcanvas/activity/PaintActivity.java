@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,10 +21,7 @@ import com.google.gson.Gson;
 
 import net.margaritov.preference.colorpicker.ColorPickerDialog;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
@@ -41,6 +37,7 @@ import pers.lonestar.pixelcanvas.customview.BorderIndicator;
 import pers.lonestar.pixelcanvas.customview.LineCanvas;
 import pers.lonestar.pixelcanvas.customview.PixelCanvas;
 import pers.lonestar.pixelcanvas.customview.StrokeCanvas;
+import pers.lonestar.pixelcanvas.dialog.ExportDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
@@ -62,6 +59,7 @@ public class PaintActivity extends AppCompatActivity {
     private int pixelCount;
     private int pixelSize;
     private int pencilColor;
+    private int prePencilColor;
     private boolean eraserStatus = false;
     private LitePalCanvas litePalCanvas;
 
@@ -126,16 +124,20 @@ public class PaintActivity extends AppCompatActivity {
                         clearCanvas();
                         break;
                     case R.id.paint_nav_export:
-                        exportSVG();
+                        //显示导出对话框
+                        showExportDialog();
                         break;
                     case R.id.paint_nav_publish:
                         postCanvasFile();
                         break;
                     case R.id.paint_nav_rename:
+
                         break;
                     case R.id.paint_nav_settings:
+
                         break;
                     case R.id.paint_nav_share:
+                        shareImage();
                         break;
                 }
                 return true;
@@ -334,12 +336,13 @@ public class PaintActivity extends AppCompatActivity {
         //TODO
         if (!eraserStatus) {
             eraserStatus = true;
+            prePencilColor = pencilColor;
             pencilColor = Color.TRANSPARENT;
             pencil.setImageResource(R.drawable.ic_eraser);
             pencil.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         } else {
             eraserStatus = false;
-            pencilColor = Color.WHITE;
+            pencilColor = prePencilColor;
             pencil.setImageResource(R.drawable.ic_pencil);
             pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
         }
@@ -356,15 +359,13 @@ public class PaintActivity extends AppCompatActivity {
         if (y >= pixelCount)
             y = pixelCount - 1;
         //获取该点颜色
-        pencilColor = ParameterUtils.pixelColor[y][x];
+        int tmpColor = ParameterUtils.pixelColor[y][x];
         //绘制画笔颜色
         //不为透明色
-        if (pencilColor != 0) {
+        if (tmpColor != 0) {
+            prePencilColor = pencilColor;
+            pencilColor = tmpColor;
             pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
-        } else {
-            //若取色为透明，则画笔色设为白色
-            pencilColor = Color.WHITE;
-            pencil.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
         }
     }
 
@@ -392,30 +393,10 @@ public class PaintActivity extends AppCompatActivity {
     private Bitmap loadBitmapFromView(View view) {
         Bitmap bmp = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bmp);
-        c.drawColor(Color.WHITE);
+        c.drawColor(Color.TRANSPARENT);
 //        view.layout(0, 0, view.getWidth(), view.getHeight());
         view.draw(c);
         return bmp;
-    }
-
-    //导出SVG格式
-    private void exportSVG() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-                "<svg version=\"1.1\" width=\"12\" height=\"12\" xmlns=\"http://www.w3.org/2000/svg\">\n");
-        for (int i = 0; i < ParameterUtils.pixelColor.length; i++) {
-            for (int j = 0; j < ParameterUtils.pixelColor.length; j++) {
-                if (ParameterUtils.pixelColor[i][j] != 0)
-                    stringBuilder.append("<rect x=\"" + j + "\" y=\"" + i + "\" width=\"1\" height=\"1\" fill=\"#" + Integer.toHexString((ParameterUtils.pixelColor[i][j] & 0xff0000) >> 16) + Integer.toHexString((ParameterUtils.pixelColor[i][j] & 0x00ff00) >> 8) + Integer.toHexString(ParameterUtils.pixelColor[i][j] & 0x0000ff) + "\" />\n");
-            }
-        }
-        stringBuilder.append("</svg>");
-        //生成SVG文件
-    }
-
-    //TODO
-    private void exportPng() {
-
     }
 
     //TODO
@@ -453,33 +434,14 @@ public class PaintActivity extends AppCompatActivity {
         });
     }
 
-    //导出PNG格式
-    private void viewSaveToImage(View view) {
-        view.setDrawingCacheEnabled(true);
-        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        view.setDrawingCacheBackgroundColor(Color.WHITE);
+    private void shareImage() {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+    }
 
-        // 把一个View转换成图片
-        Bitmap cachebmp = loadBitmapFromView(view);
-        FileOutputStream fos;
-        String imagePath = "";
-        try {
-            // 判断手机设备是否有SD卡
-            boolean isHasSDCard = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-            if (isHasSDCard) {
-                // SD卡根目录
-                File sdRoot = Environment.getExternalStorageDirectory();
-                File file = new File(sdRoot, Calendar.getInstance().getTimeInMillis() + ".png");
-                fos = new FileOutputStream(file);
-                imagePath = file.getAbsolutePath();
-            } else
-                throw new Exception("创建文件失败!");
-            cachebmp.compress(Bitmap.CompressFormat.PNG, 90, fos);
-            fos.flush();
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        view.destroyDrawingCache();
+    private void showExportDialog() {
+        ExportDialogFragment fragment = new ExportDialogFragment();
+        fragment.initParameter(litePalCanvas, pixelCanvas);
+        fragment.show(getSupportFragmentManager(), "ExportDialog");
     }
 }

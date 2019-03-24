@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/format_svg"
+            android:title="SVG" />
+        <item
+            android:id="@+id/format_png"
+            android:title="PNG" />
+        <item
+            android:id="@+id/format_jpeg"
+            android:title="JPEG" />
+        <item
+            android:id="@+id/format_webp"
+            android:title="WEBP" />
+    </group>
+</menu>

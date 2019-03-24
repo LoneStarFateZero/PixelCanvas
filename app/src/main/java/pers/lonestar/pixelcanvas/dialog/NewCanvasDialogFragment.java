@@ -41,7 +41,7 @@ public class NewCanvasDialogFragment extends DialogFragment {
                 Intent paintIntent = new Intent(requireContext(), PaintActivity.class);
                 if (pixelCountChooser == 0) {
                     //未选择画布大小，重新选择
-                    Toast.makeText(requireContext(), "Please Choose the Size of Canvas", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "请选择画布尺寸", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog.cancel();
                     paintIntent.putExtra("pixelCount", pixelCountChooser);
