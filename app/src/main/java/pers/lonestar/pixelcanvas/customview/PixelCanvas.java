@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PixelCanvas extends View {
@@ -27,12 +28,12 @@ public class PixelCanvas extends View {
     private void drawPixel(Canvas canvas) {
         Paint paint = new Paint();
         paint.setStrokeWidth(1);
-        for (int i = 0; i < ParameterUtils.pixelColor.length; i++) {
-            for (int j = 0; j < ParameterUtils.pixelColor.length; j++) {
+        for (int i = 0; i < PixelApp.pixelColor.length; i++) {
+            for (int j = 0; j < PixelApp.pixelColor.length; j++) {
                 //此处重绘若不加判断，绘制矩形会极为耗时
-                //若不为白色，才绘制矩形，否则默认白色
-                if (ParameterUtils.pixelColor[i][j] != 0) {
-                    paint.setColor(ParameterUtils.pixelColor[i][j]);
+                //若不为透明，才绘制矩形，否则默认透明
+                if (PixelApp.pixelColor[i][j] != 0) {
+                    paint.setColor(PixelApp.pixelColor[i][j]);
                     int left = j * pixelSize;
                     int top = i * pixelSize;
                     canvas.drawRect(left, top, left + pixelSize, top + pixelSize, paint);
@@ -59,5 +60,9 @@ public class PixelCanvas extends View {
 
     public void setPixelSize(int pixelSize) {
         this.pixelSize = pixelSize;
+    }
+
+    public void reDrawCanvas() {
+        invalidate();
     }
 }

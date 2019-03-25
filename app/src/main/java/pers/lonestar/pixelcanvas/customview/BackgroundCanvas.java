@@ -34,7 +34,6 @@ public class BackgroundCanvas extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         //初始化背景画笔
         if (whitePaint == null || grayPaint == null)
             iniPaint();

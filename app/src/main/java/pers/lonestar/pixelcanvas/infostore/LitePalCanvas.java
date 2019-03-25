@@ -2,7 +2,9 @@ package pers.lonestar.pixelcanvas.infostore;
 
 import org.litepal.crud.LitePalSupport;
 
-public class LitePalCanvas extends LitePalSupport {
+import java.io.Serializable;
+
+public class LitePalCanvas extends LitePalSupport implements Serializable {
     private String canvasName;
     private String creator;
     private int pixelCount;

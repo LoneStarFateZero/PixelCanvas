@@ -31,6 +31,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.customview.BackgroundCanvas;
 import pers.lonestar.pixelcanvas.customview.BorderIndicator;
@@ -220,7 +221,6 @@ public class PaintActivity extends AppCompatActivity {
                         pencil.layout(left, top, right, bottom);
                         pencil.postInvalidate();
 
-                        //TODO
                         //重绘红色边框指示器
                         //确定位置
                         int border_left = left / pixelSize * pixelSize;
@@ -241,9 +241,9 @@ public class PaintActivity extends AppCompatActivity {
                             if (y >= pixelCount) {
                                 y = pixelCount - 1;
                             }
-                            ParameterUtils.pixelColor[y][x] = pencilColor;
+                            PixelApp.pixelColor[y][x] = pencilColor;
                             pixelCanvas.setPixelSize(pixelSize);
-                            pixelCanvas.invalidate();
+                            pixelCanvas.reDrawCanvas();
                         }
 
                         // 记录当前的位置
@@ -252,7 +252,7 @@ public class PaintActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         //覆盖修改
-                        litePalCanvas.setJsonData(new Gson().toJson(ParameterUtils.pixelColor));
+                        litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
                         litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
                         litePalCanvas.save();
                         break;
@@ -287,9 +287,18 @@ public class PaintActivity extends AppCompatActivity {
     //初始化画布，包括边框，线条，格子数目，格子大小
     private void initCanvas() {
         Intent intent = getIntent();
-        pixelCount = intent.getIntExtra("pixelCount", 16);
+        litePalCanvas = PixelApp.litePalCanvas;
+        if (litePalCanvas == null) {
+            pixelCount = intent.getIntExtra("pixelCount", 16);
+            //初始化画布像素颜色信息
+            PixelApp.pixelColor = new int[pixelCount][pixelCount];
+        } else {
+            pixelCount = litePalCanvas.getPixelCount();
+            //初始化画布像素颜色信息
+            //TODO
+            PixelApp.pixelColor = new Gson().fromJson(litePalCanvas.getJsonData(), int[][].class);
+        }
         pixelSize = ParameterUtils.canvasWidth / pixelCount;
-
 
         //绘制画布背景
         backgroundCanvas.setPixelCount(pixelCount);
@@ -302,9 +311,6 @@ public class PaintActivity extends AppCompatActivity {
         //设定红色边框指示
         borderIndicator.setPixelCount(pixelCount);
         borderIndicator.reDrawLine();
-
-        //初始化画布像素颜色信息
-        ParameterUtils.pixelColor = new int[pixelCount][pixelCount];
     }
 
     //初始化View组件
@@ -327,13 +333,12 @@ public class PaintActivity extends AppCompatActivity {
     //Toolbar菜单项方法
     //清除画布
     private void clearCanvas() {
-        ParameterUtils.pixelColor = new int[pixelCount][pixelCount];
-        pixelCanvas.invalidate();
+        PixelApp.pixelColor = new int[pixelCount][pixelCount];
+        pixelCanvas.reDrawCanvas();
     }
 
     //橡皮擦
     private void setEraser() {
-        //TODO
         if (!eraserStatus) {
             eraserStatus = true;
             prePencilColor = pencilColor;
@@ -359,7 +364,7 @@ public class PaintActivity extends AppCompatActivity {
         if (y >= pixelCount)
             y = pixelCount - 1;
         //获取该点颜色
-        int tmpColor = ParameterUtils.pixelColor[y][x];
+        int tmpColor = PixelApp.pixelColor[y][x];
         //绘制画笔颜色
         //不为透明色
         if (tmpColor != 0) {
@@ -394,7 +399,6 @@ public class PaintActivity extends AppCompatActivity {
         Bitmap bmp = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bmp);
         c.drawColor(Color.TRANSPARENT);
-//        view.layout(0, 0, view.getWidth(), view.getHeight());
         view.draw(c);
         return bmp;
     }
@@ -405,14 +409,20 @@ public class PaintActivity extends AppCompatActivity {
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         //获取当前时间
         Date date = new Date(System.currentTimeMillis());
-        litePalCanvas = new LitePalCanvas();
-        litePalCanvas.setCanvasName("canvas_1");
-        litePalCanvas.setPixelCount(pixelCount);
-        litePalCanvas.setCreator("LoneStar");
-        litePalCanvas.setCreatedAt(dateFormat.format(date));
-        litePalCanvas.setUpdatedAt(dateFormat.format(date));
-        litePalCanvas.setJsonData(new Gson().toJson(ParameterUtils.pixelColor));
-        litePalCanvas.save();
+        if (litePalCanvas == null) {
+            litePalCanvas = new LitePalCanvas();
+            PixelApp.litePalCanvas = litePalCanvas;
+            litePalCanvas.setCanvasName("canvas_1");
+            litePalCanvas.setPixelCount(pixelCount);
+            litePalCanvas.setCreator("LoneStar");
+            litePalCanvas.setCreatedAt(dateFormat.format(date));
+            litePalCanvas.setUpdatedAt(dateFormat.format(date));
+            litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
+            litePalCanvas.save();
+        } else {
+            //TODO
+            litePalCanvas.setUpdatedAt(dateFormat.format(date));
+        }
     }
 
     private void postCanvasFile() {
@@ -434,6 +444,7 @@ public class PaintActivity extends AppCompatActivity {
         });
     }
 
+    //TODO
     private void shareImage() {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
@@ -443,5 +454,14 @@ public class PaintActivity extends AppCompatActivity {
         ExportDialogFragment fragment = new ExportDialogFragment();
         fragment.initParameter(litePalCanvas, pixelCanvas);
         fragment.show(getSupportFragmentManager(), "ExportDialog");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //此处之后点击画布进入会闪退
+        //数据保存到数据库是没问题的
+        PixelApp.pixelColor = null;
+        PixelApp.litePalCanvas = null;
     }
 }

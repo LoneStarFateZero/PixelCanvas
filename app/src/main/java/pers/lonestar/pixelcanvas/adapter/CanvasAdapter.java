@@ -14,6 +14,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.GalleryActivity;
 import pers.lonestar.pixelcanvas.activity.PaintActivity;
@@ -32,18 +33,12 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.canvas_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
-        holder.canvasItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(GalleryActivity.getInstance(), PaintActivity.class);
-            }
-        });
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        LitePalCanvas litePalCanvas = litePalCanvasList.get(position);
+        final LitePalCanvas litePalCanvas = litePalCanvasList.get(position);
         //图片加载或许需要优化
         Glide.with(GalleryActivity.getInstance()).load(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail())).into(holder.thumbnail);
 //        holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
@@ -54,6 +49,15 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Toast.makeText(v.getContext(), "测试-弹出悬浮窗", Toast.LENGTH_SHORT).show();
+            }
+        });
+        holder.canvasItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO
+                PixelApp.litePalCanvas = litePalCanvas;
+                Intent intent = new Intent(GalleryActivity.getInstance(), PaintActivity.class);
+                GalleryActivity.getInstance().startActivity(intent);
             }
         });
     }

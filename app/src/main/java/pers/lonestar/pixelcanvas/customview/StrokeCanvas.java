@@ -16,7 +16,6 @@ public class StrokeCanvas extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         if (strokePaint == null)
             iniPaint();
         canvas.drawLine(0, 0, 0, strokeWidth, strokePaint);

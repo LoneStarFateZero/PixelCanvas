@@ -27,9 +27,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
-import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class ExportDialogFragment extends DialogFragment {
     private Button export;
@@ -189,10 +189,10 @@ public class ExportDialogFragment extends DialogFragment {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
                 "<svg version=\"1.1\" width=\"12\" height=\"12\" xmlns=\"http://www.w3.org/2000/svg\">\n");
-        for (int i = 0; i < ParameterUtils.pixelColor.length; i++) {
-            for (int j = 0; j < ParameterUtils.pixelColor.length; j++) {
-                if (ParameterUtils.pixelColor[i][j] != 0)
-                    stringBuilder.append("<rect x=\"" + j + "\" y=\"" + i + "\" width=\"1\" height=\"1\" fill=\"#" + Integer.toHexString((ParameterUtils.pixelColor[i][j] & 0xff0000) >> 16) + Integer.toHexString((ParameterUtils.pixelColor[i][j] & 0x00ff00) >> 8) + Integer.toHexString(ParameterUtils.pixelColor[i][j] & 0x0000ff) + "\" />\n");
+        for (int i = 0; i < PixelApp.pixelColor.length; i++) {
+            for (int j = 0; j < PixelApp.pixelColor.length; j++) {
+                if (PixelApp.pixelColor[i][j] != 0)
+                    stringBuilder.append("<rect x=\"" + j + "\" y=\"" + i + "\" width=\"1\" height=\"1\" fill=\"#" + Integer.toHexString((PixelApp.pixelColor[i][j] & 0xff0000) >> 16) + Integer.toHexString((PixelApp.pixelColor[i][j] & 0x00ff00) >> 8) + Integer.toHexString(PixelApp.pixelColor[i][j] & 0x0000ff) + "\" />\n");
             }
         }
         stringBuilder.append("</svg>");

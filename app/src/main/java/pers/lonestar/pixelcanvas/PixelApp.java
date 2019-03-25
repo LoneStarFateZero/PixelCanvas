@@ -3,12 +3,15 @@ package pers.lonestar.pixelcanvas;
 import org.litepal.LitePalApplication;
 
 import cn.bmob.v3.Bmob;
+import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.FontsUtils;
 
 public class PixelApp extends LitePalApplication {
     private static PixelApp instance;
     public static PixelUser pixelUser;
+    public static LitePalCanvas litePalCanvas;
+    public static int[][] pixelColor;
 
     public static PixelApp getInstance() {
         return instance;

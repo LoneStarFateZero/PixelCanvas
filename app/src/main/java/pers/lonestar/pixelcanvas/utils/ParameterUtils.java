@@ -7,7 +7,6 @@ import java.io.ByteArrayOutputStream;
 
 public class ParameterUtils {
     public static int canvasWidth = 960;
-    public static int[][] pixelColor;
 
     public static byte[] bitmapToBytes(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

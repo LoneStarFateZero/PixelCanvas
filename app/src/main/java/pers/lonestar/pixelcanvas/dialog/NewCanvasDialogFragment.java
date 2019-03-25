@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.PaintActivity;
 
@@ -44,6 +45,7 @@ public class NewCanvasDialogFragment extends DialogFragment {
                     Toast.makeText(requireContext(), "请选择画布尺寸", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog.cancel();
+                    PixelApp.litePalCanvas = null;
                     paintIntent.putExtra("pixelCount", pixelCountChooser);
                     startActivity(paintIntent);
                 }
