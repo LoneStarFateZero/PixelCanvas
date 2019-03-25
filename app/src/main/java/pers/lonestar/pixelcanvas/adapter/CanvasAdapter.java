@@ -222,6 +222,7 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
         bmobCanvas.setCreatorID(litePalCanvas.getCreatorID());
         bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
         bmobCanvas.setJsonData(litePalCanvas.getJsonData());
+        bmobCanvas.setThumbnail(litePalCanvas.getThumbnail());
 
         bmobCanvas.save(new SaveListener<String>() {
             @Override

@@ -1,5 +1,6 @@
 package pers.lonestar.pixelcanvas.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -134,13 +137,14 @@ public class PaintActivity extends AppCompatActivity {
                         showExportDialog();
                         break;
                     case R.id.paint_nav_publish:
-                        postCanvasFile();
+                        showPostDialog();
                         break;
                     case R.id.paint_nav_rename:
-
+                        showRenameDialog();
                         break;
                     case R.id.paint_nav_settings:
-
+                        Intent intent = new Intent(PaintActivity.this, SettingsActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.paint_nav_share:
                         shareImage();
@@ -451,6 +455,7 @@ public class PaintActivity extends AppCompatActivity {
         bmobCanvas.setCreatorID(litePalCanvas.getCreatorID());
         bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
         bmobCanvas.setJsonData(litePalCanvas.getJsonData());
+        bmobCanvas.setThumbnail(litePalCanvas.getThumbnail());
 
         bmobCanvas.save(new SaveListener<String>() {
             @Override
@@ -478,9 +483,50 @@ public class PaintActivity extends AppCompatActivity {
         fragment.show(getSupportFragmentManager(), "ExportDialog");
     }
 
+    //发布对话框
+    private void showPostDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(PaintActivity.this);
+        dialog.setMessage("确定要发布这个作品吗？");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                postCanvasFile();
+            }
+        });
+        dialog.setNegativeButton("取消", null);
+        dialog.show();
+    }
+
     //重命名对话框
     private void showRenameDialog() {
-
+        View view = View.inflate(PaintActivity.this, R.layout.rename_dialog, null);
+        final EditText renameText = view.findViewById(R.id.rename_text);
+        renameText.setText(litePalCanvas.getCanvasName());
+        renameText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                renameText.selectAll();
+            }
+        });
+        AlertDialog.Builder dialog = new AlertDialog.Builder(PaintActivity.this);
+        dialog.setView(view);
+        dialog.setTitle("重命名");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newName = renameText.getText().toString();
+                if (!newName.equals("")) {
+                    litePalCanvas.setCanvasName(newName);
+                    litePalCanvas.save();
+                } else {
+                    Toast.makeText(PaintActivity.this, "名称不能为空", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.setNegativeButton("取消", null);
+        dialog.show();
     }
 
     @Override

@@ -5,6 +5,18 @@ import cn.bmob.v3.BmobObject;
 public class BmobCanvas extends BmobObject {
     private String canvasName;
     private String creator;
+    private String creatorID;
+    private int pixelCount;
+    private String jsonData;
+    private byte[] thumbnail;
+
+    public byte[] getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(byte[] thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
     public String getCreatorID() {
         return creatorID;
@@ -13,10 +25,6 @@ public class BmobCanvas extends BmobObject {
     public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
     }
-
-    private String creatorID;
-    private int pixelCount;
-    private String jsonData;
 
     public String getCanvasName() {
         return canvasName;
