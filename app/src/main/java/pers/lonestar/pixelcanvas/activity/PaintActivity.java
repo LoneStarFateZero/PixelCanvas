@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -52,6 +53,10 @@ public class PaintActivity extends AppCompatActivity {
     private FrameLayout pixelFramelayout;
     private ImageView pencil;
     private ImageView thumbnail;
+    private TextView canvasName;
+    private TextView canvasSize;
+    private TextView canvasCreate;
+    private TextView canvasUpdate;
     private BorderIndicator borderIndicator;
     private Button dotButton;
     private FloatingActionButton fab;
@@ -155,7 +160,19 @@ public class PaintActivity extends AppCompatActivity {
                 //thumbnail只会在抽屉滑动时初始化一次
                 if (thumbnail == null)
                     thumbnail = findViewById(R.id.thumbnail);
+                if (canvasName == null)
+                    canvasName = findViewById(R.id.paint_canvas_name);
+                if (canvasSize == null)
+                    canvasSize = findViewById(R.id.paint_canvas_size);
+                if (canvasCreate == null)
+                    canvasCreate = findViewById(R.id.paint_canvas_create);
+                if (canvasUpdate == null)
+                    canvasUpdate = findViewById(R.id.paint_canvas_update);
                 thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
+                canvasName.setText(litePalCanvas.getCanvasName());
+                canvasSize.setText("尺寸:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
+                canvasCreate.setText("创建时间:" + litePalCanvas.getCreatedAt());
+                canvasUpdate.setText("更新时间:" + litePalCanvas.getUpdatedAt());
             }
 
             @Override
@@ -469,6 +486,9 @@ public class PaintActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+        Date date = new Date(System.currentTimeMillis());
+        litePalCanvas.setUpdatedAt(dateFormat.format(date));
         PixelApp.pixelColor = null;
         PixelApp.litePalCanvas = null;
     }

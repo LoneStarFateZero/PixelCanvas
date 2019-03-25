@@ -4,20 +4,27 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:gravity="center_horizontal"
-        android:text="新建画布"
-        android:textSize="30sp" />
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="新建画布"
+            android:textSize="30sp" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="画布尺寸"
-        android:textSize="20sp" />
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/canvas_size_text"
@@ -27,7 +34,7 @@
         android:layout_margin="10dp"
         android:clickable="true"
         android:text="选择画布尺寸"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/create_button"
@@ -35,5 +42,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:background="@drawable/dialog_button"
-        android:text="创建" />
+        android:text="创建"
+        android:textSize="25sp" />
 </LinearLayout>

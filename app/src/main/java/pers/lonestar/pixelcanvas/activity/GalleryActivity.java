@@ -1,16 +1,16 @@
 package pers.lonestar.pixelcanvas.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.litepal.LitePal;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -36,12 +36,25 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        YoYo.with(Techniques.ZoomIn).duration(400).playOn(fab);
         initCanvasList();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        CanvasAdapter canvasAdapter = new CanvasAdapter(litePalCanvasList);
+        final CanvasAdapter canvasAdapter = new CanvasAdapter(litePalCanvasList);
         recyclerView.setAdapter(canvasAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        fab.show();
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        fab.hide();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -51,14 +64,28 @@ public class GalleryActivity extends AppCompatActivity {
         instance = this;
 
         toolbar = findViewById(R.id.gallery_activity_toolbar);
+        toolbar.setTitle("本地作品");
+        //设置标题字体样式为像素字体，否则为默认字体，与整体像素风格不匹配
+        toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
         }
 
         initView();
         initListener();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     private void initListener() {

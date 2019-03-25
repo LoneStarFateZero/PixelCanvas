@@ -52,7 +52,7 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
         //Glide.with(GalleryActivity.getInstance()).load(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail())).into(holder.thumbnail);
         holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
         holder.canvasName.setText(litePalCanvas.getCanvasName());
-        holder.canvasSize.setText("Size:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
+        holder.canvasSize.setText("尺寸:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
         holder.canvasUpdated.setText(litePalCanvas.getUpdatedAt());
         holder.canvasMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,6 +138,12 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
         View view = View.inflate(GalleryActivity.getInstance(), R.layout.rename_dialog, null);
         final EditText renameText = view.findViewById(R.id.rename_text);
         renameText.setText(litePalCanvas.getCanvasName());
+        renameText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                renameText.selectAll();
+            }
+        });
         AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
         dialog.setView(view);
         dialog.setTitle("重命名");
