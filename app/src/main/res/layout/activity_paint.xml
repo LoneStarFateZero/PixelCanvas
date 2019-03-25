@@ -13,7 +13,8 @@
             android:id="@+id/paint_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <FrameLayout
             android:id="@+id/paint_framelayout"
@@ -22,11 +23,6 @@
             android:layout_below="@+id/paint_toolbar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp">
-
-            <pers.lonestar.pixelcanvas.customview.BackgroundCanvas
-                android:id="@+id/background_canvas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
             <pers.lonestar.pixelcanvas.customview.PixelCanvas
                 android:id="@+id/pixel_canvas"

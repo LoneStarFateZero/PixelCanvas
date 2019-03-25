@@ -63,7 +63,8 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
         instance = this;
 
-        toolbar = findViewById(R.id.gallery_activity_toolbar);
+        initView();
+        initListener();
         toolbar.setTitle("本地作品");
         //设置标题字体样式为像素字体，否则为默认字体，与整体像素风格不匹配
         toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
@@ -73,9 +74,6 @@ public class GalleryActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
-
-        initView();
-        initListener();
     }
 
     @Override
@@ -99,6 +97,7 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        toolbar = findViewById(R.id.gallery_activity_toolbar);
         fab = findViewById(R.id.gallery_activity_fab);
         recyclerView = findViewById(R.id.gallery_activity_recyclerview);
     }

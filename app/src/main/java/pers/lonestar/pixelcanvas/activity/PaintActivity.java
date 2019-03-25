@@ -37,7 +37,6 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
-import pers.lonestar.pixelcanvas.customview.BackgroundCanvas;
 import pers.lonestar.pixelcanvas.customview.BorderIndicator;
 import pers.lonestar.pixelcanvas.customview.LineCanvas;
 import pers.lonestar.pixelcanvas.customview.PixelCanvas;
@@ -52,7 +51,7 @@ public class PaintActivity extends AppCompatActivity {
     private LineCanvas lineCanvas;
     private PixelCanvas pixelCanvas;
     private StrokeCanvas strokeCanvas;
-    private BackgroundCanvas backgroundCanvas;
+    //    private BackgroundCanvas backgroundCanvas;
     private FrameLayout pixelFramelayout;
     private ImageView pencil;
     private ImageView thumbnail;
@@ -82,8 +81,11 @@ public class PaintActivity extends AppCompatActivity {
         //设置自定义Toolbar
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayShowTitleEnabled(false);
+        }
 
         initListener();
         initCanvas();
@@ -102,6 +104,9 @@ public class PaintActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
             case R.id.clearCanvas:
                 clearCanvas();
                 break;
@@ -245,7 +250,11 @@ public class PaintActivity extends AppCompatActivity {
                         //重绘红色边框指示器
                         //确定位置
                         int border_left = left / pixelSize * pixelSize;
+                        if (border_left == 960)
+                            border_left = 900;
                         int border_top = bottom / pixelSize * pixelSize;
+                        if (border_top == 960)
+                            border_top = 900;
                         int border_bottom = border_top + borderIndicator.getHeight();
                         int border_right = border_left + borderIndicator.getWidth();
                         borderIndicator.layout(border_left, border_top, border_right, border_bottom);
@@ -263,7 +272,6 @@ public class PaintActivity extends AppCompatActivity {
                                 y = pixelCount - 1;
                             }
                             PixelApp.pixelColor[y][x] = pencilColor;
-                            pixelCanvas.setPixelSize(pixelSize);
                             pixelCanvas.reDrawCanvas();
                         }
 
@@ -321,16 +329,16 @@ public class PaintActivity extends AppCompatActivity {
         pixelSize = ParameterUtils.canvasWidth / pixelCount;
 
         //绘制画布背景
-        backgroundCanvas.setPixelCount(pixelCount);
-        backgroundCanvas.reDrawBackground();
+//        backgroundCanvas.setPixelCount(pixelCount);
+
+        //绘制画布
+        pixelCanvas.setPixelSize(pixelSize);
 
         //绘制画布线条
         lineCanvas.setPixelCount(pixelCount);
-        lineCanvas.reDrawLine();
 
         //设定红色边框指示
         borderIndicator.setPixelCount(pixelCount);
-        borderIndicator.reDrawLine();
     }
 
     //初始化View组件
@@ -338,7 +346,7 @@ public class PaintActivity extends AppCompatActivity {
         lineCanvas = findViewById(R.id.line_canvas);
         pixelCanvas = findViewById(R.id.pixel_canvas);
         strokeCanvas = findViewById(R.id.stroke_canvas);
-        backgroundCanvas = findViewById(R.id.background_canvas);
+//        backgroundCanvas = findViewById(R.id.background_canvas);
         pixelFramelayout = findViewById(R.id.paint_framelayout);
         pencil = findViewById(R.id.draw_pencil);
         borderIndicator = findViewById(R.id.border);
@@ -403,10 +411,10 @@ public class PaintActivity extends AppCompatActivity {
     //切换显示线条
     private void toggleLine() {
         if (lineCanvas.getVisibility() == View.INVISIBLE) {
-            backgroundCanvas.setVisibility(View.VISIBLE);
+//            backgroundCanvas.setVisibility(View.INVISIBLE);
             lineCanvas.setVisibility(View.VISIBLE);
         } else {
-            backgroundCanvas.setVisibility(View.INVISIBLE);
+//            backgroundCanvas.setVisibility(View.INVISIBLE);
             lineCanvas.setVisibility(View.INVISIBLE);
         }
     }
