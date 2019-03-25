@@ -1,19 +1,22 @@
 package pers.lonestar.pixelcanvas.adapter;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 import cn.bmob.v3.exception.BmobException;
@@ -42,11 +45,12 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final LitePalCanvas litePalCanvas = litePalCanvasList.get(position);
         //图片加载或许需要优化
-        Glide.with(GalleryActivity.getInstance()).load(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail())).into(holder.thumbnail);
-//        holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
+        //使用Glide加载图片会造成OOM
+        //Glide.with(GalleryActivity.getInstance()).load(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail())).into(holder.thumbnail);
+        holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
         holder.canvasName.setText(litePalCanvas.getCanvasName());
         holder.canvasSize.setText("Size:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
         holder.canvasUpdated.setText(litePalCanvas.getUpdatedAt());
@@ -61,12 +65,16 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.list_post:
+                                showPostDialog(litePalCanvas);
                                 break;
                             case R.id.list_rename:
+                                showRenameDialog(litePalCanvas, position);
                                 break;
                             case R.id.list_copy:
+                                showCopyDialog(litePalCanvas);
                                 break;
                             case R.id.list_delete:
+                                showDeleteDialog(litePalCanvas, position);
                                 break;
                         }
                         return true;
@@ -110,22 +118,97 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
         }
     }
 
-    private void showPostDialog() {
-
+    //发布对话框
+    private void showPostDialog(final LitePalCanvas litePalCanvas) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
+        dialog.setMessage("确定要发布这个作品吗？");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                postCanvasFile(litePalCanvas);
+            }
+        });
+        dialog.setNegativeButton("取消", null);
+        dialog.show();
     }
 
-    private void showRenameDialog() {
-
+    //重命名对话框
+    private void showRenameDialog(final LitePalCanvas litePalCanvas, final int position) {
+        View view = View.inflate(GalleryActivity.getInstance(), R.layout.rename_dialog, null);
+        final EditText renameText = view.findViewById(R.id.rename_text);
+        renameText.setText(litePalCanvas.getCanvasName());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
+        dialog.setView(view);
+        dialog.setTitle("重命名");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newName = renameText.getText().toString();
+                if (!newName.equals("")) {
+                    litePalCanvas.setCanvasName(newName);
+                    litePalCanvas.save();
+                    notifyItemChanged(position);
+                } else {
+                    Toast.makeText(GalleryActivity.getInstance(), "名称不能为空", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        dialog.setNegativeButton("取消", null);
+        dialog.show();
     }
 
-    private void showCopyDialog() {
-
+    //复制对话框
+    private void showCopyDialog(final LitePalCanvas litePalCanvas) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
+        dialog.setMessage("确定要复制这个作品吗？");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //复制作品
+                //获取本地日期时间格式
+                DateFormat dateFormat = DateFormat.getDateTimeInstance();
+                //获取当前时间
+                Date date = new Date(System.currentTimeMillis());
+                LitePalCanvas copyCanvas = new LitePalCanvas();
+                copyCanvas.setCanvasName(litePalCanvas.getCanvasName());
+                copyCanvas.setCreator(litePalCanvas.getCreator());
+                copyCanvas.setCreatorID(litePalCanvas.getCreatorID());
+                copyCanvas.setPixelCount(litePalCanvas.getPixelCount());
+                copyCanvas.setJsonData(litePalCanvas.getJsonData());
+                copyCanvas.setCreatedAt(litePalCanvas.getCreatedAt());
+                copyCanvas.setUpdatedAt(dateFormat.format(date));
+                copyCanvas.setThumbnail(litePalCanvas.getThumbnail());
+                copyCanvas.save();
+                litePalCanvasList.add(0, copyCanvas);
+                notifyItemInserted(0);
+            }
+        });
+        dialog.setNegativeButton("取消", null);
+        dialog.show();
     }
 
-    private void showDeleteDialog() {
-
+    //删除对话框
+    private void showDeleteDialog(final LitePalCanvas litePalCanvas, final int position) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
+        dialog.setMessage("确定要删除这个作品吗？\n操作无法恢复");
+        dialog.setCancelable(true);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //删除画布
+                litePalCanvasList.remove(position);
+                notifyItemRemoved(position);
+                litePalCanvas.delete();
+            }
+        });
+        dialog.setNegativeButton("取消", null);
+        dialog.show();
     }
 
+    //发布作品
     private void postCanvasFile(LitePalCanvas litePalCanvas) {
         BmobCanvas bmobCanvas = new BmobCanvas();
         bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());

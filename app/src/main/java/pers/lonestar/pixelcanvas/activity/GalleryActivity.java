@@ -77,6 +77,6 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void initCanvasList() {
-        litePalCanvasList = LitePal.findAll(LitePalCanvas.class);
+        litePalCanvasList = LitePal.order("id desc").find(LitePalCanvas.class);
     }
 }

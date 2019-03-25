@@ -7,6 +7,12 @@ import java.io.Serializable;
 public class LitePalCanvas extends LitePalSupport implements Serializable {
     private String canvasName;
     private String creator;
+    private String creatorID;
+    private int pixelCount;
+    private String jsonData;
+    private String createdAt;
+    private String updatedAt;
+    private byte[] thumbnail;
 
     public String getCreatorID() {
         return creatorID;
@@ -15,13 +21,6 @@ public class LitePalCanvas extends LitePalSupport implements Serializable {
     public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
     }
-
-    private String creatorID;
-    private int pixelCount;
-    private String jsonData;
-    private String createdAt;
-    private String updatedAt;
-    private byte[] thumbnail;
 
     public String getCanvasName() {
         return canvasName;
