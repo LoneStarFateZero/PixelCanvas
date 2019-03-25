@@ -5,13 +5,21 @@ import org.litepal.crud.LitePalSupport;
 import java.io.Serializable;
 
 public class LitePalCanvas extends LitePalSupport implements Serializable {
+    //作品名称
     private String canvasName;
+    //创作者名称
     private String creator;
+    //创作者唯一ID
     private String creatorID;
+    //尺寸
     private int pixelCount;
+    //json像素数据
     private String jsonData;
+    //创作时间
     private String createdAt;
+    //更新时间
     private String updatedAt;
+    //字节流缩略图
     private byte[] thumbnail;
 
     public String getCreatorID() {

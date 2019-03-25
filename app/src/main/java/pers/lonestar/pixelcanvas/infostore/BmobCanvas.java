@@ -3,11 +3,17 @@ package pers.lonestar.pixelcanvas.infostore;
 import cn.bmob.v3.BmobObject;
 
 public class BmobCanvas extends BmobObject {
+    //作品名称
     private String canvasName;
+    //创作者名称
     private String creator;
+    //创作者唯一ID
     private String creatorID;
+    //尺寸
     private int pixelCount;
+    //json像素数据
     private String jsonData;
+    //字节流缩略图
     private byte[] thumbnail;
 
     public byte[] getThumbnail() {

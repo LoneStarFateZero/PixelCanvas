@@ -45,12 +45,18 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final LitePalCanvas litePalCanvas = litePalCanvasList.get(position);
         //图片加载或许需要优化
         //使用Glide加载图片会造成OOM
         //Glide.with(GalleryActivity.getInstance()).load(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail())).into(holder.thumbnail);
-        holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
+//        holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
+        holder.thumbnail.post(new Runnable() {
+            @Override
+            public void run() {
+                holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
+            }
+        });
         holder.canvasName.setText(litePalCanvas.getCanvasName());
         holder.canvasSize.setText("尺寸:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
         holder.canvasUpdated.setText(litePalCanvas.getUpdatedAt());
