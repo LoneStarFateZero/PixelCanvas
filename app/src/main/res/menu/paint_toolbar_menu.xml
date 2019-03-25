@@ -4,26 +4,26 @@
     <item
         android:id="@+id/clearCanvas"
         android:icon="@drawable/ic_clear"
-        android:title="Clear"
+        android:title="清除"
         app:showAsAction="always" />
     <item
         android:id="@+id/eraser"
         android:icon="@drawable/ic_eraser"
-        android:title="Eraser"
+        android:title="橡皮"
         app:showAsAction="always" />
     <item
         android:id="@+id/moveCanvas"
         android:icon="@drawable/ic_move"
-        android:title="Move"
+        android:title="移动"
         app:showAsAction="always" />
     <item
         android:id="@+id/colorPicker"
         android:icon="@drawable/ic_picker"
-        android:title="picker"
+        android:title="取色"
         app:showAsAction="always" />
     <item
         android:id="@+id/linetoggle"
         android:icon="@drawable/ic_line"
-        android:title="line"
+        android:title="线框"
         app:showAsAction="always" />
 </menu>

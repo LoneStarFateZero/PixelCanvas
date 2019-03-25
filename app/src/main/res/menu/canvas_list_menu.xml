@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/list_post"
+        android:title="发布" />
+    <item
+        android:id="@+id/list_rename"
+        android:title="重命名" />
+    <item
+        android:id="@+id/list_copy"
+        android:title="复制" />
+    <item
+        android:id="@+id/list_delete"
+        android:title="删除" />
+</menu>

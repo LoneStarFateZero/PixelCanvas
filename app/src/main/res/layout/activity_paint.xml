@@ -37,13 +37,13 @@
                 android:id="@+id/stroke_canvas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorTransparent" />
+                android:background="@color/canvasTransparent" />
 
             <pers.lonestar.pixelcanvas.customview.LineCanvas
                 android:id="@+id/line_canvas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorTransparent" />
+                android:background="@color/canvasTransparent" />
 
             <pers.lonestar.pixelcanvas.customview.BorderIndicator
                 android:id="@+id/border"

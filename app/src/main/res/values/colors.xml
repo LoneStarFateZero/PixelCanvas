@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E76384</color>
-    <color name="colorPrimaryDark">#D65575</color>
-    <color name="colorAccent">#D81B60</color>
+    <!--<color name="colorPrimary">#E76384</color>-->
+    <!--<color name="colorPrimaryDark">#D65575</color>-->
+    <!--<color name="colorAccent">#D81B60</color>-->
+    <color name="colorPrimary">#7D7D7D</color>
+    <color name="colorPrimaryDark">#5F5F5F</color>
+    <color name="colorAccent">#CA3628</color>
     <color name="colorFont">#FFFFFF</color>
-    <color name="buttonStroke">#D81B60</color>
-    <color name="buttonSolid">#FFC5DF</color>
+    <!--<color name="buttonStroke">#D81B60</color>-->
+    <color name="buttonStroke">#CA3628</color>
+    <!--<color name="buttonSolid">#FFC5DF</color>-->
+    <color name="buttonSolid">#FFFFFF</color>
     <color name="colorTheme">#5E5E5E</color>
-    <color name="colorTransparent">#00FFFFFF</color>
+    <color name="canvasTransparent">#00FFFFFF</color>
     <color name="borderStroke">#D81B60</color>
 </resources>

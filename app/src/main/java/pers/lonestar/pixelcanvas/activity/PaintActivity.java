@@ -155,7 +155,7 @@ public class PaintActivity extends AppCompatActivity {
                 //thumbnail只会在抽屉滑动时初始化一次
                 if (thumbnail == null)
                     thumbnail = findViewById(R.id.thumbnail);
-                thumbnail.setImageBitmap(loadBitmapFromView(pixelFramelayout));
+                thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
             }
 
             @Override
@@ -289,13 +289,12 @@ public class PaintActivity extends AppCompatActivity {
         Intent intent = getIntent();
         litePalCanvas = PixelApp.litePalCanvas;
         if (litePalCanvas == null) {
+            //初始化画布大小
             pixelCount = intent.getIntExtra("pixelCount", 16);
             //初始化画布像素颜色信息
             PixelApp.pixelColor = new int[pixelCount][pixelCount];
         } else {
             pixelCount = litePalCanvas.getPixelCount();
-            //初始化画布像素颜色信息
-            //TODO
             PixelApp.pixelColor = new Gson().fromJson(litePalCanvas.getJsonData(), int[][].class);
         }
         pixelSize = ParameterUtils.canvasWidth / pixelCount;
@@ -374,8 +373,8 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-    //平移画布
     //TODO
+    //平移画布
     private void moveCanvas() {
 
     }
@@ -404,6 +403,7 @@ public class PaintActivity extends AppCompatActivity {
     }
 
     //TODO
+    //生成画布文件
     private void createCanvasFile() {
         //获取本地日期时间格式
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
@@ -412,9 +412,10 @@ public class PaintActivity extends AppCompatActivity {
         if (litePalCanvas == null) {
             litePalCanvas = new LitePalCanvas();
             PixelApp.litePalCanvas = litePalCanvas;
-            litePalCanvas.setCanvasName("canvas_1");
+            litePalCanvas.setCanvasName("无题");
             litePalCanvas.setPixelCount(pixelCount);
-            litePalCanvas.setCreator("LoneStar");
+            litePalCanvas.setCreator(PixelApp.pixelUser.getNickname());
+            litePalCanvas.setCreatorID(PixelApp.pixelUser.getObjectId());
             litePalCanvas.setCreatedAt(dateFormat.format(date));
             litePalCanvas.setUpdatedAt(dateFormat.format(date));
             litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
@@ -425,10 +426,12 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
+    //发布作品
     private void postCanvasFile() {
         BmobCanvas bmobCanvas = new BmobCanvas();
         bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
         bmobCanvas.setCreator(litePalCanvas.getCreator());
+        bmobCanvas.setCreatorID(litePalCanvas.getCreatorID());
         bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
         bmobCanvas.setJsonData(litePalCanvas.getJsonData());
 
@@ -445,22 +448,27 @@ public class PaintActivity extends AppCompatActivity {
     }
 
     //TODO
+    //分享功能，考虑生成多种格式分享
     private void shareImage() {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
     }
 
+    //导出对话框
     private void showExportDialog() {
         ExportDialogFragment fragment = new ExportDialogFragment();
         fragment.initParameter(litePalCanvas, pixelCanvas);
         fragment.show(getSupportFragmentManager(), "ExportDialog");
     }
 
+    //重命名对话框
+    private void showRenameDialog() {
+
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //此处之后点击画布进入会闪退
-        //数据保存到数据库是没问题的
         PixelApp.pixelColor = null;
         PixelApp.litePalCanvas = null;
     }

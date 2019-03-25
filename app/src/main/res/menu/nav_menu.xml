@@ -4,18 +4,18 @@
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_gallery"
-            android:title="Gallery" />
+            android:title="本地作品" />
         <item
             android:id="@+id/nav_publish"
             android:icon="@drawable/ic_publish"
-            android:title="Publish" />
+            android:title="发布作品" />
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_profile"
-            android:title="Profile" />
+            android:title="个人主页" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
-            android:title="Settings" />
+            android:title="设置" />
     </group>
 </menu>

@@ -4,26 +4,26 @@
         <item
             android:id="@+id/paint_nav_rename"
             android:icon="@drawable/ic_rename"
-            android:title="Rename" />
+            android:title="重命名" />
         <item
             android:id="@+id/paint_nav_clear"
             android:icon="@drawable/ic_clear"
-            android:title="Clear" />
+            android:title="清除" />
         <item
             android:id="@+id/paint_nav_publish"
             android:icon="@drawable/ic_publish"
-            android:title="Post" />
+            android:title="发布" />
         <item
             android:id="@+id/paint_nav_export"
             android:icon="@drawable/ic_export"
-            android:title="Export" />
+            android:title="导出" />
         <item
             android:id="@+id/paint_nav_share"
             android:icon="@drawable/ic_share"
-            android:title="Share" />
+            android:title="分享" />
         <item
             android:id="@+id/paint_nav_settings"
             android:icon="@drawable/ic_settings"
-            android:title="Settings" />
+            android:title="设置" />
     </group>
 </menu>

@@ -5,6 +5,16 @@ import cn.bmob.v3.BmobObject;
 public class BmobCanvas extends BmobObject {
     private String canvasName;
     private String creator;
+
+    public String getCreatorID() {
+        return creatorID;
+    }
+
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
+    }
+
+    private String creatorID;
     private int pixelCount;
     private String jsonData;
 
