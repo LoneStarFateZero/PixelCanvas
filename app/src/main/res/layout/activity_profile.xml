@@ -24,11 +24,28 @@
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_avatar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/profile_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="15dp"
+                    android:text="用户昵称"
+                    android:textColor="#FFF"
+                    android:textSize="25sp" />
+            </LinearLayout>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/profile_toolbar"
@@ -38,9 +55,24 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profile_recyclerview"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profile_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_create"
+        app:layout_anchor="@id/profile_appbar"
+        app:layout_anchorGravity="bottom|end" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/profile_swipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/profile_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
