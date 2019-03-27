@@ -43,14 +43,7 @@
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@drawable/stroke"
+            android:foreground="@drawable/stroke"
             android:src="@drawable/avatar" />
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/post_canvas_item_like"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:src="@drawable/ic_like" />
 </androidx.cardview.widget.CardView>

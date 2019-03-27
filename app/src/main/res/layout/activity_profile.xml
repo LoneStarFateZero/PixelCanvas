@@ -64,6 +64,13 @@
         app:layout_anchor="@id/profile_appbar"
         app:layout_anchorGravity="bottom|end" />
 
+    <com.ldoublem.loadingviewlib.view.LVBlazeWood
+        android:id="@+id/profile_loadinganim"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/profile_swipe"
         android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package pers.lonestar.pixelcanvas.adapter;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -211,6 +212,8 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //删除画布
+                Log.d("TEST", "删除size" + litePalCanvasList.size());
+                Log.d("TEST", "删除position" + position);
                 litePalCanvasList.remove(position);
                 notifyItemRemoved(position);
                 litePalCanvas.delete();

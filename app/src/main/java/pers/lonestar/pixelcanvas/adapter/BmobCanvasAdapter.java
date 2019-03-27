@@ -6,8 +6,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -43,19 +41,10 @@ public class BmobCanvasAdapter extends RecyclerView.Adapter<BmobCanvasAdapter.Vi
             public void onClick(View v) {
             }
         });
-        holder.likeFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //喜欢数+1
-                //按钮动画效果
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
-        if (bmobCanvasList == null)
-            return 0;
         return bmobCanvasList.size();
     }
 
@@ -64,7 +53,6 @@ public class BmobCanvasAdapter extends RecyclerView.Adapter<BmobCanvasAdapter.Vi
         ImageView thumbnail;
         TextView canvasName;
         TextView canvasUpdated;
-        FloatingActionButton likeFab;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,7 +60,6 @@ public class BmobCanvasAdapter extends RecyclerView.Adapter<BmobCanvasAdapter.Vi
             thumbnail = itemView.findViewById(R.id.post_canvas_item_thumbnail);
             canvasName = itemView.findViewById(R.id.post_canvas_item_name);
             canvasUpdated = itemView.findViewById(R.id.post_canvas_item_time);
-            likeFab = itemView.findViewById(R.id.post_canvas_item_like);
         }
     }
 }

@@ -68,5 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        usernameText.setText("1589186895@qq.com");
+        passwordText.setText("123456");
     }
 }

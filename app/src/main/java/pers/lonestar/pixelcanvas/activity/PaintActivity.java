@@ -538,12 +538,16 @@ public class PaintActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onBackPressed() {
+        super.onBackPressed();
+        //覆盖修改
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         Date date = new Date(System.currentTimeMillis());
+        litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
         litePalCanvas.setUpdatedAt(dateFormat.format(date));
+        litePalCanvas.save();
         PixelApp.pixelColor = null;
         PixelApp.litePalCanvas = null;
+        finish();
     }
 }

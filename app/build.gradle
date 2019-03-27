@@ -38,4 +38,5 @@ dependencies {
     implementation 'org.litepal.android:core:2.0.0'
     implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
     implementation 'jp.wasabeef:glide-transformations:4.0.0'
+    implementation 'com.ldoublem.loadingview:loadingviewlib:1.0'
 }
