@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ldoublem.loadingviewlib.view.LVBlazeWood;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
@@ -32,6 +33,7 @@ import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.BmobCanvasAdapter;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.listener.EndlessRecyclerOnScrollListener;
 import pers.lonestar.pixelcanvas.utils.BlurTransformation;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -45,7 +47,8 @@ public class ProfileActivity extends AppCompatActivity {
     private List<BmobCanvas> bmobCanvasList;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private BmobQuery<BmobCanvas> query;
+    private BmobQuery<BmobCanvas> loadMoreQuery;
+    private int querySkip;
     private BmobCanvasAdapter adapter;
     private LVBlazeWood lvBlazeWood;
 
@@ -70,6 +73,13 @@ public class ProfileActivity extends AppCompatActivity {
     private void initListener() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                //获取更多数据
+                loadMoreData();
+            }
+        });
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -82,6 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     //加载数据
     private void loadData() {
+        bmobCanvasList = new ArrayList<>();
         adapter = new BmobCanvasAdapter(bmobCanvasList);
         recyclerView.setAdapter(adapter);
     }
@@ -146,17 +157,34 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
-        //更新作品信息
-        query = new BmobQuery<>();
-        query.addWhereEqualTo("creatorID", pixelUser.getObjectId());
-        query.order("-createdAt");
-        query.findObjects(new FindListener<BmobCanvas>() {
+
+        loadData();
+
+        //初始化加载更多查询，用于上拉加载更多
+        querySkip = 0;
+        loadMoreQuery = new BmobQuery<>();
+        loadMoreQuery.addWhereEqualTo("creatorID", pixelUser.getObjectId());
+        loadMoreQuery.order("-createdAt");
+        loadMoreQuery.setLimit(10);
+        loadMoreQuery.setSkip(0);
+
+        adapter.setLoadState(adapter.LOADING);
+
+        loadMoreQuery.findObjects(new FindListener<BmobCanvas>() {
             @Override
             public void done(List<BmobCanvas> list, BmobException e) {
                 if (e == null) {
                     loadingAnimStop();
-                    bmobCanvasList = list;
-                    loadData();
+                    if (list.isEmpty())
+                        adapter.setLoadState(adapter.LOADING_END);
+                    else {
+                        querySkip += 1;
+                        //不可以直接bmobCanvasList=list
+                        //会导致adapter中的观察者观察的是原来的bmobCanvasList，而不是新bmobCanvasList
+                        bmobCanvasList.clear();
+                        bmobCanvasList.addAll(list);
+                        adapter.setLoadState(adapter.LOADING_COMPLETE);
+                    }
                 } else {
                     Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
@@ -179,15 +207,28 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //下拉刷新后需要重新初始化加载更多查询
+        querySkip = 0;
+        loadMoreQuery.setSkip(0);
+
+        adapter.setLoadState(adapter.LOADING);
+
         //更新作品信息
-        query.findObjects(new FindListener<BmobCanvas>() {
+        loadMoreQuery.findObjects(new FindListener<BmobCanvas>() {
             @Override
             public void done(List<BmobCanvas> list, BmobException e) {
                 if (e == null) {
                     loadingAnimStop();
-                    bmobCanvasList = list;
-                    adapter.notifyDataSetChanged();
+                    bmobCanvasList.clear();
+                    bmobCanvasList.addAll(list);
                     swipeRefreshLayout.setRefreshing(false);
+                    if (list.isEmpty())
+                        adapter.setLoadState(adapter.LOADING_END);
+                    else {
+                        querySkip += 1;
+                        adapter.setLoadState(adapter.LOADING_COMPLETE);
+                    }
                 } else {
                     Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
@@ -218,5 +259,28 @@ public class ProfileActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    private void loadMoreData() {
+        loadMoreQuery.setSkip(querySkip * 10);
+
+        adapter.setLoadState(adapter.LOADING);
+
+        loadMoreQuery.findObjects(new FindListener<BmobCanvas>() {
+            @Override
+            public void done(List<BmobCanvas> list, BmobException e) {
+                if (e == null) {
+                    if (list.isEmpty())
+                        adapter.setLoadState(adapter.LOADING_END);
+                    else {
+                        querySkip += 1;
+                        bmobCanvasList.addAll(list);
+                        adapter.setLoadState(adapter.LOADING_COMPLETE);
+                    }
+                } else {
+                    Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
