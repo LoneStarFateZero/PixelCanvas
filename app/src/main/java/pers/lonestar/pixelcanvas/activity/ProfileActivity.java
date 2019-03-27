@@ -1,6 +1,8 @@
 package pers.lonestar.pixelcanvas.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,15 +14,18 @@ import com.ldoublem.loadingviewlib.view.LVBlazeWood;
 
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
 import de.hdodenhof.circleimageview.CircleImageView;
-import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.BmobCanvasAdapter;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
@@ -31,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static ProfileActivity instance;
     private ImageView backgroundImg;
     private CircleImageView avatar;
+    private Toolbar toolbar;
     private TextView userNickName;
     private PixelUser pixelUser;
     private List<BmobCanvas> bmobCanvasList;
@@ -49,7 +55,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         instance = this;
-        pixelUser = PixelApp.pixelUser;
+        Intent intent = getIntent();
+        pixelUser = (PixelUser) intent.getSerializableExtra("pixel_user");
         initView();
         initListener();
         loadInfo();
@@ -80,6 +87,15 @@ public class ProfileActivity extends AppCompatActivity {
     private void initView() {
         backgroundImg = findViewById(R.id.profile_background_img);
         avatar = findViewById(R.id.profile_avatar);
+        toolbar = findViewById(R.id.profile_toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
         userNickName = findViewById(R.id.profile_nickname);
         swipeRefreshLayout = findViewById(R.id.profile_swipe);
         lvBlazeWood = findViewById(R.id.profile_loadinganim);
@@ -112,7 +128,8 @@ public class ProfileActivity extends AppCompatActivity {
     private void initCanvasList() {
         loadingAnimStart();
         query = new BmobQuery<>();
-        query.addWhereEqualTo("creatorID", PixelApp.pixelUser.getObjectId());
+        query.addWhereEqualTo("creatorID", pixelUser.getObjectId());
+        query.order("-createdAt");
         query.findObjects(new FindListener<BmobCanvas>() {
             @Override
             public void done(List<BmobCanvas> list, BmobException e) {
@@ -120,7 +137,6 @@ public class ProfileActivity extends AppCompatActivity {
                     loadingAnimStop();
                     bmobCanvasList = list;
                     loadData();
-                    swipeRefreshLayout.setRefreshing(false);
                 } else {
                     Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
@@ -131,6 +147,19 @@ public class ProfileActivity extends AppCompatActivity {
     //下拉刷新
     private void refreshData() {
         loadingAnimStart();
+        //更新用户信息
+        BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
+            @Override
+            public void done(BmobUser bmobUser, BmobException e) {
+                if (e == null) {
+                    pixelUser = BmobUser.getCurrentUser(PixelUser.class);
+                    loadInfo();
+                } else {
+                    Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //更新作品信息
         query.findObjects(new FindListener<BmobCanvas>() {
             @Override
             public void done(List<BmobCanvas> list, BmobException e) {
@@ -150,6 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void loadingAnimStart() {
         recyclerView.setVisibility(View.INVISIBLE);
         lvBlazeWood.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(false);
         lvBlazeWood.startAnim();
     }
 
@@ -158,5 +188,15 @@ public class ProfileActivity extends AppCompatActivity {
         lvBlazeWood.stopAnim();
         lvBlazeWood.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 }

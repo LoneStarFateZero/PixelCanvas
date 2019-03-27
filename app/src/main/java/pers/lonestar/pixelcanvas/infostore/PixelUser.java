@@ -1,8 +1,10 @@
 package pers.lonestar.pixelcanvas.infostore;
 
+import java.io.Serializable;
+
 import cn.bmob.v3.BmobUser;
 
-public class PixelUser extends BmobUser {
+public class PixelUser extends BmobUser implements Serializable {
     private String nickname;
     private String avatarUrl;
     private String introduction;

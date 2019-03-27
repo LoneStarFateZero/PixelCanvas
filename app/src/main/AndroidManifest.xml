@@ -21,20 +21,36 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.RegisterActivity"></activity>
-        <activity android:name=".activity.LoginActivity">
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.PaintActivity" />
-        <activity android:name=".activity.PublishActivity" />
-        <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.ProfileActivity" />
-        <activity android:name=".activity.GalleryActivity" />
-        <activity android:name=".activity.MainActivity" />
+        <activity
+            android:name=".activity.PaintActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.PublishActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:launchMode="standard" />
+        <activity
+            android:name=".activity.GalleryActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask" />
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"

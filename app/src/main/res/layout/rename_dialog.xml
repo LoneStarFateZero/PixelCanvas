@@ -9,5 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="请输入名称"
-        android:inputType="text" />
+        android:inputType="text"
+        android:maxLength="20" />
 </LinearLayout>

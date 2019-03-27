@@ -251,10 +251,10 @@ public class PaintActivity extends AppCompatActivity {
                         //确定位置
                         int border_left = left / pixelSize * pixelSize;
                         if (border_left == 960)
-                            border_left = 900;
+                            border_left -= pixelSize;
                         int border_top = bottom / pixelSize * pixelSize;
                         if (border_top == 960)
-                            border_top = 900;
+                            border_top -= pixelSize;
                         int border_bottom = border_top + borderIndicator.getHeight();
                         int border_right = border_left + borderIndicator.getWidth();
                         borderIndicator.layout(border_left, border_top, border_right, border_bottom);

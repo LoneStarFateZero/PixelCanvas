@@ -2,7 +2,6 @@ package pers.lonestar.pixelcanvas.adapter;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -197,6 +196,8 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
                 copyCanvas.save();
                 litePalCanvasList.add(0, copyCanvas);
                 notifyItemInserted(0);
+                //调用此方法刷新数据，否则其后position不会自动+1，导致错误
+                notifyItemRangeChanged(0, getItemCount());
             }
         });
         dialog.setNegativeButton("取消", null);
@@ -212,10 +213,10 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //删除画布
-                Log.d("TEST", "删除size" + litePalCanvasList.size());
-                Log.d("TEST", "删除position" + position);
                 litePalCanvasList.remove(position);
                 notifyItemRemoved(position);
+                //调用此方法刷新数据，否则其后position不会自动+1，导致错误
+                notifyItemRangeChanged(position, getItemCount());
                 litePalCanvas.delete();
             }
         });

@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_profile:
                         intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        intent.putExtra("pixel_user", PixelApp.pixelUser);
                         break;
                     case R.id.nav_settings:
                         intent = new Intent(MainActivity.this, SettingsActivity.class);
