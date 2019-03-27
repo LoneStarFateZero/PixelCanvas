@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ldoublem.loadingviewlib.view.LVBlazeWood;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
 import de.hdodenhof.circleimageview.CircleImageView;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.BmobCanvasAdapter;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
@@ -38,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView avatar;
     private Toolbar toolbar;
     private TextView userNickName;
+    private FloatingActionButton editFab;
     private PixelUser pixelUser;
     private List<BmobCanvas> bmobCanvasList;
     private RecyclerView recyclerView;
@@ -87,6 +90,10 @@ public class ProfileActivity extends AppCompatActivity {
     private void initView() {
         backgroundImg = findViewById(R.id.profile_background_img);
         avatar = findViewById(R.id.profile_avatar);
+        editFab = findViewById(R.id.profile_fab);
+        //如果访问的是他人的主页，则不显示编辑按钮，只有自己的主页才可以编辑
+        if (!PixelApp.pixelUser.getObjectId().equals(pixelUser.getObjectId()))
+            editFab.setVisibility(View.GONE);
         toolbar = findViewById(R.id.profile_toolbar);
         toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
         setSupportActionBar(toolbar);
@@ -127,6 +134,19 @@ public class ProfileActivity extends AppCompatActivity {
     //初始化载入数据
     private void initCanvasList() {
         loadingAnimStart();
+        //更新用户信息
+        BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
+            @Override
+            public void done(BmobUser bmobUser, BmobException e) {
+                if (e == null) {
+                    pixelUser = BmobUser.getCurrentUser(PixelUser.class);
+                    loadInfo();
+                } else {
+                    Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        //更新作品信息
         query = new BmobQuery<>();
         query.addWhereEqualTo("creatorID", pixelUser.getObjectId());
         query.order("-createdAt");

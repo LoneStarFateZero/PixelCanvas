@@ -8,19 +8,31 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
+import pers.lonestar.pixelcanvas.fragment.WatchFragment;
+import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 
 public class MainActivity extends AppCompatActivity {
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -28,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView nickName;
     private TextView introduction;
     private PixelUser pixelUser;
+    private List<Fragment> fragmentList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
         initListener();
+        addFragment();
     }
 
     private void initView() {
@@ -49,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         PixelApp.pixelUser = pixelUser;
         drawerLayout = findViewById(R.id.main_drawerlayout);
         navigationView = findViewById(R.id.nav_view);
+        tabLayout = findViewById(R.id.main_tablayout);
+        viewPager = findViewById(R.id.main_viewpager);
     }
 
     private void initListener() {
@@ -112,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_profile:
                         intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        //访问个人主页，传递PixelUser对象
                         intent.putExtra("pixel_user", PixelApp.pixelUser);
                         break;
                     case R.id.nav_settings:
@@ -123,5 +140,34 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    //TODO
+    private void addFragment() {
+        final String[] titles = new String[]{"世界", "关注"};
+        for (String title : titles) {
+            tabLayout.addTab(tabLayout.newTab().setText(title));
+        }
+        fragmentList.add(new WorldFragmnet());
+        fragmentList.add(new WatchFragment());
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @NonNull
+            @Override
+            public Fragment getItem(int position) {
+                return fragmentList.get(position);
+            }
+
+            @Override
+            public int getCount() {
+                return fragmentList.size();
+            }
+
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return titles[position];
+            }
+        });
+        tabLayout.setupWithViewPager(viewPager);
     }
 }

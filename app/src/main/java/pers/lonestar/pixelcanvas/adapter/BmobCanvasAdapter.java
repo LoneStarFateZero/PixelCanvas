@@ -16,10 +16,23 @@ import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class BmobCanvasAdapter extends RecyclerView.Adapter<BmobCanvasAdapter.ViewHolder> {
     private List<BmobCanvas> bmobCanvasList;
+    // 普通布局
+    private final int TYPE_ITEM = 1;
+    // 脚布局
+    private final int TYPE_FOOTER = 2;
+    // 当前加载状态，默认为加载完成
+    private int loadState = 2;
+    // 正在加载
+    public final int LOADING = 1;
+    // 加载完成
+    public final int LOADING_COMPLETE = 2;
+    // 加载到底
+    public final int LOADING_END = 3;
 
     public BmobCanvasAdapter(List<BmobCanvas> bmobCanvasList) {
         this.bmobCanvasList = bmobCanvasList;
     }
+
 
     @NonNull
     @Override
