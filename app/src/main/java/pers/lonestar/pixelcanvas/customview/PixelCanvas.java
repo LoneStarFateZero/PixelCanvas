@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -27,7 +26,6 @@ public class PixelCanvas extends View {
 
     //自定义绘制
     private void drawPixel(Canvas canvas) {
-        Log.d("TEST", "开始重绘");
         Paint paint = new Paint();
         paint.setStrokeWidth(1);
         for (int i = 0; i < PixelApp.pixelColor.length; i++) {

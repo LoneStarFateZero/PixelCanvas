@@ -52,7 +52,6 @@ public class PaintActivity extends AppCompatActivity {
     private LineCanvas lineCanvas;
     private PixelCanvas pixelCanvas;
     private StrokeCanvas strokeCanvas;
-    //    private BackgroundCanvas backgroundCanvas;
     private FrameLayout pixelFramelayout;
     private ImageView pencil;
     private ImageView thumbnail;
@@ -120,8 +119,8 @@ public class PaintActivity extends AppCompatActivity {
             case R.id.eraser:
                 setEraser();
                 break;
-            case R.id.moveCanvas:
-                moveCanvas();
+            case R.id.paint_bucket:
+                paintBucket();
                 break;
             case R.id.colorPicker:
                 pickColor();
@@ -269,7 +268,6 @@ public class PaintActivity extends AppCompatActivity {
 
                         //边框位置也可用于画图
                         if (dotButton.isPressed()) {
-                            changeFlag = true;
                             int x = left / pixelSize;
                             int y = bottom / pixelSize;
                             //防止数组越界
@@ -279,15 +277,19 @@ public class PaintActivity extends AppCompatActivity {
                             if (y >= pixelCount) {
                                 y = pixelCount - 1;
                             }
-                            PixelApp.pixelColor[y][x] = pencilColor;
-                            pixelCanvas.reDrawCanvas();
+                            //同色像素块不必重新绘制
+                            if (PixelApp.pixelColor[y][x] != pencilColor) {
+                                changeFlag = true;
+                                PixelApp.pixelColor[y][x] = pencilColor;
+                                pixelCanvas.reDrawCanvas();
+                            }
                         }
                         //按键松开算是完成一次绘制
                         else {
                             //如果发生修改动作才进行覆盖保存
                             if (changeFlag) {
                                 changeFlag = false;
-                                pixelColorUndoStack.push(savePixelColor());
+                                pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
                                 pixelColorRedoStack.clear();
                                 litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
                                 litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
@@ -300,6 +302,15 @@ public class PaintActivity extends AppCompatActivity {
                         lastY = (int) event.getRawY();
                         break;
                     case MotionEvent.ACTION_UP:
+                        if (!dotButton.isPressed() && changeFlag) {
+                            //如果发生修改动作才进行覆盖保存
+                            changeFlag = false;
+                            pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
+                            pixelColorRedoStack.clear();
+                            litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
+                            litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
+                            litePalCanvas.save();
+                        }
                         break;
                 }
                 return true;
@@ -311,20 +322,24 @@ public class PaintActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //更换颜色对话框库
-                ColorPickerDialog colorPickerDialog = new ColorPickerDialog(PaintActivity.this, pencilColor);
-                colorPickerDialog.setAlphaSliderVisible(true);
-                colorPickerDialog.setHexValueEnabled(true);
-                colorPickerDialog.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
-                    @Override
-                    public void onColorChanged(int color) {
-                        pencilColor = color;
-                        pencil.setImageResource(R.drawable.ic_pencil);
-                        pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
-                    }
-                });
-                colorPickerDialog.show();
+                if (!eraserStatus) {
+                    //弹出颜色选择器
+                    ColorPickerDialog colorPickerDialog = new ColorPickerDialog(PaintActivity.this, pencilColor);
+                    colorPickerDialog.setAlphaSliderVisible(true);
+                    colorPickerDialog.setHexValueEnabled(true);
+                    colorPickerDialog.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
+                        @Override
+                        public void onColorChanged(int color) {
+                            prePencilColor = pencilColor;
+                            pencilColor = color;
+                            pencil.setImageResource(R.drawable.ic_pencil);
+                            pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
+                        }
+                    });
+                    colorPickerDialog.show();
+                } else {
+                    Toast.makeText(PaintActivity.this, "请先将橡皮擦切换为画笔", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -345,10 +360,7 @@ public class PaintActivity extends AppCompatActivity {
         pixelSize = ParameterUtils.canvasWidth / pixelCount;
         pixelColorRedoStack = new Stack<>();
         pixelColorUndoStack = new Stack<>();
-        pixelColorUndoStack.push(savePixelColor());
-
-        //绘制画布背景
-//        backgroundCanvas.setPixelCount(pixelCount);
+        pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
 
         //绘制画布
         pixelCanvas.setPixelSize(pixelSize);
@@ -365,7 +377,6 @@ public class PaintActivity extends AppCompatActivity {
         lineCanvas = findViewById(R.id.line_canvas);
         pixelCanvas = findViewById(R.id.pixel_canvas);
         strokeCanvas = findViewById(R.id.stroke_canvas);
-//        backgroundCanvas = findViewById(R.id.background_canvas);
         pixelFramelayout = findViewById(R.id.paint_framelayout);
         pencil = findViewById(R.id.draw_pencil);
         borderIndicator = findViewById(R.id.border);
@@ -382,7 +393,7 @@ public class PaintActivity extends AppCompatActivity {
     private void clearCanvas() {
         changeFlag = true;
         PixelApp.pixelColor = new int[pixelCount][pixelCount];
-        pixelColorUndoStack.push(savePixelColor());
+        pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
         pixelColorRedoStack.clear();
         pixelCanvas.reDrawCanvas();
     }
@@ -405,38 +416,78 @@ public class PaintActivity extends AppCompatActivity {
 
     //取色
     private void pickColor() {
-        int left = pencil.getLeft();
-        int bottom = pencil.getBottom();
-        int x = left / pixelSize;
-        int y = bottom / pixelSize;
-        if (x >= pixelCount)
-            x = pixelCount - 1;
-        if (y >= pixelCount)
-            y = pixelCount - 1;
-        //获取该点颜色
-        int tmpColor = PixelApp.pixelColor[y][x];
-        //绘制画笔颜色
-        //不为透明色
-        if (tmpColor != 0) {
-            prePencilColor = pencilColor;
-            pencilColor = tmpColor;
-            pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
+        if (!eraserStatus) {
+            int left = pencil.getLeft();
+            int bottom = pencil.getBottom();
+            int x = left / pixelSize;
+            int y = bottom / pixelSize;
+            if (x >= pixelCount)
+                x = pixelCount - 1;
+            if (y >= pixelCount)
+                y = pixelCount - 1;
+            //获取该点颜色
+            int tmpColor = PixelApp.pixelColor[y][x];
+            //绘制画笔颜色
+            //不为透明色
+            if (tmpColor != 0) {
+                prePencilColor = pencilColor;
+                pencilColor = tmpColor;
+                pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
+            }
+        } else {
+            Toast.makeText(PaintActivity.this, "请先将橡皮擦切换为画笔", Toast.LENGTH_SHORT).show();
         }
     }
 
     //TODO
     //平移画布
-    private void moveCanvas() {
-
+    private void paintBucket() {
+        if (!eraserStatus) {
+            int left = pencil.getLeft();
+            int bottom = pencil.getBottom();
+            int x = left / pixelSize;
+            int y = bottom / pixelSize;
+            if (x >= pixelCount)
+                x = pixelCount - 1;
+            if (y >= pixelCount)
+                y = pixelCount - 1;
+            //获取该点颜色
+            //PixelApp.pixelColor[y][x];
+            int oldColor = PixelApp.pixelColor[y][x];
+            int newColor = pencilColor;
+            Stack<Integer> stackRow = new Stack<>();
+            Stack<Integer> stackColumn = new Stack<>();
+            stackRow.push(y);
+            stackColumn.push(x);
+            while (!stackRow.empty()) {
+                int row = stackRow.pop();
+                int col = stackColumn.pop();
+                if (row >= 0 && row < PixelApp.pixelColor.length && col >= 0 && col < PixelApp.pixelColor.length && PixelApp.pixelColor[row][col] == oldColor && PixelApp.pixelColor[row][col] != newColor) {
+                    PixelApp.pixelColor[row][col] = newColor;
+                    stackRow.push(row - 1);
+                    stackColumn.push(col);
+                    stackRow.push(row + 1);
+                    stackColumn.push(col);
+                    stackRow.push(row);
+                    stackColumn.push(col - 1);
+                    stackRow.push(row);
+                    stackColumn.push(col + 1);
+                }
+            }
+            pixelCanvas.reDrawCanvas();
+            //保存入栈
+            pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
+            pixelColorRedoStack.clear();
+        } else {
+            Toast.makeText(PaintActivity.this, "请先将橡皮擦切换为画笔", Toast.LENGTH_SHORT).show();
+        }
     }
 
     //切换显示线条
     private void toggleLine() {
         if (lineCanvas.getVisibility() == View.INVISIBLE) {
-//            backgroundCanvas.setVisibility(View.INVISIBLE);
             lineCanvas.setVisibility(View.VISIBLE);
         } else {
-//            backgroundCanvas.setVisibility(View.INVISIBLE);
             lineCanvas.setVisibility(View.INVISIBLE);
         }
     }
@@ -577,7 +628,8 @@ public class PaintActivity extends AppCompatActivity {
     private void undoCanvas() {
         if (pixelColorUndoStack.size() > 1) {
             pixelColorRedoStack.push(pixelColorUndoStack.pop());
-            PixelApp.pixelColor = pixelColorUndoStack.peek();
+            PixelApp.pixelColor = savePixelColor(pixelColorUndoStack.peek());
+//            PixelApp.pixelColor = pixelColorUndoStack.peek();
             pixelCanvas.reDrawCanvas();
         } else {
             PixelApp.pixelColor = pixelColorUndoStack.peek();
@@ -593,10 +645,10 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-    private int[][] savePixelColor() {
+    private int[][] savePixelColor(int[][] src) {
         int[][] newPixelColor = new int[pixelCount][pixelCount];
-        for (int i = 0; i < PixelApp.pixelColor.length; i++) {
-            System.arraycopy(PixelApp.pixelColor[i], 0, newPixelColor[i], 0, PixelApp.pixelColor.length);
+        for (int i = 0; i < src.length; i++) {
+            System.arraycopy(src[i], 0, newPixelColor[i], 0, src.length);
         }
         return newPixelColor;
     }

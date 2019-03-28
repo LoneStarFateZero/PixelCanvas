@@ -17,9 +17,9 @@
         android:title="橡皮"
         app:showAsAction="always" />
     <item
-        android:id="@+id/moveCanvas"
-        android:icon="@drawable/ic_move"
-        android:title="移动"
+        android:id="@+id/paint_bucket"
+        android:icon="@drawable/ic_bucket"
+        android:title="油漆桶"
         app:showAsAction="always" />
     <item
         android:id="@+id/colorPicker"
