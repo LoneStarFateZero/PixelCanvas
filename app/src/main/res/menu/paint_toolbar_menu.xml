@@ -25,10 +25,15 @@
         android:id="@+id/colorPicker"
         android:icon="@drawable/ic_picker"
         android:title="取色"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/paint_move"
+        android:icon="@drawable/ic_move"
+        android:title="移动"
+        app:showAsAction="never" />
     <item
         android:id="@+id/linetoggle"
         android:icon="@drawable/ic_line"
         android:title="线框"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 </menu>

@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import net.margaritov.preference.colorpicker.ColorPickerDialog;
 
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Stack;
@@ -64,6 +65,10 @@ public class PaintActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private Toolbar toolbar;
     private NavigationView navigationView;
+    private View moveUpView;
+    private View moveDownView;
+    private View moveLeftView;
+    private View moveRightView;
     private int pixelCount;
     private int pixelSize;
     private int pencilColor;
@@ -108,6 +113,8 @@ public class PaintActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                PixelApp.pixelColor = null;
+                PixelApp.litePalCanvas = null;
                 finish();
                 break;
             case R.id.undo:
@@ -127,6 +134,9 @@ public class PaintActivity extends AppCompatActivity {
                 break;
             case R.id.linetoggle:
                 toggleLine();
+                break;
+            case R.id.paint_move:
+                moveCanvas();
                 break;
         }
         return true;
@@ -198,6 +208,79 @@ public class PaintActivity extends AppCompatActivity {
             @Override
             public void onDrawerStateChanged(int newState) {
 
+            }
+        });
+
+        //画布上移
+        moveUpView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] tmpPixelColorRow = new int[pixelCount];
+                System.arraycopy(PixelApp.pixelColor[0], 0, tmpPixelColorRow, 0, pixelCount);
+                for (int i = 0; i < pixelCount - 1; i++) {
+                    System.arraycopy(PixelApp.pixelColor[i + 1], 0, PixelApp.pixelColor[i], 0, pixelCount);
+                }
+                System.arraycopy(tmpPixelColorRow, 0, PixelApp.pixelColor[pixelCount - 1], 0, pixelCount);
+                pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
+                pixelColorRedoStack.clear();
+                pixelCanvas.reDrawCanvas();
+            }
+        });
+        //画布下移
+        moveDownView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] tmpPixelColorRow = new int[pixelCount];
+                System.arraycopy(PixelApp.pixelColor[pixelCount - 1], 0, tmpPixelColorRow, 0, pixelCount);
+                for (int i = pixelCount - 1; i > 0; i--) {
+                    System.arraycopy(PixelApp.pixelColor[i - 1], 0, PixelApp.pixelColor[i], 0, pixelCount);
+                }
+                System.arraycopy(tmpPixelColorRow, 0, PixelApp.pixelColor[0], 0, pixelCount);
+                pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
+                pixelColorRedoStack.clear();
+                pixelCanvas.reDrawCanvas();
+            }
+        });
+        //画布左移
+        moveLeftView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] tmpPixelColorRow = new int[pixelCount];
+                for (int i = 0; i < pixelCount; i++) {
+                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][0];
+                }
+                for (int i = 0; i < pixelCount; i++) {
+                    for (int j = 0; j < pixelCount - 1; j++) {
+                        PixelApp.pixelColor[i][j] = PixelApp.pixelColor[i][j + 1];
+                    }
+                }
+                for (int i = 0; i < pixelCount; i++) {
+                    PixelApp.pixelColor[i][pixelCount - 1] = tmpPixelColorRow[i];
+                }
+                pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
+                pixelColorRedoStack.clear();
+                pixelCanvas.reDrawCanvas();
+            }
+        });
+        //画布右移
+        moveRightView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int[] tmpPixelColorRow = new int[pixelCount];
+                for (int i = 0; i < pixelCount; i++) {
+                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][pixelCount - 1];
+                }
+                for (int i = 0; i < pixelCount; i++) {
+                    for (int j = pixelCount - 1; j > 0; j--) {
+                        PixelApp.pixelColor[i][j] = PixelApp.pixelColor[i][j - 1];
+                    }
+                }
+                for (int i = 0; i < pixelCount; i++) {
+                    PixelApp.pixelColor[i][0] = tmpPixelColorRow[i];
+                }
+                pixelColorUndoStack.push(savePixelColor(PixelApp.pixelColor));
+                pixelColorRedoStack.clear();
+                pixelCanvas.reDrawCanvas();
             }
         });
     }
@@ -433,6 +516,10 @@ public class PaintActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.paint_toolbar);
         navigationView = findViewById(R.id.paint_nav);
         drawerLayout = findViewById(R.id.paint_drawer);
+        moveUpView = findViewById(R.id.paint_move_up);
+        moveDownView = findViewById(R.id.paint_move_down);
+        moveLeftView = findViewById(R.id.paint_move_left);
+        moveRightView = findViewById(R.id.paint_move_right);
     }
 
 
@@ -536,6 +623,21 @@ public class PaintActivity extends AppCompatActivity {
             lineCanvas.setVisibility(View.VISIBLE);
         } else {
             lineCanvas.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    //移动画布
+    private void moveCanvas() {
+        if (moveUpView.getVisibility() == View.INVISIBLE) {
+            moveUpView.setVisibility(View.VISIBLE);
+            moveDownView.setVisibility(View.VISIBLE);
+            moveLeftView.setVisibility(View.VISIBLE);
+            moveRightView.setVisibility(View.VISIBLE);
+        } else {
+            moveUpView.setVisibility(View.INVISIBLE);
+            moveDownView.setVisibility(View.INVISIBLE);
+            moveLeftView.setVisibility(View.INVISIBLE);
+            moveRightView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -659,16 +761,35 @@ public class PaintActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //覆盖修改
+        //是否有必要覆盖修改？
+        /*
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         Date date = new Date(System.currentTimeMillis());
         litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
         litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
         litePalCanvas.setUpdatedAt(dateFormat.format(date));
         litePalCanvas.save();
+        */
         PixelApp.pixelColor = null;
         PixelApp.litePalCanvas = null;
         finish();
+    }
+
+    @Override
+    // 使得Toolbar的溢出菜单可显示图标
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
+                try {
+                    Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    method.setAccessible(true);
+                    method.invoke(menu, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 
     private void undoCanvas() {
