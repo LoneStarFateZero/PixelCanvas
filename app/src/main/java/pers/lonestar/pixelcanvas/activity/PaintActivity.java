@@ -542,7 +542,6 @@ public class PaintActivity extends AppCompatActivity {
 
     //清除画布
     private void clearCanvas() {
-        canvasChangeFlag = true;
         globalChangeFlag = true;
         PixelApp.pixelColor = new int[pixelCount][pixelCount];
         pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
