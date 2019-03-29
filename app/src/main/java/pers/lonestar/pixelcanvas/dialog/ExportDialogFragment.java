@@ -184,11 +184,11 @@ public class ExportDialogFragment extends DialogFragment {
         return bmp;
     }
 
-    //导出SVG格式
+    //导出SVG格式，默认像素大小为1
     private void exportSVG(File file) throws FileNotFoundException {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-                "<svg version=\"1.1\" width=\"12\" height=\"12\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+                "<svg version=\"1.1\" width=\"" + PixelApp.pixelColor.length + "\" height=\"" + PixelApp.pixelColor.length + "\" xmlns=\"http://www.w3.org/2000/svg\">\n");
         for (int i = 0; i < PixelApp.pixelColor.length; i++) {
             for (int j = 0; j < PixelApp.pixelColor.length; j++) {
                 if (PixelApp.pixelColor[i][j] != 0)
