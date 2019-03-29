@@ -23,25 +23,30 @@
             android:layout_height="match_parent">
 
             <FrameLayout
-                android:id="@+id/paint_framelayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="50dp">
 
-                <pers.lonestar.pixelcanvas.customview.PixelCanvas
-                    android:id="@+id/pixel_canvas"
+                <FrameLayout
+                    android:id="@+id/paint_framelayout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
+
+                    <pers.lonestar.pixelcanvas.customview.PixelCanvas
+                        android:id="@+id/pixel_canvas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <pers.lonestar.pixelcanvas.customview.LineCanvas
+                        android:id="@+id/line_canvas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/canvasTransparent" />
+                </FrameLayout>
 
                 <pers.lonestar.pixelcanvas.customview.StrokeCanvas
                     android:id="@+id/stroke_canvas"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/canvasTransparent" />
-
-                <pers.lonestar.pixelcanvas.customview.LineCanvas
-                    android:id="@+id/line_canvas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/canvasTransparent" />
@@ -70,12 +75,12 @@
 
             <Button
                 android:id="@+id/dot_button"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="360dp"
+                android:layout_height="90dp"
                 android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 android:layout_margin="10dp"
-                android:background="@color/colorPrimary"
-                android:text="DOT"
+                android:background="@drawable/dot_button_bg"
                 android:textSize="40sp" />
         </RelativeLayout>
 

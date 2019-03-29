@@ -183,7 +183,7 @@ public class PaintActivity extends AppCompatActivity {
                     canvasCreate = findViewById(R.id.paint_canvas_create);
                 if (canvasUpdate == null)
                     canvasUpdate = findViewById(R.id.paint_canvas_update);
-                thumbnail.setImageBitmap(loadBitmapFromView(pixelCanvas));
+                thumbnail.setImageBitmap(loadBitmapFromView(pixelFramelayout));
                 canvasName.setText(litePalCanvas.getCanvasName());
                 canvasSize.setText("尺寸:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
                 canvasCreate.setText("创建时间:" + litePalCanvas.getCreatedAt());
@@ -207,7 +207,7 @@ public class PaintActivity extends AppCompatActivity {
         pencilColor = Color.BLACK;
         pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
         //画布上的铅笔滑动监听
-        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+        View.OnTouchListener pencilOnTouchListener = new View.OnTouchListener() {
             int lastX, lastY;
 
             @Override
@@ -234,8 +234,8 @@ public class PaintActivity extends AppCompatActivity {
                             right = left + pencil.getWidth();
 
                         }
-                        if (right > (v.getHeight() + pencil.getWidth())) {
-                            right = v.getHeight() + pencil.getWidth();
+                        if (right > (v.getWidth() + pencil.getWidth())) {
+                            right = v.getWidth() + pencil.getWidth();
                             left = right - pencil.getWidth();
 
                         }
@@ -316,32 +316,80 @@ public class PaintActivity extends AppCompatActivity {
                 return true;
             }
         };
-        pixelCanvas.setOnTouchListener(onTouchListener);
+        pixelCanvas.setOnTouchListener(pencilOnTouchListener);
 
-        //浮动按钮点击，弹出颜色选择对话框
-        fab.setOnClickListener(new View.OnClickListener() {
+        View.OnTouchListener fabOnTouchListener = new View.OnTouchListener() {
+            int lastX, lastY;
+            boolean isMoved;
+
             @Override
-            public void onClick(View v) {
-                if (!eraserStatus) {
-                    //弹出颜色选择器
-                    ColorPickerDialog colorPickerDialog = new ColorPickerDialog(PaintActivity.this, pencilColor);
-                    colorPickerDialog.setAlphaSliderVisible(true);
-                    colorPickerDialog.setHexValueEnabled(true);
-                    colorPickerDialog.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
-                        @Override
-                        public void onColorChanged(int color) {
-                            prePencilColor = pencilColor;
-                            pencilColor = color;
-                            pencil.setImageResource(R.drawable.ic_pencil);
-                            pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        lastX = (int) event.getRawX();
+                        lastY = (int) event.getRawY();
+                        isMoved = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        isMoved = true;
+                        int dx = (int) event.getRawX() - lastX;//位移量X
+                        int dy = (int) event.getRawY() - lastY;//位移量Y
+                        int left = v.getLeft() + dx;
+                        int top = v.getTop() + dy;
+                        int right = v.getRight() + dx;
+                        int bottom = v.getBottom() + dy;
+
+                        //防止超出边界
+                        if (left < 0) {
+                            left = 0;
+                            right = left + v.getWidth();
                         }
-                    });
-                    colorPickerDialog.show();
-                } else {
-                    Toast.makeText(PaintActivity.this, "请先将橡皮擦切换为画笔", Toast.LENGTH_SHORT).show();
+                        if (right > drawerLayout.getWidth()) {
+                            right = drawerLayout.getWidth();
+                            left = right - v.getWidth();
+                        }
+                        if (top < 0) {
+                            top = 0;
+                            bottom = top + v.getHeight();
+                        }
+                        if (bottom > drawerLayout.getHeight()) {
+                            bottom = drawerLayout.getHeight();
+                            top = bottom - v.getHeight();
+                        }
+                        v.layout(left, top, right, bottom);
+                        v.postInvalidate();
+                        // 记录当前的位置
+                        lastX = (int) event.getRawX();
+                        lastY = (int) event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (!isMoved) {
+                            if (!eraserStatus) {
+                                //弹出颜色选择器
+                                ColorPickerDialog colorPickerDialog = new ColorPickerDialog(PaintActivity.this, pencilColor);
+                                colorPickerDialog.setAlphaSliderVisible(true);
+                                colorPickerDialog.setHexValueEnabled(true);
+                                colorPickerDialog.setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
+                                    @Override
+                                    public void onColorChanged(int color) {
+                                        prePencilColor = pencilColor;
+                                        pencilColor = color;
+                                        pencil.setImageResource(R.drawable.ic_pencil);
+                                        pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
+                                    }
+                                });
+                                colorPickerDialog.show();
+                            } else {
+                                Toast.makeText(PaintActivity.this, "请先将橡皮擦切换为画笔", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        break;
                 }
+                return true;
             }
-        });
+        };
+        //浮动按钮点击，弹出颜色选择对话框
+        fab.setOnTouchListener(fabOnTouchListener);
     }
 
     //初始化画布，包括边框，线条，格子数目，格子大小
@@ -439,8 +487,7 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-    //TODO
-    //平移画布
+    //油漆桶
     private void paintBucket() {
         if (!eraserStatus) {
             int left = pencil.getLeft();
@@ -504,7 +551,6 @@ public class PaintActivity extends AppCompatActivity {
         return bmp;
     }
 
-    //TODO
     //生成画布文件
     private void createCanvasFile() {
         //获取本地日期时间格式
@@ -560,7 +606,7 @@ public class PaintActivity extends AppCompatActivity {
     //导出对话框
     private void showExportDialog() {
         ExportDialogFragment fragment = new ExportDialogFragment();
-        fragment.initParameter(litePalCanvas, pixelCanvas);
+        fragment.initParameter(litePalCanvas, pixelFramelayout);
         fragment.show(getSupportFragmentManager(), "ExportDialog");
     }
 
@@ -629,7 +675,6 @@ public class PaintActivity extends AppCompatActivity {
         if (pixelColorUndoStack.size() > 1) {
             pixelColorRedoStack.push(pixelColorUndoStack.pop());
             PixelApp.pixelColor = savePixelColor(pixelColorUndoStack.peek());
-//            PixelApp.pixelColor = pixelColorUndoStack.peek();
             pixelCanvas.reDrawCanvas();
         } else {
             PixelApp.pixelColor = pixelColorUndoStack.peek();
