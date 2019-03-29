@@ -2,6 +2,7 @@ package pers.lonestar.pixelcanvas.adapter;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -49,14 +52,9 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
         final LitePalCanvas litePalCanvas = litePalCanvasList.get(position);
         //图片加载或许需要优化
         //使用Glide加载图片会造成OOM
-        //Glide.with(GalleryActivity.getInstance()).load(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail())).into(holder.thumbnail);
-//        holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
-        holder.thumbnail.post(new Runnable() {
-            @Override
-            public void run() {
-                holder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail()));
-            }
-        });
+        //避免每次都要重新生成缩略图的Bitmap
+        holder.thumbnailBitmap = ParameterUtils.bytesToBitmap(litePalCanvas.getThumbnail());
+        Glide.with(GalleryActivity.getInstance()).load(holder.thumbnailBitmap).into(holder.thumbnail);
         holder.canvasName.setText(litePalCanvas.getCanvasName());
         holder.canvasSize.setText("尺寸:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
         holder.canvasUpdated.setText(litePalCanvas.getUpdatedAt());
@@ -112,6 +110,7 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
         TextView canvasSize;
         TextView canvasUpdated;
         ImageView canvasMenu;
+        Bitmap thumbnailBitmap;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,6 +120,7 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
             canvasSize = itemView.findViewById(R.id.item_canvas_size);
             canvasUpdated = itemView.findViewById(R.id.item_canvas_updated);
             canvasMenu = itemView.findViewById(R.id.item_menu);
+            thumbnailBitmap = null;
         }
     }
 

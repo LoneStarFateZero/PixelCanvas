@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.litepal.LitePal;
@@ -48,8 +49,10 @@ public class GalleryActivity extends AppCompatActivity {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         fab.show();
+                        Glide.with(GalleryActivity.this).resumeRequests();
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
+                        Glide.with(GalleryActivity.this).pauseRequests();
                         fab.hide();
                         break;
                 }

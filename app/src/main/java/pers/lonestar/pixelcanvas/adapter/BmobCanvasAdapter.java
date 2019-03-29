@@ -1,5 +1,6 @@
 package pers.lonestar.pixelcanvas.adapter;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import pers.lonestar.pixelcanvas.R;
+import pers.lonestar.pixelcanvas.activity.ProfileActivity;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
@@ -67,7 +71,8 @@ public class BmobCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
             BmobCanvas bmobCanvas = bmobCanvasList.get(position);
-            recyclerViewHolder.thumbnail.setImageBitmap(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail()));
+            recyclerViewHolder.thumbnailBitmap = ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail());
+            Glide.with(ProfileActivity.getInstance()).load(recyclerViewHolder.thumbnailBitmap).into(recyclerViewHolder.thumbnail);
             recyclerViewHolder.canvasName.setText(bmobCanvas.getCanvasName());
             recyclerViewHolder.canvasUpdated.setText(bmobCanvas.getUpdatedAt());
             recyclerViewHolder.canvasItemView.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +118,7 @@ public class BmobCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView thumbnail;
         TextView canvasName;
         TextView canvasUpdated;
+        Bitmap thumbnailBitmap;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,6 +126,7 @@ public class BmobCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             thumbnail = itemView.findViewById(R.id.post_canvas_item_thumbnail);
             canvasName = itemView.findViewById(R.id.post_canvas_item_name);
             canvasUpdated = itemView.findViewById(R.id.post_canvas_item_time);
+            thumbnailBitmap = null;
         }
     }
 

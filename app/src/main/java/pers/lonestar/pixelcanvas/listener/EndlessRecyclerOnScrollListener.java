@@ -1,7 +1,10 @@
 package pers.lonestar.pixelcanvas.listener;
 
+import com.bumptech.glide.Glide;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import pers.lonestar.pixelcanvas.activity.ProfileActivity;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
     //用来标记是否正在向上滑动
@@ -13,6 +16,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
         // 当不滑动时
         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+            Glide.with(ProfileActivity.getInstance()).resumeRequests();
             //获取最后一个完全显示的itemPosition
             int lastItemPosition = manager.findLastCompletelyVisibleItemPosition();
             int itemCount = manager.getItemCount();
@@ -21,6 +25,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
                 //加载更多
                 onLoadMore();
             }
+        } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+            Glide.with(ProfileActivity.getInstance()).pauseRequests();
         }
     }
 
