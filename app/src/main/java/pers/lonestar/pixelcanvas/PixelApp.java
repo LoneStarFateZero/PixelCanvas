@@ -12,6 +12,7 @@ public class PixelApp extends LitePalApplication {
     public static PixelUser pixelUser;
     public static LitePalCanvas litePalCanvas;
     public static int[][] pixelColor;
+    public static final String defaultAvatarUrl = "https://bmob-cdn-23980.b0.upaiyun.com/2019/03/29/6bf99f6e40efcf3480e0c62ab7558adb.gif";
 
     public static PixelApp getInstance() {
         return instance;

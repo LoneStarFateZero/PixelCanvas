@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerOpened(@NonNull View drawerView) {
                 if (pixelUser.getAvatarUrl() == null) {
                     Glide.with(MainActivity.this)
-                            .load(R.drawable.avatar)
+                            .load(PixelApp.defaultAvatarUrl)
                             .into(avatar);
                 } else {
                     Glide.with(MainActivity.this)

@@ -14,7 +14,7 @@
     <item
         android:id="@+id/eraser"
         android:icon="@drawable/ic_eraser"
-        android:title="橡皮"
+        android:title="橡皮擦"
         app:showAsAction="always" />
     <item
         android:id="@+id/paint_bucket"

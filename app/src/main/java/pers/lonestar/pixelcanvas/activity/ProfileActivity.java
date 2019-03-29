@@ -13,7 +13,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ldoublem.loadingviewlib.view.LVBlazeWood;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
@@ -24,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.FindListener;
@@ -48,7 +52,6 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private BmobQuery<BmobCanvas> loadMoreQuery;
-    private int querySkip;
     private BmobCanvasAdapter adapter;
     private LVBlazeWood lvBlazeWood;
 
@@ -124,10 +127,11 @@ public class ProfileActivity extends AppCompatActivity {
     private void loadInfo() {
         if (pixelUser.getAvatarUrl() == null) {
             Glide.with(this)
-                    .load(R.drawable.avatar)
+                    .load(PixelApp.defaultAvatarUrl)
                     .into(avatar);
             Glide.with(this)
-                    .load(R.drawable.avatar)
+//                    .load(R.drawable.avatar)
+                    .load(PixelApp.defaultAvatarUrl)
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(15, 1)))
                     .into(backgroundImg);
         } else {
@@ -161,7 +165,6 @@ public class ProfileActivity extends AppCompatActivity {
         loadData();
 
         //初始化加载更多查询，用于上拉加载更多
-        querySkip = 0;
         loadMoreQuery = new BmobQuery<>();
         loadMoreQuery.addWhereEqualTo("creatorID", pixelUser.getObjectId());
         loadMoreQuery.order("-createdAt");
@@ -178,7 +181,16 @@ public class ProfileActivity extends AppCompatActivity {
                     if (list.isEmpty())
                         adapter.setLoadState(adapter.LOADING_END);
                     else {
-                        querySkip += 1;
+                        String createdAt = list.get(list.size() - 1).getCreatedAt();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date createdAtDate = null;
+                        try {
+                            createdAtDate = sdf.parse(createdAt);
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        BmobDate bmobCreatedAtDate = new BmobDate(createdAtDate);
+                        loadMoreQuery.addWhereLessThan("createdAt", bmobCreatedAtDate);
                         //不可以直接bmobCanvasList=list
                         //会导致adapter中的观察者观察的是原来的bmobCanvasList，而不是新bmobCanvasList
                         bmobCanvasList.clear();
@@ -209,7 +221,10 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         //下拉刷新后需要重新初始化加载更多查询
-        querySkip = 0;
+        loadMoreQuery = new BmobQuery<>();
+        loadMoreQuery.addWhereEqualTo("creatorID", pixelUser.getObjectId());
+        loadMoreQuery.order("-createdAt");
+        loadMoreQuery.setLimit(10);
         loadMoreQuery.setSkip(0);
 
         adapter.setLoadState(adapter.LOADING);
@@ -226,7 +241,16 @@ public class ProfileActivity extends AppCompatActivity {
                     if (list.isEmpty())
                         adapter.setLoadState(adapter.LOADING_END);
                     else {
-                        querySkip += 1;
+                        String createdAt = list.get(list.size() - 1).getCreatedAt();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date createdAtDate = null;
+                        try {
+                            createdAtDate = sdf.parse(createdAt);
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        BmobDate bmobCreatedAtDate = new BmobDate(createdAtDate);
+                        loadMoreQuery.addWhereLessThan("createdAt", bmobCreatedAtDate);
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
                     }
                 } else {
@@ -262,8 +286,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadMoreData() {
-        loadMoreQuery.setSkip(querySkip * 10);
-
         adapter.setLoadState(adapter.LOADING);
 
         loadMoreQuery.findObjects(new FindListener<BmobCanvas>() {
@@ -273,7 +295,16 @@ public class ProfileActivity extends AppCompatActivity {
                     if (list.isEmpty())
                         adapter.setLoadState(adapter.LOADING_END);
                     else {
-                        querySkip += 1;
+                        String createdAt = list.get(list.size() - 1).getCreatedAt();
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date createdAtDate = null;
+                        try {
+                            createdAtDate = sdf.parse(createdAt);
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        BmobDate bmobCreatedAtDate = new BmobDate(createdAtDate);
+                        loadMoreQuery.addWhereLessThan("createdAt", bmobCreatedAtDate);
                         bmobCanvasList.addAll(list);
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
                     }

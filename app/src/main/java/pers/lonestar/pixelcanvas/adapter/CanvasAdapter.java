@@ -186,7 +186,6 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
                 Date date = new Date(System.currentTimeMillis());
                 LitePalCanvas copyCanvas = new LitePalCanvas();
                 copyCanvas.setCanvasName(litePalCanvas.getCanvasName());
-                copyCanvas.setCreator(litePalCanvas.getCreator());
                 copyCanvas.setCreatorID(litePalCanvas.getCreatorID());
                 copyCanvas.setPixelCount(litePalCanvas.getPixelCount());
                 copyCanvas.setJsonData(litePalCanvas.getJsonData());
@@ -228,7 +227,6 @@ public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder
     private void postCanvasFile(LitePalCanvas litePalCanvas) {
         BmobCanvas bmobCanvas = new BmobCanvas();
         bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
-        bmobCanvas.setCreator(litePalCanvas.getCreator());
         bmobCanvas.setCreatorID(litePalCanvas.getCreatorID());
         bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
         bmobCanvas.setJsonData(litePalCanvas.getJsonData());

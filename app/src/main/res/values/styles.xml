@@ -16,4 +16,12 @@
     <style name="TitleStyle">
         <item name="android:fontFamily">@font/zpix</item>
     </style>
+
+    <style name="ProfileActivityTheme" parent="AppTheme">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="@style/Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="android:popupBackground">@color/colorPrimary</item>
+    </style>
 </resources>

@@ -5,8 +5,6 @@ import cn.bmob.v3.BmobObject;
 public class BmobCanvas extends BmobObject {
     //作品名称
     private String canvasName;
-    //创作者名称
-    private String creator;
     //创作者唯一ID
     private String creatorID;
     //尺寸
@@ -38,14 +36,6 @@ public class BmobCanvas extends BmobObject {
 
     public void setCanvasName(String canvasName) {
         this.canvasName = canvasName;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
     }
 
     public int getPixelCount() {

@@ -44,7 +44,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.ProfileActivity"
-            android:launchMode="standard" />
+            android:launchMode="standard"
+            android:theme="@style/ProfileActivityTheme" />
         <activity
             android:name=".activity.GalleryActivity"
             android:launchMode="singleTask" />

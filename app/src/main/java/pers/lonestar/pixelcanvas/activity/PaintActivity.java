@@ -681,7 +681,6 @@ public class PaintActivity extends AppCompatActivity {
             PixelApp.litePalCanvas = litePalCanvas;
             litePalCanvas.setCanvasName("无题");
             litePalCanvas.setPixelCount(pixelCount);
-            litePalCanvas.setCreator(PixelApp.pixelUser.getNickname());
             litePalCanvas.setCreatorID(PixelApp.pixelUser.getObjectId());
             litePalCanvas.setCreatedAt(dateFormat.format(date));
             litePalCanvas.setUpdatedAt(dateFormat.format(date));
@@ -694,7 +693,6 @@ public class PaintActivity extends AppCompatActivity {
     private void postCanvasFile() {
         BmobCanvas bmobCanvas = new BmobCanvas();
         bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
-        bmobCanvas.setCreator(litePalCanvas.getCreator());
         bmobCanvas.setCreatorID(litePalCanvas.getCreatorID());
         bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
         bmobCanvas.setJsonData(litePalCanvas.getJsonData());
