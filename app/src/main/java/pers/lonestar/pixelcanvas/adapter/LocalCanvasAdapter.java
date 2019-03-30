@@ -32,10 +32,10 @@ import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
-public class CanvasAdapter extends RecyclerView.Adapter<CanvasAdapter.ViewHolder> {
+public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.ViewHolder> {
     private List<LitePalCanvas> litePalCanvasList;
 
-    public CanvasAdapter(List<LitePalCanvas> litePalCanvasList) {
+    public LocalCanvasAdapter(List<LitePalCanvas> litePalCanvasList) {
         this.litePalCanvasList = litePalCanvasList;
     }
 

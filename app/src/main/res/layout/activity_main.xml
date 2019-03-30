@@ -19,8 +19,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:layout_scrollFlags="scroll|enterAlways|snap" />
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/main_tablayout"

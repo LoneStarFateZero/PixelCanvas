@@ -31,6 +31,7 @@ import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 
 public class MainActivity extends AppCompatActivity {
+    private static MainActivity instance;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
@@ -42,10 +43,15 @@ public class MainActivity extends AppCompatActivity {
     private PixelUser pixelUser;
     private List<Fragment> fragmentList = new ArrayList<>();
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
 
         toolbar = findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(toolbar);
@@ -148,8 +154,10 @@ public class MainActivity extends AppCompatActivity {
         for (String title : titles) {
             tabLayout.addTab(tabLayout.newTab().setText(title));
         }
-        fragmentList.add(new WorldFragmnet());
-        fragmentList.add(new WatchFragment());
+        WorldFragmnet worldFragmnet = new WorldFragmnet();
+        WatchFragment watchFragment = new WatchFragment();
+        fragmentList.add(worldFragmnet);
+        fragmentList.add(watchFragment);
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @NonNull
             @Override

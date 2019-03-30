@@ -34,7 +34,7 @@ import cn.bmob.v3.listener.FindListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
-import pers.lonestar.pixelcanvas.adapter.BmobCanvasAdapter;
+import pers.lonestar.pixelcanvas.adapter.ProfileCanvasAdapter;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.listener.EndlessRecyclerOnScrollListener;
@@ -52,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private BmobQuery<BmobCanvas> loadMoreQuery;
-    private BmobCanvasAdapter adapter;
+    private ProfileCanvasAdapter adapter;
     private LVBlazeWood lvBlazeWood;
 
     public static ProfileActivity getInstance() {
@@ -96,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
     //加载数据
     private void loadData() {
         bmobCanvasList = new ArrayList<>();
-        adapter = new BmobCanvasAdapter(bmobCanvasList);
+        adapter = new ProfileCanvasAdapter(bmobCanvasList);
         recyclerView.setAdapter(adapter);
     }
 

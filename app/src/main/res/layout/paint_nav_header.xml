@@ -31,6 +31,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:textColor="#FFF"
             android:textSize="15sp" />
 
@@ -41,6 +43,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="#FFF"
             android:textSize="10sp" />
 
@@ -51,6 +55,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="#FFF"
             android:textSize="10sp" />
 
@@ -61,6 +67,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="#FFF"
             android:textSize="10sp" />
     </LinearLayout>

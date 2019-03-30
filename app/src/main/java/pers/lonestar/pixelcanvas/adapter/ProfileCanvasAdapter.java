@@ -20,7 +20,7 @@ import pers.lonestar.pixelcanvas.activity.ProfileActivity;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
-public class BmobCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ProfileCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<BmobCanvas> bmobCanvasList;
     // 普通布局
     private final int TYPE_ITEM = 1;
@@ -35,7 +35,7 @@ public class BmobCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     // 加载到底
     public final int LOADING_END = 3;
 
-    public BmobCanvasAdapter(List<BmobCanvas> bmobCanvasList) {
+    public ProfileCanvasAdapter(List<BmobCanvas> bmobCanvasList) {
         this.bmobCanvasList = bmobCanvasList;
     }
 

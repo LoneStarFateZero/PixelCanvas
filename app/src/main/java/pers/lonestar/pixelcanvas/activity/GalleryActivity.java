@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import pers.lonestar.pixelcanvas.R;
-import pers.lonestar.pixelcanvas.adapter.CanvasAdapter;
+import pers.lonestar.pixelcanvas.adapter.LocalCanvasAdapter;
 import pers.lonestar.pixelcanvas.dialog.NewCanvasDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 
@@ -40,8 +40,8 @@ public class GalleryActivity extends AppCompatActivity {
         initCanvasList();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        final CanvasAdapter canvasAdapter = new CanvasAdapter(litePalCanvasList);
-        recyclerView.setAdapter(canvasAdapter);
+        final LocalCanvasAdapter localCanvasAdapter = new LocalCanvasAdapter(litePalCanvasList);
+        recyclerView.setAdapter(localCanvasAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
