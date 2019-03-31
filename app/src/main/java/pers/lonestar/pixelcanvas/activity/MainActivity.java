@@ -15,7 +15,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -54,10 +53,9 @@ public class MainActivity extends AppCompatActivity {
         instance = this;
 
         toolbar = findViewById(R.id.main_activity_toolbar);
+        toolbar.setTitle("像素画板");
+        toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.setDisplayShowTitleEnabled(false);
 
         initView();
         initListener();

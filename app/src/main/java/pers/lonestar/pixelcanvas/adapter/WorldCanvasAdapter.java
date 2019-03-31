@@ -1,5 +1,6 @@
 package pers.lonestar.pixelcanvas.adapter;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +25,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.MainActivity;
+import pers.lonestar.pixelcanvas.activity.ProfileActivity;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
-public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     // 正在加载
     public final int LOADING = 1;
     // 加载完成
@@ -43,7 +45,7 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     // 当前加载状态，默认为加载完成
     private int loadState = 2;
 
-    public MainCanvasAdapter(List<BmobCanvas> bmobCanvasList) {
+    public WorldCanvasAdapter(List<BmobCanvas> bmobCanvasList) {
         this.bmobCanvasList = bmobCanvasList;
     }
 
@@ -75,8 +77,8 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MainCanvasAdapter.RecyclerViewHolder) {
-            final MainCanvasAdapter.RecyclerViewHolder recyclerViewHolder = (MainCanvasAdapter.RecyclerViewHolder) holder;
+        if (holder instanceof WorldCanvasAdapter.RecyclerViewHolder) {
+            final WorldCanvasAdapter.RecyclerViewHolder recyclerViewHolder = (WorldCanvasAdapter.RecyclerViewHolder) holder;
             BmobCanvas bmobCanvas = bmobCanvasList.get(position);
             //缩略图
             recyclerViewHolder.thumbnailBitmap = ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail());
@@ -89,7 +91,7 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             bmobQuery.addWhereEqualTo("objectId", bmobCanvas.getCreatorID());
             bmobQuery.findObjects(new FindListener<PixelUser>() {
                 @Override
-                public void done(List<PixelUser> list, BmobException e) {
+                public void done(final List<PixelUser> list, BmobException e) {
                     if (e == null) {
                         recyclerViewHolder.nickName.setText(list.get(0).getNickname());
                         String avatarUrl = list.get(0).getAvatarUrl();
@@ -97,6 +99,17 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             Glide.with(MainActivity.getInstance()).load(PixelApp.defaultAvatarUrl).into(recyclerViewHolder.avatar);
                         else
                             Glide.with(MainActivity.getInstance()).load(list.get(0).getAvatarUrl()).into(recyclerViewHolder.avatar);
+                        //点击头像转到个人主页
+                        recyclerViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //TODO
+//                                PixelUser pixelUser = new PixelUser();
+                                Intent intent = new Intent(MainActivity.getInstance(), ProfileActivity.class);
+                                intent.putExtra("pixel_user", list.get(0));
+                                MainActivity.getInstance().startActivity(intent);
+                            }
+                        });
                     } else {
                         Toast.makeText(MainActivity.getInstance(), "用户信息获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                     }
@@ -109,15 +122,8 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     //TODO
                 }
             });
-            //点击头像转到个人主页
-            recyclerViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO
-                }
-            });
-        } else if (holder instanceof MainCanvasAdapter.FootViewHolder) {
-            MainCanvasAdapter.FootViewHolder footViewHolder = (MainCanvasAdapter.FootViewHolder) holder;
+        } else if (holder instanceof WorldCanvasAdapter.FootViewHolder) {
+            WorldCanvasAdapter.FootViewHolder footViewHolder = (WorldCanvasAdapter.FootViewHolder) holder;
             switch (loadState) {
                 case LOADING: // 正在加载
                     footViewHolder.pbLoading.setVisibility(View.VISIBLE);

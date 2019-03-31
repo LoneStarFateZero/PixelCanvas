@@ -24,7 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/nav_introduction"
-        android:layout_marginBottom="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
         android:text="用户名"
         android:textColor="@color/colorFont"
         android:textSize="20sp" />
@@ -34,9 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
         android:text="编辑个人简介"
         android:textColor="@color/colorFont"
         android:textSize="20sp" />
-
-
 </RelativeLayout>

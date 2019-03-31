@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.ldoublem.loadingviewlib.view.LVBlazeWood;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +24,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.MainActivity;
-import pers.lonestar.pixelcanvas.adapter.MainCanvasAdapter;
+import pers.lonestar.pixelcanvas.adapter.WorldCanvasAdapter;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.listener.MainEndlessRecyclerOnScrollListener;
 
@@ -33,14 +32,12 @@ public class WorldFragmnet extends Fragment {
     List<BmobCanvas> bmobCanvasList = new ArrayList<>();
     private RecyclerView recyclerView;
     private BmobQuery<BmobCanvas> loadMoreQuery;
-    private MainCanvasAdapter adapter;
+    private WorldCanvasAdapter adapter;
     private SwipeRefreshLayout worldSwipeRefreshLayout;
     private LVBlazeWood lvBlazeWood;
     private View view;
     private int querySkip;
     private int pageLimit = 10;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 
     @Nullable
     @Override
@@ -69,7 +66,7 @@ public class WorldFragmnet extends Fragment {
         //设置子项布局大小不变，省去重新测量过程，提升性能
         recyclerView.setHasFixedSize(true);
         //设置适配器
-        adapter = new MainCanvasAdapter(bmobCanvasList);
+        adapter = new WorldCanvasAdapter(bmobCanvasList);
         recyclerView.setAdapter(adapter);
         //添加滚动监听事件，用于上拉加载
         recyclerView.addOnScrollListener(new MainEndlessRecyclerOnScrollListener() {
