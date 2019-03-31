@@ -98,6 +98,10 @@ public class ProfileActivity extends AppCompatActivity {
         bmobCanvasList = new ArrayList<>();
         adapter = new ProfileCanvasAdapter(bmobCanvasList);
         recyclerView.setAdapter(adapter);
+        //设置缓存
+        recyclerView.setItemViewCacheSize(50);
+        //设置子项布局大小不变，省去重新测量过程，提升性能
+        recyclerView.setHasFixedSize(true);
     }
 
     //初始化View
@@ -196,6 +200,7 @@ public class ProfileActivity extends AppCompatActivity {
                         bmobCanvasList.clear();
                         bmobCanvasList.addAll(list);
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
+                        adapter.notifyDataSetChanged();
                     }
                 } else {
                     Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
@@ -252,6 +257,7 @@ public class ProfileActivity extends AppCompatActivity {
                         BmobDate bmobCreatedAtDate = new BmobDate(createdAtDate);
                         loadMoreQuery.addWhereLessThan("createdAt", bmobCreatedAtDate);
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
+                        adapter.notifyDataSetChanged();
                     }
                 } else {
                     Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
@@ -307,6 +313,7 @@ public class ProfileActivity extends AppCompatActivity {
                         loadMoreQuery.addWhereLessThan("createdAt", bmobCreatedAtDate);
                         bmobCanvasList.addAll(list);
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
+                        adapter.notifyDataSetChanged();
                     }
                 } else {
                     Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();

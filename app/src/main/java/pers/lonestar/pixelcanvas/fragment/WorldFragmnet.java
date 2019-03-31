@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.ldoublem.loadingviewlib.view.LVBlazeWood;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,9 +35,10 @@ public class WorldFragmnet extends Fragment {
     private BmobQuery<BmobCanvas> loadMoreQuery;
     private MainCanvasAdapter adapter;
     private SwipeRefreshLayout worldSwipeRefreshLayout;
-    private SwipeRefreshLayout watchSwipeRefreshLayout;
+    private LVBlazeWood lvBlazeWood;
     private View view;
     private int querySkip;
+    private int pageLimit = 10;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
@@ -56,9 +59,15 @@ public class WorldFragmnet extends Fragment {
     private void initView() {
         recyclerView = view.findViewById(R.id.world_recyclerview);
         worldSwipeRefreshLayout = view.findViewById(R.id.world_swiperefreshlayout);
+        lvBlazeWood = view.findViewById(R.id.world_loadinganim);
         //设置网格布局管理器
         GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.getInstance(), 2);
+        gridLayoutManager.setInitialPrefetchItemCount(4);
         recyclerView.setLayoutManager(gridLayoutManager);
+        //设置缓存
+        recyclerView.setItemViewCacheSize(50);
+        //设置子项布局大小不变，省去重新测量过程，提升性能
+        recyclerView.setHasFixedSize(true);
         //设置适配器
         adapter = new MainCanvasAdapter(bmobCanvasList);
         recyclerView.setAdapter(adapter);
@@ -79,6 +88,7 @@ public class WorldFragmnet extends Fragment {
     }
 
     private void refreshData() {
+        loadingAnimStart();
         //取当前时间对应的BmobDate用于数据查询
         Date currentDate = new Date(System.currentTimeMillis());
         BmobDate bmobCurrentDate = new BmobDate(currentDate);
@@ -89,7 +99,7 @@ public class WorldFragmnet extends Fragment {
         loadMoreQuery.order("-createdAt");
         //小于当前时间
         loadMoreQuery.addWhereLessThan("createdAt", bmobCurrentDate);
-        loadMoreQuery.setLimit(10);
+        loadMoreQuery.setLimit(pageLimit);
         loadMoreQuery.setSkip(0);
         loadMoreQuery.findObjects(new FindListener<BmobCanvas>() {
             @Override
@@ -98,15 +108,14 @@ public class WorldFragmnet extends Fragment {
                     if (list.isEmpty())
                         adapter.setLoadState(adapter.LOADING_END);
                     else {
-                        querySkip += list.size();
-                        loadMoreQuery.setSkip(querySkip);
                         //下拉刷新前先清空之前的数据
                         bmobCanvasList.clear();
                         //添加新数据
                         bmobCanvasList.addAll(list);
+                        adapter.notifyDataSetChanged();
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
                     }
-                    worldSwipeRefreshLayout.setRefreshing(false);
+                    loadingAnimStop();
                 } else {
                     Toast.makeText(MainActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
@@ -115,6 +124,8 @@ public class WorldFragmnet extends Fragment {
     }
 
     private void loadMoreData() {
+        querySkip += pageLimit;
+        loadMoreQuery.setSkip(querySkip);
         adapter.setLoadState(adapter.LOADING);
         loadMoreQuery.findObjects(new FindListener<BmobCanvas>() {
             @Override
@@ -123,17 +134,31 @@ public class WorldFragmnet extends Fragment {
                     if (list.isEmpty())
                         adapter.setLoadState(adapter.LOADING_END);
                     else {
-                        querySkip += list.size();
-                        loadMoreQuery.setSkip(querySkip);
                         //上拉加载更多不需要清空之前的数据
                         //添加新数据
                         bmobCanvasList.addAll(list);
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
+                        adapter.notifyDataSetChanged();
                     }
                 } else {
                     Toast.makeText(MainActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    //数据加载动画启动
+    private void loadingAnimStart() {
+        recyclerView.setVisibility(View.INVISIBLE);
+        lvBlazeWood.setVisibility(View.VISIBLE);
+        worldSwipeRefreshLayout.setRefreshing(false);
+        lvBlazeWood.startAnim();
+    }
+
+    //数据加载动画停止
+    private void loadingAnimStop() {
+        lvBlazeWood.stopAnim();
+        lvBlazeWood.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 }

@@ -48,7 +48,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="15dp"
-                    android:text="用户昵称"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="#FFF"
                     android:textSize="25sp" />
             </LinearLayout>

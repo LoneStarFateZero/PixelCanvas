@@ -150,6 +150,7 @@ public class ProfileCanvasAdapter extends RecyclerView.Adapter<RecyclerView.View
      */
     public void setLoadState(int loadState) {
         this.loadState = loadState;
-        notifyDataSetChanged();
+        notifyItemChanged(bmobCanvasList.size());
+//        notifyDataSetChanged();
     }
 }

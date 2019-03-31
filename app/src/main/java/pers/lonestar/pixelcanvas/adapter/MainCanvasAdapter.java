@@ -155,7 +155,7 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public void setLoadState(int loadState) {
         this.loadState = loadState;
-        notifyDataSetChanged();
+        notifyItemChanged(bmobCanvasList.size());
     }
 
     @Override
