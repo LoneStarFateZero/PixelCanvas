@@ -1,7 +1,6 @@
 package pers.lonestar.pixelcanvas.adapter;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,11 +59,11 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("TEST", "创建时数据大小：" + bmobCanvasList.size());
         //添加一般View
         if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.world_canvas_item, parent, false);
-            return new RecyclerViewHolder(view);
+            RecyclerViewHolder recyclerViewHolder = new RecyclerViewHolder(view);
+            return recyclerViewHolder;
         }
         //添加FootView
         else if (viewType == TYPE_FOOTER) {
@@ -103,8 +102,15 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             });
-            recyclerViewHolder.canvasItemView.setOnClickListener(new View.OnClickListener() {
-                //点击转到对应作品主页
+            //点击缩略图转到作品主页
+            recyclerViewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO
+                }
+            });
+            //点击头像转到个人主页
+            recyclerViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //TODO
@@ -169,7 +175,6 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        View canvasItemView;
         ImageView thumbnail;
         CircleImageView avatar;
         TextView canvasName;
@@ -178,7 +183,6 @@ public class MainCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            canvasItemView = itemView;
             avatar = itemView.findViewById(R.id.main_canvas_avatar);
             thumbnail = itemView.findViewById(R.id.main_canvas_thumbnail);
             canvasName = itemView.findViewById(R.id.main_canvas_name);
