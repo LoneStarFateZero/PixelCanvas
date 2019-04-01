@@ -10,11 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import pers.lonestar.pixelcanvas.R;
 
-public class WatchFragment extends Fragment {
+public class FollowFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_watch, container, false);
+        View view = inflater.inflate(R.layout.fragment_follow, container, false);
         return view;
     }
 }

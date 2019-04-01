@@ -1,7 +1,6 @@
 package pers.lonestar.pixelcanvas.adapter;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,8 +63,7 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         //添加一般View
         if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.world_canvas_item, parent, false);
-            RecyclerViewHolder recyclerViewHolder = new RecyclerViewHolder(view);
-            return recyclerViewHolder;
+            return new RecyclerViewHolder(view);
         }
         //添加FootView
         else if (viewType == TYPE_FOOTER) {
@@ -81,11 +79,9 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final WorldCanvasAdapter.RecyclerViewHolder recyclerViewHolder = (WorldCanvasAdapter.RecyclerViewHolder) holder;
             BmobCanvas bmobCanvas = bmobCanvasList.get(position);
             //缩略图
-            recyclerViewHolder.thumbnailBitmap = ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail());
-            Glide.with(MainActivity.getInstance()).load(recyclerViewHolder.thumbnailBitmap).into(recyclerViewHolder.thumbnail);
+            Glide.with(MainActivity.getInstance()).load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail())).into(recyclerViewHolder.thumbnail);
             //作品名称
             recyclerViewHolder.canvasName.setText(bmobCanvas.getCanvasName());
-            //TODO
             //还需要根据ID查询作者当前头像和当前昵称
             BmobQuery<PixelUser> bmobQuery = new BmobQuery<>();
             bmobQuery.addWhereEqualTo("objectId", bmobCanvas.getCreatorID());
@@ -119,7 +115,6 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             recyclerViewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO
                 }
             });
         } else if (holder instanceof WorldCanvasAdapter.FootViewHolder) {
@@ -185,15 +180,13 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         CircleImageView avatar;
         TextView canvasName;
         TextView nickName;
-        Bitmap thumbnailBitmap;
 
-        public RecyclerViewHolder(@NonNull View itemView) {
+        RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             avatar = itemView.findViewById(R.id.main_canvas_avatar);
             thumbnail = itemView.findViewById(R.id.main_canvas_thumbnail);
             canvasName = itemView.findViewById(R.id.main_canvas_name);
             nickName = itemView.findViewById(R.id.main_canvas_nickname);
-            thumbnailBitmap = null;
         }
     }
 
@@ -202,7 +195,7 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tvLoading;
         LinearLayout llEnd;
 
-        public FootViewHolder(@NonNull View itemView) {
+        FootViewHolder(@NonNull View itemView) {
             super(itemView);
             pbLoading = itemView.findViewById(R.id.pb_loading);
             tvLoading = itemView.findViewById(R.id.tv_loading);

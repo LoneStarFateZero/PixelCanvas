@@ -103,6 +103,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
+            android:elevation="10dp"
             android:src="@drawable/ic_palette" />
 
         <Button
@@ -112,8 +113,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
-            android:background="@drawable/dot_button_bg"
-            android:textSize="40sp" />
+            android:background="@drawable/dot_button_bg" />
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView

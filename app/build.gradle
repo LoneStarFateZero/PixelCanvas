@@ -39,4 +39,5 @@ dependencies {
     implementation 'net.margaritov.preference.colorpicker.ColorPickerPreference:ColorPickerPreference:1.0.0'
     implementation 'jp.wasabeef:glide-transformations:4.0.0'
     implementation 'com.ldoublem.loadingview:loadingviewlib:1.0'
+    implementation 'com.sackcentury:shinebutton:0.2.0'
 }

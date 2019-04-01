@@ -26,7 +26,6 @@
         android:layout_above="@+id/nav_introduction"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
-        android:text="用户名"
         android:textColor="@color/colorFont"
         android:textSize="20sp" />
 

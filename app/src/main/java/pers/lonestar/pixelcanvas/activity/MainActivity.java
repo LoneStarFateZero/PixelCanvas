@@ -25,7 +25,7 @@ import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
-import pers.lonestar.pixelcanvas.fragment.WatchFragment;
+import pers.lonestar.pixelcanvas.fragment.FollowFragment;
 import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                            intent.putExtra("pixel_user", PixelApp.pixelUser);
                             startActivity(intent);
                             drawerLayout.closeDrawers();
                         }
@@ -153,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
             tabLayout.addTab(tabLayout.newTab().setText(title));
         }
         WorldFragmnet worldFragmnet = new WorldFragmnet();
-        WatchFragment watchFragment = new WatchFragment();
+        FollowFragment followFragment = new FollowFragment();
         fragmentList.add(worldFragmnet);
-        fragmentList.add(watchFragment);
+        fragmentList.add(followFragment);
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @NonNull
             @Override

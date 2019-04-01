@@ -4,19 +4,19 @@
     android:layout_height="match_parent">
 
     <com.ldoublem.loadingviewlib.view.LVBlazeWood
-        android:id="@+id/watch_loadinganim"
+        android:id="@+id/follow_loadinganim"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_centerInParent="true"
         android:visibility="invisible" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/watch_swiperefreshlayout"
+        android:id="@+id/follow_swiperefreshlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/watch_recyclerview"
+            android:id="@+id/follow_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

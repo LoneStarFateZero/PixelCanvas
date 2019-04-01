@@ -64,11 +64,20 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/profile_fab"
+        android:id="@+id/profile_edit_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_create"
+        android:src="@drawable/ic_edit"
+        app:layout_anchor="@id/profile_appbar"
+        app:layout_anchorGravity="bottom|end" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/profile_follow_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_not_following"
         app:layout_anchor="@id/profile_appbar"
         app:layout_anchorGravity="bottom|end" />
 

@@ -375,7 +375,7 @@ public class PaintActivity extends AppCompatActivity {
 
     //初始化画笔，包括画笔颜色，滑动监听等
     private void initPencil() {
-        pencilColor = Color.BLACK;
+        pencilColor = Color.parseColor("#CA3628");
         pencil.setColorFilter(pencilColor, PorterDuff.Mode.MULTIPLY);
         //画布上的铅笔滑动监听
         View.OnTouchListener pencilOnTouchListener = new View.OnTouchListener() {

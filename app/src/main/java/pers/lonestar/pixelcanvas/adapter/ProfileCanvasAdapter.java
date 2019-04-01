@@ -1,6 +1,5 @@
 package pers.lonestar.pixelcanvas.adapter;
 
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,16 +70,12 @@ public class ProfileCanvasAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
             BmobCanvas bmobCanvas = bmobCanvasList.get(position);
-            recyclerViewHolder.thumbnailBitmap = ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail());
-            Glide.with(ProfileActivity.getInstance()).load(recyclerViewHolder.thumbnailBitmap).into(recyclerViewHolder.thumbnail);
+            //缩略图
+            Glide.with(ProfileActivity.getInstance()).load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail())).into(recyclerViewHolder.thumbnail);
+            //作品名称
             recyclerViewHolder.canvasName.setText(bmobCanvas.getCanvasName());
+            //上传时间
             recyclerViewHolder.canvasUpdated.setText(bmobCanvas.getUpdatedAt());
-            recyclerViewHolder.canvasItemView.setOnClickListener(new View.OnClickListener() {
-                //点击转到对应作品主页
-                @Override
-                public void onClick(View v) {
-                }
-            });
         } else if (holder instanceof FootViewHolder) {
             FootViewHolder footViewHolder = (FootViewHolder) holder;
             switch (loadState) {
@@ -113,36 +108,6 @@ public class ProfileCanvasAdapter extends RecyclerView.Adapter<RecyclerView.View
         return bmobCanvasList.size() + 1;
     }
 
-    private class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        View canvasItemView;
-        ImageView thumbnail;
-        TextView canvasName;
-        TextView canvasUpdated;
-        Bitmap thumbnailBitmap;
-
-        public RecyclerViewHolder(@NonNull View itemView) {
-            super(itemView);
-            canvasItemView = itemView;
-            thumbnail = itemView.findViewById(R.id.post_canvas_item_thumbnail);
-            canvasName = itemView.findViewById(R.id.post_canvas_item_name);
-            canvasUpdated = itemView.findViewById(R.id.post_canvas_item_time);
-            thumbnailBitmap = null;
-        }
-    }
-
-    private class FootViewHolder extends RecyclerView.ViewHolder {
-        ProgressBar pbLoading;
-        TextView tvLoading;
-        LinearLayout llEnd;
-
-        public FootViewHolder(@NonNull View itemView) {
-            super(itemView);
-            pbLoading = itemView.findViewById(R.id.pb_loading);
-            tvLoading = itemView.findViewById(R.id.tv_loading);
-            llEnd = itemView.findViewById(R.id.ll_end);
-        }
-    }
-
     /**
      * 设置上拉加载状态
      *
@@ -152,5 +117,31 @@ public class ProfileCanvasAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.loadState = loadState;
         notifyItemChanged(bmobCanvasList.size());
 //        notifyDataSetChanged();
+    }
+
+    private class RecyclerViewHolder extends RecyclerView.ViewHolder {
+        ImageView thumbnail;
+        TextView canvasName;
+        TextView canvasUpdated;
+
+        RecyclerViewHolder(@NonNull View itemView) {
+            super(itemView);
+            thumbnail = itemView.findViewById(R.id.post_canvas_item_thumbnail);
+            canvasName = itemView.findViewById(R.id.post_canvas_item_name);
+            canvasUpdated = itemView.findViewById(R.id.post_canvas_item_time);
+        }
+    }
+
+    private class FootViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar pbLoading;
+        TextView tvLoading;
+        LinearLayout llEnd;
+
+        FootViewHolder(@NonNull View itemView) {
+            super(itemView);
+            pbLoading = itemView.findViewById(R.id.pb_loading);
+            tvLoading = itemView.findViewById(R.id.tv_loading);
+            llEnd = itemView.findViewById(R.id.ll_end);
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
@@ -26,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         //本地是否有用户缓存
         if (BmobUser.getCurrentUser(PixelUser.class) != null) {
-            Toast.makeText(LoginActivity.this, "登录成功：" + BmobUser.getCurrentUser(PixelUser.class).getNickname(), Toast.LENGTH_SHORT).show();
+            fetchUserInfo();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -60,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,5 +71,19 @@ public class LoginActivity extends AppCompatActivity {
 
         usernameText.setText("1589186895@qq.com");
         passwordText.setText("123456");
+    }
+
+    private void fetchUserInfo() {
+        BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
+            @Override
+            public void done(BmobUser user, BmobException e) {
+                if (e == null) {
+//                    Toast.makeText(LoginActivity.this, "更新本地缓存用户信息成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "登录成功：" + BmobUser.getCurrentUser(PixelUser.class).getNickname(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "更新本地缓存用户信息失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
