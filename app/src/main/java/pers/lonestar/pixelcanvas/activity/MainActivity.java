@@ -100,15 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
-                if (pixelUser.getAvatarUrl() == null) {
-                    Glide.with(MainActivity.this)
-                            .load(PixelApp.defaultAvatarUrl)
-                            .into(avatar);
-                } else {
-                    Glide.with(MainActivity.this)
-                            .load(pixelUser.getAvatarUrl())
-                            .into(avatar);
-                }
+                //设置头像
+                Glide.with(MainActivity.this)
+                        .load(pixelUser.getAvatarUrl())
+                        .into(avatar);
             }
 
             @Override

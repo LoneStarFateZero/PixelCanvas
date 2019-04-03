@@ -1,18 +1,32 @@
 package pers.lonestar.pixelcanvas.infostore;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobRelation;
 
 public class BmobCanvas extends BmobObject {
     //作品名称
     private String canvasName;
     //创作者唯一ID
-    private String creatorID;
+    private PixelUser creator;
+    //喜欢此作品的用户
+    //一个作品可被很多用户喜欢
+    //一个用户也可喜欢很多作品
+    //多对多关系
+    private BmobRelation likes;
     //尺寸
     private int pixelCount;
     //json像素数据
     private String jsonData;
     //字节流缩略图
     private byte[] thumbnail;
+
+    public BmobRelation getLikes() {
+        return likes;
+    }
+
+    public void setLikes(BmobRelation likes) {
+        this.likes = likes;
+    }
 
     public byte[] getThumbnail() {
         return thumbnail;
@@ -22,12 +36,12 @@ public class BmobCanvas extends BmobObject {
         this.thumbnail = thumbnail;
     }
 
-    public String getCreatorID() {
-        return creatorID;
+    public PixelUser getCreator() {
+        return creator;
     }
 
-    public void setCreatorID(String creatorID) {
-        this.creatorID = creatorID;
+    public void setCreator(PixelUser creator) {
+        this.creator = creator;
     }
 
     public String getCanvasName() {

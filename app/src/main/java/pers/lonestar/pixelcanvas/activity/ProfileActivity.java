@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ldoublem.loadingviewlib.view.LVBlazeWood;
 
@@ -26,18 +24,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
+import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
-import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.ProfileCanvasAdapter;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
-import pers.lonestar.pixelcanvas.infostore.UserFollow;
 import pers.lonestar.pixelcanvas.listener.EndlessRecyclerOnScrollListener;
 import pers.lonestar.pixelcanvas.utils.BlurTransformation;
 
@@ -70,9 +68,8 @@ public class ProfileActivity extends AppCompatActivity {
     //Bmob数据查询
     private BmobQuery<BmobCanvas> loadMoreQuery;
     private int querySkip;
-    private int queryLimit = 5;
-    private Boolean isfollowing;
-    private String userFollowId;
+    private int pageLimit = 5;
+    private Boolean isFollowing;
 
     public static ProfileActivity getInstance() {
         return instance;
@@ -103,66 +100,6 @@ public class ProfileActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.profile_recyclerview);
 
         //如果访问的是他人的主页，则不显示编辑按钮，只有自己的主页才可以编辑
-        if (!PixelApp.pixelUser.getObjectId().equals(pixelUser.getObjectId())) {
-            editFab.setVisibility(View.GONE);
-            followFab.setVisibility(View.VISIBLE);
-            View.OnClickListener followFabListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isfollowing != null) {
-                        //已经关注
-                        if (isfollowing) {
-                            UserFollow userFollow = new UserFollow();
-                            userFollow.setObjectId(userFollowId);
-                            userFollow.delete(new UpdateListener() {
-                                @Override
-                                public void done(BmobException e) {
-                                    if (e == null) {
-                                        isfollowing = false;
-                                        YoYo.with(Techniques.ZoomOut).duration(700).playOn(followFab);
-                                        followFab.setImageResource(R.drawable.ic_not_following);
-                                        YoYo.with(Techniques.ZoomIn).duration(700).playOn(followFab);
-                                        Toast.makeText(ProfileActivity.this, "取消关注成功", Toast.LENGTH_SHORT).show();
-                                    } else
-                                        Toast.makeText(ProfileActivity.this, "取消关注失败", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                        //未关注
-                        else {
-                            UserFollow userFollow = new UserFollow();
-                            userFollow.setUserId(PixelApp.pixelUser.getObjectId());
-                            userFollow.setFollowUserId(pixelUser.getObjectId());
-                            userFollow.save(new SaveListener<String>() {
-                                @Override
-                                public void done(String objectId, BmobException e) {
-                                    if (e == null) {
-                                        isfollowing = true;
-                                        userFollowId = objectId;
-                                        YoYo.with(Techniques.ZoomOut).duration(700).playOn(followFab);
-                                        followFab.setImageResource(R.drawable.ic_following);
-                                        YoYo.with(Techniques.ZoomIn).duration(700).playOn(followFab);
-                                        Toast.makeText(ProfileActivity.this, "关注成功", Toast.LENGTH_SHORT).show();
-                                    } else
-                                        Toast.makeText(ProfileActivity.this, "关注失败", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-                }
-            };
-            followFab.setOnClickListener(followFabListener);
-        } else {
-            editFab.setVisibility(View.VISIBLE);
-            followFab.setVisibility(View.GONE);
-            View.OnClickListener editFabListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //转到个人编辑页面
-                }
-            };
-            editFab.setOnClickListener(editFabListener);
-        }
         toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -209,10 +146,10 @@ public class ProfileActivity extends AppCompatActivity {
         //下拉刷新后需要重新初始化加载更多查询
         querySkip = 0;
         loadMoreQuery = new BmobQuery<>();
-        loadMoreQuery.addWhereEqualTo("creatorID", pixelUser.getObjectId());
+        loadMoreQuery.addWhereEqualTo("creator", pixelUser);
         loadMoreQuery.addWhereLessThan("createdAt", bmobCurrentDate);
         loadMoreQuery.order("-createdAt");
-        loadMoreQuery.setLimit(queryLimit);
+        loadMoreQuery.setLimit(pageLimit);
         loadMoreQuery.setSkip(0);
 
         //更新作品信息
@@ -240,7 +177,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     //上拉加载
     private void loadMoreData() {
-        querySkip += queryLimit;
+        querySkip += pageLimit;
         loadMoreQuery.setSkip(querySkip);
         adapter.setLoadState(adapter.LOADING);
         loadMoreQuery.findObjects(new FindListener<BmobCanvas>() {
@@ -265,45 +202,93 @@ public class ProfileActivity extends AppCompatActivity {
 
     //加载头像、背景和昵称，以及关注状态
     private void loadInfo() {
-        if (pixelUser.getAvatarUrl() == null) {
-            Glide.with(this)
-                    .load(PixelApp.defaultAvatarUrl)
-                    .into(avatar);
-            Glide.with(this)
-                    .load(PixelApp.defaultAvatarUrl)
-                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(15, 1)))
-                    .into(backgroundImg);
-        } else {
-            Glide.with(this)
-                    .load(pixelUser.getAvatarUrl())
-                    .into(avatar);
-            Glide.with(this)
-                    .load(pixelUser.getAvatarUrl())
-                    .apply(RequestOptions.bitmapTransform(new BlurTransformation(15, 1)))
-                    .into(backgroundImg);
-        }
+        Glide.with(this)
+                .load(pixelUser.getAvatarUrl())
+                .into(avatar);
+        Glide.with(this)
+                .load(pixelUser.getAvatarUrl())
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(15, 1)))
+                .into(backgroundImg);
         userNickName.setText(pixelUser.getNickname());
 
-        BmobQuery<UserFollow> bmobQuery = new BmobQuery<>();
-        bmobQuery.addWhereEqualTo("userId", PixelApp.pixelUser.getObjectId());
-        bmobQuery.addWhereEqualTo("followUserId", pixelUser.getObjectId());
-        bmobQuery.findObjects(new FindListener<UserFollow>() {
-            @Override
-            public void done(List<UserFollow> list, BmobException e) {
-                if (e == null) {
-                    if (list.isEmpty()) {
-                        isfollowing = false;
+        //关注状态查询
+        final PixelUser curPixelUser = BmobUser.getCurrentUser(PixelUser.class);
+        //不是本人主页
+        if (!curPixelUser.getObjectId().equals(pixelUser.getObjectId())) {
+            editFab.setVisibility(View.GONE);
+            followFab.setVisibility(View.VISIBLE);
+            //查询是否已经关注
+            final BmobQuery<PixelUser> bmobQuery = new BmobQuery<>();
+            bmobQuery.addWhereRelatedTo("followUsers", new BmobPointer(curPixelUser));
+            bmobQuery.addQueryKeys("objectId");
+            bmobQuery.findObjects(new FindListener<PixelUser>() {
+                @Override
+                public void done(List<PixelUser> list, BmobException e) {
+                    if (e == null) {
+                        for (int i = 0; i < list.size(); i++) {
+                            if (pixelUser.getObjectId().equals(list.get(i).getObjectId())) {
+                                //已关注
+                                isFollowing = true;
+                                followFab.setImageResource(R.drawable.ic_following);
+                                return;
+                            }
+                        }
+                        //未关注
+                        isFollowing = false;
                         followFab.setImageResource(R.drawable.ic_not_following);
-                    } else {
-                        isfollowing = true;
-                        userFollowId = list.get(0).getObjectId();
-                        followFab.setImageResource(R.drawable.ic_following);
                     }
-                } else {
-                    Toast.makeText(ProfileActivity.this, "获取关注状态失败", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+            });
+            followFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //已关注则取消关注
+                    if (isFollowing != null && isFollowing) {
+                        BmobRelation bmobRelation = new BmobRelation();
+                        bmobRelation.remove(pixelUser);
+                        curPixelUser.setFollowUsers(bmobRelation);
+                        curPixelUser.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    isFollowing = false;
+                                    followFab.setImageResource(R.drawable.ic_not_following);
+                                    Toast.makeText(ProfileActivity.this, "已取消关注", Toast.LENGTH_SHORT).show();
+                                } else
+                                    Toast.makeText(ProfileActivity.this, "操作失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    //未关注则进行关注
+                    else if (isFollowing != null && !isFollowing) {
+                        BmobRelation bmobRelation = new BmobRelation();
+                        bmobRelation.add(pixelUser);
+                        curPixelUser.setFollowUsers(bmobRelation);
+                        curPixelUser.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    isFollowing = true;
+                                    followFab.setImageResource(R.drawable.ic_following);
+                                    Toast.makeText(ProfileActivity.this, "已成功关注", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ProfileActivity.this, "操作失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            followFab.setVisibility(View.GONE);
+            editFab.setVisibility(View.VISIBLE);
+            editFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
     }
 
     //数据加载动画启动

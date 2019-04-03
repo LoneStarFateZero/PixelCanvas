@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.R;
@@ -24,7 +23,7 @@ import pers.lonestar.pixelcanvas.activity.ProfileActivity;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
-public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FollowCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     // 正在加载
     public final int LOADING = 1;
     // 加载完成
@@ -40,7 +39,7 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private List<BmobCanvas> bmobCanvasList;
 
-    public WorldCanvasAdapter(List<BmobCanvas> bmobCanvasList) {
+    public FollowCanvasAdapter(List<BmobCanvas> bmobCanvasList) {
         super();
         this.bmobCanvasList = bmobCanvasList;
     }
@@ -59,26 +58,28 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //添加一般View
         if (viewType == TYPE_ITEM) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.world_canvas_item, parent, false);
-            return new RecyclerViewHolder(view);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.follow_canvas_item, parent, false);
+            return new FollowCanvasAdapter.RecyclerViewHolder(view);
         }
         //添加FootView
         else if (viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.footview, parent, false);
-            return new FootViewHolder(view);
+            return new FollowCanvasAdapter.FootViewHolder(view);
         }
         return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof WorldCanvasAdapter.RecyclerViewHolder) {
-            final WorldCanvasAdapter.RecyclerViewHolder recyclerViewHolder = (WorldCanvasAdapter.RecyclerViewHolder) holder;
+        if (holder instanceof FollowCanvasAdapter.RecyclerViewHolder) {
+            final FollowCanvasAdapter.RecyclerViewHolder recyclerViewHolder = (FollowCanvasAdapter.RecyclerViewHolder) holder;
             final BmobCanvas bmobCanvas = bmobCanvasList.get(position);
             //作品名称
             recyclerViewHolder.canvasName.setText(bmobCanvas.getCanvasName());
             //设置当前昵称
             recyclerViewHolder.nickName.setText(bmobCanvas.getCreator().getNickname());
+            //设置发布时间
+            recyclerViewHolder.createdTime.setText(bmobCanvas.getCreatedAt());
             //缩略图
             Glide.with(MainActivity.getInstance()).load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail())).into(recyclerViewHolder.thumbnail);
             //设置当前头像
@@ -100,8 +101,8 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     MainActivity.getInstance().startActivity(intent);
                 }
             });
-        } else if (holder instanceof WorldCanvasAdapter.FootViewHolder) {
-            WorldCanvasAdapter.FootViewHolder footViewHolder = (WorldCanvasAdapter.FootViewHolder) holder;
+        } else if (holder instanceof FollowCanvasAdapter.FootViewHolder) {
+            FollowCanvasAdapter.FootViewHolder footViewHolder = (FollowCanvasAdapter.FootViewHolder) holder;
             switch (loadState) {
                 case LOADING: // 正在加载
                     footViewHolder.pbLoading.setVisibility(View.VISIBLE);
@@ -142,34 +143,20 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyItemChanged(bmobCanvasList.size());
     }
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
-        if (manager instanceof GridLayoutManager) {
-            final GridLayoutManager gridManager = ((GridLayoutManager) manager);
-            gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    // 如果当前是footer的位置，那么该item占据2个单元格，正常情况下占据1个单元格
-                    return getItemViewType(position) == TYPE_FOOTER ? gridManager.getSpanCount() : 1;
-                }
-            });
-        }
-    }
-
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        ImageView thumbnail;
         CircleImageView avatar;
-        TextView canvasName;
         TextView nickName;
+        TextView createdTime;
+        TextView canvasName;
+        ImageView thumbnail;
 
         RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            avatar = itemView.findViewById(R.id.world_canvas_avatar);
-            thumbnail = itemView.findViewById(R.id.world_canvas_thumbnail);
-            canvasName = itemView.findViewById(R.id.world_canvas_name);
-            nickName = itemView.findViewById(R.id.world_canvas_nickname);
+            avatar = itemView.findViewById(R.id.follow_canvas_avatar);
+            nickName = itemView.findViewById(R.id.follow_canvas_nickname);
+            createdTime = itemView.findViewById(R.id.follow_canvas_time);
+            canvasName = itemView.findViewById(R.id.follow_canvas_name);
+            thumbnail = itemView.findViewById(R.id.follow_canvas_thumbnail);
         }
     }
 

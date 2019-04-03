@@ -37,6 +37,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.PixelApp;
@@ -48,6 +49,7 @@ import pers.lonestar.pixelcanvas.customview.StrokeCanvas;
 import pers.lonestar.pixelcanvas.dialog.ExportDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
+import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
@@ -692,7 +694,7 @@ public class PaintActivity extends AppCompatActivity {
     private void postCanvasFile() {
         BmobCanvas bmobCanvas = new BmobCanvas();
         bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
-        bmobCanvas.setCreatorID(litePalCanvas.getCreatorID());
+        bmobCanvas.setCreator(BmobUser.getCurrentUser(PixelUser.class));
         bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
         bmobCanvas.setJsonData(litePalCanvas.getJsonData());
         bmobCanvas.setThumbnail(litePalCanvas.getThumbnail());

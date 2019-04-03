@@ -16,7 +16,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/main_canvas_thumbnail"
+            android:id="@+id/world_canvas_thumbnail"
             android:layout_width="140dp"
             android:layout_height="140dp"
             android:foreground="@drawable/stroke" />
@@ -29,8 +29,9 @@
             android:layerType="software" />
 
         <TextView
-            android:id="@+id/main_canvas_name"
+            android:id="@+id/world_canvas_name"
             android:layout_width="wrap_content"
+            android:text="作品名称"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
@@ -44,14 +45,15 @@
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/main_canvas_avatar"
+                android:id="@+id/world_canvas_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
 
             <TextView
-                android:id="@+id/main_canvas_nickname"
+                android:id="@+id/world_canvas_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="用户昵称"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:ellipsize="end"

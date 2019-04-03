@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.PixelApp;
@@ -30,6 +31,7 @@ import pers.lonestar.pixelcanvas.activity.GalleryActivity;
 import pers.lonestar.pixelcanvas.activity.PaintActivity;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
+import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.ViewHolder> {
@@ -42,7 +44,7 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.canvas_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.local_canvas_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -227,7 +229,7 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
     private void postCanvasFile(LitePalCanvas litePalCanvas) {
         BmobCanvas bmobCanvas = new BmobCanvas();
         bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
-        bmobCanvas.setCreatorID(litePalCanvas.getCreatorID());
+        bmobCanvas.setCreator(BmobUser.getCurrentUser(PixelUser.class));
         bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
         bmobCanvas.setJsonData(litePalCanvas.getJsonData());
         bmobCanvas.setThumbnail(litePalCanvas.getThumbnail());

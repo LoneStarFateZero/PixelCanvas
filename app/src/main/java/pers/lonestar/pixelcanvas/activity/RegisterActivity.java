@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String userName = usernameText.getText().toString();
                 String password = passwordText.getText().toString();
                 PixelUser pixelUser = new PixelUser();
+                pixelUser.setAvatarUrl(PixelApp.defaultAvatarUrl);
                 pixelUser.setUsername(userName);
                 pixelUser.setEmail(userName);
                 pixelUser.setNickname(userName);

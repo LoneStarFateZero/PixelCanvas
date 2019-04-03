@@ -94,6 +94,7 @@ public class WorldFragmnet extends Fragment {
         querySkip = 0;
         loadMoreQuery = new BmobQuery<>();
         loadMoreQuery.order("-createdAt");
+        loadMoreQuery.include("creator");
         //小于当前时间
         loadMoreQuery.addWhereLessThan("createdAt", bmobCurrentDate);
         loadMoreQuery.setLimit(pageLimit);
