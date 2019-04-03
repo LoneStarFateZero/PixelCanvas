@@ -26,11 +26,13 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //本地是否有用户缓存
-        if (BmobUser.getCurrentUser(PixelUser.class) != null) {
+        if (BmobUser.isLogin()) {
             fetchUserInfo();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        } else {
+            Toast.makeText(LoginActivity.this, "尚未登录，请先登录", Toast.LENGTH_SHORT).show();
         }
         usernameText = findViewById(R.id.username_text);
         passwordText = findViewById(R.id.password_text);
@@ -78,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void done(BmobUser user, BmobException e) {
                 if (e == null) {
-//                    Toast.makeText(LoginActivity.this, "更新本地缓存用户信息成功", Toast.LENGTH_SHORT).show();
                     Toast.makeText(LoginActivity.this, "登录成功：" + BmobUser.getCurrentUser(PixelUser.class).getNickname(), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(LoginActivity.this, "更新本地缓存用户信息失败，请检查网络设置", Toast.LENGTH_SHORT).show();

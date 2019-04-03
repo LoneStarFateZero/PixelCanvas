@@ -131,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
                         //访问个人主页，传递PixelUser对象
                         intent.putExtra("pixel_user", PixelApp.pixelUser);
                         break;
+                    case R.id.nav_follow:
+                        intent = new Intent(MainActivity.this, FollowActivity.class);
+                        break;
                     case R.id.nav_settings:
                         intent = new Intent(MainActivity.this, SettingsActivity.class);
                         break;

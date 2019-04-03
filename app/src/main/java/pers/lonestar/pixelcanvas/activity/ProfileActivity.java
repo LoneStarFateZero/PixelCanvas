@@ -261,16 +261,20 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                     //未关注则进行关注
                     else if (isFollowing != null && !isFollowing) {
-                        BmobRelation bmobRelation = new BmobRelation();
-                        bmobRelation.add(pixelUser);
-                        curPixelUser.setFollowUsers(bmobRelation);
-                        curPixelUser.update(new UpdateListener() {
+                        PixelUser curUser = new PixelUser();
+                        curUser.setObjectId(BmobUser.getCurrentUser(PixelUser.class).getObjectId());
+                        PixelUser followUser = new PixelUser();
+                        followUser.setObjectId(pixelUser.getObjectId());
+                        BmobRelation followRelation = new BmobRelation();
+                        followRelation.add(followUser);
+                        curUser.setFollowUsers(followRelation);
+                        curUser.update(new UpdateListener() {
                             @Override
                             public void done(BmobException e) {
                                 if (e == null) {
                                     isFollowing = true;
                                     followFab.setImageResource(R.drawable.ic_following);
-                                    Toast.makeText(ProfileActivity.this, "已成功关注", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ProfileActivity.this, "关注成功", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(ProfileActivity.this, "操作失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                                 }
