@@ -134,20 +134,20 @@ public class FollowFragment extends Fragment {
                         @Override
                         public void done(List<BmobCanvas> list, BmobException e) {
                             if (e == null) {
+                                //下拉刷新前先清空之前的数据
+                                bmobCanvasList.clear();
+                                //添加新数据
+                                bmobCanvasList.addAll(list);
+                                adapter.notifyDataSetChanged();
                                 if (list.isEmpty())
                                     adapter.setLoadState(adapter.LOADING_END);
                                 else {
-                                    //下拉刷新前先清空之前的数据
-                                    bmobCanvasList.clear();
-                                    //添加新数据
-                                    bmobCanvasList.addAll(list);
-                                    adapter.notifyDataSetChanged();
                                     adapter.setLoadState(adapter.LOADING_COMPLETE);
                                 }
-                                loadingAnimStop();
                             } else {
                                 Toast.makeText(MainActivity.getInstance(), "作品获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                             }
+                            loadingAnimStop();
                         }
                     });
                 } else {

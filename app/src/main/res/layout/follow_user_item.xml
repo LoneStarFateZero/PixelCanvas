@@ -16,6 +16,8 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            app:civ_border_color="#1B1B1B"
+            app:civ_border_width="2dp"
             android:id="@+id/follow_user_item_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp" />

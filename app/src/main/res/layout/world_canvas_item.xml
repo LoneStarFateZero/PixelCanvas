@@ -45,6 +45,8 @@
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                app:civ_border_color="#1B1B1B"
+                app:civ_border_width="2dp"
                 android:id="@+id/world_canvas_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />

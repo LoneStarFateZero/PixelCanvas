@@ -113,10 +113,10 @@ public class WorldFragmnet extends Fragment {
                         adapter.notifyDataSetChanged();
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
                     }
-                    loadingAnimStop();
                 } else {
                     Toast.makeText(MainActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
+                loadingAnimStop();
             }
         });
     }

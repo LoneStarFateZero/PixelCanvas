@@ -98,6 +98,8 @@ public class FollowCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.getInstance(), CanvasInfoActivity.class);
+                    intent.putExtra("pixel_canvas", bmobCanvas);
+                    intent.putExtra("pixel_user", bmobCanvas.getCreator());
                     MainActivity.getInstance().startActivity(intent);
                 }
             });

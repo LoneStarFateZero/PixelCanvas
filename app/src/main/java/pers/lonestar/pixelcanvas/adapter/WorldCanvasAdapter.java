@@ -97,6 +97,8 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.getInstance(), CanvasInfoActivity.class);
+                    intent.putExtra("pixel_canvas", bmobCanvas);
+                    intent.putExtra("pixel_user", bmobCanvas.getCreator());
                     MainActivity.getInstance().startActivity(intent);
                 }
             });

@@ -1,77 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/profile_appbar"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/canvas_info_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:fitsSystemWindows="true">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/canvasinfo_collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:contentScrim="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+    <ImageView
+        android:id="@+id/canvas_info_thumbnail"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@+id/canvas_info_toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:foreground="@drawable/stroke" />
 
-            <ImageView
-                android:id="@+id/profile_background_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_avatar"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    app:civ_border_color="#FFFFFF"
-                    app:civ_border_width="2dp" />
-
-                <TextView
-                    android:id="@+id/profile_nickname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="#FFF"
-                    android:textSize="25sp" />
-            </LinearLayout>
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/profile_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_collapseMode="pin" />
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/profile_swipe"
+    <View
+        android:id="@+id/canvas_info_linetop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="5dp"
+        android:layout_below="@+id/canvas_info_thumbnail"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/bg_dotted_line"
+        android:layerType="software" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/profile_recyclerview"
+    <LinearLayout
+        android:id="@+id/canvas_info_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/canvas_info_linetop"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/canvas_info_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:civ_border_color="#1B1B1B"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/canvas_info_nickname"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="用户昵称"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/canvas_info_linebottom"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_below="@+id/canvas_info_ll"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/bg_dotted_line"
+        android:layerType="software" />
+
+    <LinearLayout
+        android:id="@+id/canvas_info_button_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/canvas_info_linebottom"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="100dp"
+            android:src="@android:color/darker_gray"
+            app:allow_random_color="true"
+            app:btn_color="@android:color/darker_gray"
+            app:btn_fill_color="@color/colorAccent"
+            app:siShape="@raw/heart" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:text="+12"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp" />
+
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="100dp"
+            android:src="@android:color/darker_gray"
+            app:allow_random_color="true"
+            app:btn_color="@android:color/darker_gray"
+            app:btn_fill_color="#FFC107"
+            app:siShape="@raw/star" />
+    </LinearLayout>
+</RelativeLayout>
