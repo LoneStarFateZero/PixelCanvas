@@ -6,10 +6,6 @@
             android:icon="@drawable/ic_gallery"
             android:title="本地作品" />
         <item
-            android:id="@+id/nav_publish"
-            android:icon="@drawable/ic_publish"
-            android:title="发布作品" />
-        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_profile"
             android:title="个人主页" />

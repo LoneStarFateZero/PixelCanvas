@@ -22,16 +22,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.GalleryActivity;
 import pers.lonestar.pixelcanvas.activity.PaintActivity;
-import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
+import pers.lonestar.pixelcanvas.activity.PublishActivity;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
-import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.ViewHolder> {
@@ -71,7 +67,9 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.list_post:
-                                showPostDialog(litePalCanvas);
+                                Intent intent = new Intent(GalleryActivity.getInstance(), PublishActivity.class);
+                                intent.putExtra("local_canvas", litePalCanvas);
+                                GalleryActivity.getInstance().startActivity(intent);
                                 break;
                             case R.id.list_rename:
                                 showRenameDialog(litePalCanvas, position);
@@ -124,21 +122,6 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
             canvasMenu = itemView.findViewById(R.id.item_menu);
             thumbnailBitmap = null;
         }
-    }
-
-    //发布对话框
-    private void showPostDialog(final LitePalCanvas litePalCanvas) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
-        dialog.setMessage("确定要发布这个作品吗？");
-        dialog.setCancelable(true);
-        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                postCanvasFile(litePalCanvas);
-            }
-        });
-        dialog.setNegativeButton("取消", null);
-        dialog.show();
     }
 
     //重命名对话框
@@ -223,26 +206,5 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
         });
         dialog.setNegativeButton("取消", null);
         dialog.show();
-    }
-
-    //发布作品
-    private void postCanvasFile(LitePalCanvas litePalCanvas) {
-        BmobCanvas bmobCanvas = new BmobCanvas();
-        bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
-        bmobCanvas.setCreator(BmobUser.getCurrentUser(PixelUser.class));
-        bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
-        bmobCanvas.setJsonData(litePalCanvas.getJsonData());
-        bmobCanvas.setThumbnail(litePalCanvas.getThumbnail());
-
-        bmobCanvas.save(new SaveListener<String>() {
-            @Override
-            public void done(String objectId, BmobException e) {
-                if (e == null) {
-                    Toast.makeText(GalleryActivity.getInstance(), "作品发布成功！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(GalleryActivity.getInstance(), "作品发布失败，请检查网络设置", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 }

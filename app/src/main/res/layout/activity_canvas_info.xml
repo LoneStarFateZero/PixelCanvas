@@ -1,111 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/canvas_info_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    <ImageView
-        android:id="@+id/canvas_info_thumbnail"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_below="@+id/canvas_info_toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:foreground="@drawable/stroke" />
-
-    <View
-        android:id="@+id/canvas_info_linetop"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_below="@+id/canvas_info_thumbnail"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/bg_dotted_line"
-        android:layerType="software" />
-
     <LinearLayout
-        android:id="@+id/canvas_info_ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/canvas_info_linetop"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/canvas_info_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:civ_border_color="#1B1B1B"
-            app:civ_border_width="2dp" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/canvas_info_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <TextView
-            android:id="@+id/canvas_info_nickname"
+        <ImageView
+            android:id="@+id/canvas_info_thumbnail"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:foreground="@drawable/stroke" />
+
+        <View
+            android:id="@+id/canvas_info_linetop"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_dotted_line"
+            android:layerType="software" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="用户昵称"
-            android:textSize="20sp" />
-    </LinearLayout>
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
 
-    <View
-        android:id="@+id/canvas_info_linebottom"
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_below="@+id/canvas_info_ll"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/bg_dotted_line"
-        android:layerType="software" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/canvas_info_avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/avatar" />
 
-    <LinearLayout
-        android:id="@+id/canvas_info_button_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/canvas_info_linebottom"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal">
+            <TextView
+                android:id="@+id/canvas_info_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="用户昵称" />
+        </LinearLayout>
 
-        <com.sackcentury.shinebuttonlib.ShineButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="100dp"
-            android:src="@android:color/darker_gray"
-            app:allow_random_color="true"
-            app:btn_color="@android:color/darker_gray"
-            app:btn_fill_color="@color/colorAccent"
-            app:siShape="@raw/heart" />
+        <View
+            android:id="@+id/canvas_info_linebottom"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/bg_dotted_line"
+            android:layerType="software" />
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="15dp"
-            android:text="+12"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp" />
+            android:orientation="horizontal">
 
-        <com.sackcentury.shinebuttonlib.ShineButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="100dp"
-            android:src="@android:color/darker_gray"
-            app:allow_random_color="true"
-            app:btn_color="@android:color/darker_gray"
-            app:btn_fill_color="#FFC107"
-            app:siShape="@raw/star" />
+            <com.sackcentury.shinebuttonlib.ShineButton
+                android:id="@+id/canvas_info_like"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="100dp"
+                android:src="@android:color/darker_gray"
+                app:allow_random_color="true"
+                app:btn_color="@android:color/darker_gray"
+                app:btn_fill_color="@color/colorAccent"
+                app:siShape="@raw/heart" />
+
+            <TextView
+                android:id="@+id/canvas_info_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:text="+12"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp" />
+
+            <com.sackcentury.shinebuttonlib.ShineButton
+                android:id="@+id/canvas_info_favorite"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="100dp"
+                android:src="@android:color/darker_gray"
+                app:allow_random_color="true"
+                app:btn_color="@android:color/darker_gray"
+                app:btn_fill_color="#FFC107"
+                app:siShape="@raw/star" />
+        </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</androidx.core.widget.NestedScrollView>

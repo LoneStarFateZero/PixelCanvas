@@ -37,9 +37,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.customview.BorderIndicator;
@@ -47,9 +44,7 @@ import pers.lonestar.pixelcanvas.customview.LineCanvas;
 import pers.lonestar.pixelcanvas.customview.PixelCanvas;
 import pers.lonestar.pixelcanvas.customview.StrokeCanvas;
 import pers.lonestar.pixelcanvas.dialog.ExportDialogFragment;
-import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
-import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
@@ -91,14 +86,6 @@ public class PaintActivity extends AppCompatActivity {
 
         //优先初始化View
         initView();
-        //设置自定义Toolbar
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
 
         initListener();
         initCanvas();
@@ -161,14 +148,16 @@ public class PaintActivity extends AppCompatActivity {
                         showExportDialog();
                         break;
                     case R.id.paint_nav_publish:
-                        showPostDialog();
+                        Intent postIntent = new Intent(PaintActivity.this, PublishActivity.class);
+                        postIntent.putExtra("local_canvas", litePalCanvas);
+                        GalleryActivity.getInstance().startActivity(postIntent);
                         break;
                     case R.id.paint_nav_rename:
                         showRenameDialog();
                         break;
                     case R.id.paint_nav_settings:
-                        Intent intent = new Intent(PaintActivity.this, SettingsActivity.class);
-                        startActivity(intent);
+                        Intent settingsIntent = new Intent(PaintActivity.this, SettingsActivity.class);
+                        startActivity(settingsIntent);
                         break;
                     case R.id.paint_nav_share:
                         shareCanvas();
@@ -538,6 +527,15 @@ public class PaintActivity extends AppCompatActivity {
         moveDownView = findViewById(R.id.paint_move_down);
         moveLeftView = findViewById(R.id.paint_move_left);
         moveRightView = findViewById(R.id.paint_move_right);
+
+        //设置自定义Toolbar
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
     }
 
     //Toolbar菜单项方法
@@ -690,27 +688,6 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-    //发布作品
-    private void postCanvasFile() {
-        BmobCanvas bmobCanvas = new BmobCanvas();
-        bmobCanvas.setCanvasName(litePalCanvas.getCanvasName());
-        bmobCanvas.setCreator(BmobUser.getCurrentUser(PixelUser.class));
-        bmobCanvas.setPixelCount(litePalCanvas.getPixelCount());
-        bmobCanvas.setJsonData(litePalCanvas.getJsonData());
-        bmobCanvas.setThumbnail(litePalCanvas.getThumbnail());
-
-        bmobCanvas.save(new SaveListener<String>() {
-            @Override
-            public void done(String objectId, BmobException e) {
-                if (e == null) {
-                    Toast.makeText(PaintActivity.this, "作品发布成功！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(PaintActivity.this, "作品发布失败，请检查网络设置", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     //TODO
     //分享功能，考虑生成多种格式分享
     private void shareCanvas() {
@@ -726,21 +703,6 @@ public class PaintActivity extends AppCompatActivity {
         ExportDialogFragment fragment = new ExportDialogFragment();
         fragment.initParameter(litePalCanvas, pixelFramelayout);
         fragment.show(getSupportFragmentManager(), "ExportDialog");
-    }
-
-    //发布对话框
-    private void showPostDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(PaintActivity.this);
-        dialog.setMessage("确定要发布这个作品吗？");
-        dialog.setCancelable(true);
-        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                postCanvasFile();
-            }
-        });
-        dialog.setNegativeButton("取消", null);
-        dialog.show();
     }
 
     //重命名对话框

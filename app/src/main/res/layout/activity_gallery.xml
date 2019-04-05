@@ -28,6 +28,6 @@
             android:layout_margin="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:src="@drawable/ic_pencil_white" />
+            android:src="@drawable/ic_pencil_create" />
     </FrameLayout>
 </LinearLayout>

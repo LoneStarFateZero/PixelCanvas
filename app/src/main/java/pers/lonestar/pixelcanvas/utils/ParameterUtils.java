@@ -24,7 +24,7 @@ public class ParameterUtils {
         InputStream input = null;
         Bitmap bitmap = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 4;
+        options.inSampleSize = 2;
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         input = new ByteArrayInputStream(imgByte);
         SoftReference softRef = new SoftReference(BitmapFactory.decodeStream(input, null, options));

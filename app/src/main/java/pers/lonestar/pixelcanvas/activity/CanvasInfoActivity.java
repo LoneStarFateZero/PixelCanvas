@@ -42,4 +42,5 @@ public class CanvasInfoActivity extends AppCompatActivity {
         Glide.with(this).load(pixelUser.getAvatarUrl()).into(avatar);
         nickName.setText(pixelUser.getNickname());
     }
+
 }

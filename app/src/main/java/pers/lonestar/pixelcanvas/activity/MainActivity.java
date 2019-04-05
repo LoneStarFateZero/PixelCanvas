@@ -52,11 +52,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         instance = this;
 
-        toolbar = findViewById(R.id.main_activity_toolbar);
-        toolbar.setTitle("像素画板");
-        toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
-        setSupportActionBar(toolbar);
-
         initView();
         initListener();
         addFragment();
@@ -69,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.nav_view);
         tabLayout = findViewById(R.id.main_tablayout);
         viewPager = findViewById(R.id.main_viewpager);
+        toolbar = findViewById(R.id.main_activity_toolbar);
+        toolbar.setTitle("像素画板");
+        toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
+        setSupportActionBar(toolbar);
     }
 
     private void initListener() {
@@ -122,9 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_gallery:
                         intent = new Intent(MainActivity.this, GalleryActivity.class);
-                        break;
-                    case R.id.nav_publish:
-                        intent = new Intent(MainActivity.this, PublishActivity.class);
                         break;
                     case R.id.nav_profile:
                         intent = new Intent(MainActivity.this, ProfileActivity.class);
