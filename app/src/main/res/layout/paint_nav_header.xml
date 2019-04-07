@@ -20,6 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="5dp"
         android:layout_marginBottom="20dp"
         android:layout_toEndOf="@+id/thumbnail"
         android:orientation="vertical">
@@ -28,9 +29,6 @@
             android:id="@+id/paint_canvas_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="20dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:textColor="#FFF"
@@ -40,11 +38,9 @@
             android:id="@+id/paint_canvas_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textColor="#FFF"
             android:textSize="10sp" />
 
@@ -52,11 +48,9 @@
             android:id="@+id/paint_canvas_create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="3"
             android:textColor="#FFF"
             android:textSize="10sp" />
 
@@ -64,11 +58,10 @@
             android:id="@+id/paint_canvas_update"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="3"
             android:textColor="#FFF"
             android:textSize="10sp" />
     </LinearLayout>

@@ -37,6 +37,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import cn.bmob.v3.BmobUser;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.customview.BorderIndicator;
@@ -45,6 +46,7 @@ import pers.lonestar.pixelcanvas.customview.PixelCanvas;
 import pers.lonestar.pixelcanvas.customview.StrokeCanvas;
 import pers.lonestar.pixelcanvas.dialog.ExportDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
+import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
@@ -187,9 +189,9 @@ public class PaintActivity extends AppCompatActivity {
                     canvasUpdate = findViewById(R.id.paint_canvas_update);
                 thumbnail.setImageBitmap(loadBitmapFromView(pixelFramelayout));
                 canvasName.setText(litePalCanvas.getCanvasName());
-                canvasSize.setText("尺寸:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
-                canvasCreate.setText("创建时间:" + litePalCanvas.getCreatedAt());
-                canvasUpdate.setText("更新时间:" + litePalCanvas.getUpdatedAt());
+                canvasSize.setText("尺寸:\n" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
+                canvasCreate.setText("创建时间:\n" + litePalCanvas.getCreatedAt());
+                canvasUpdate.setText("更新时间:\n" + litePalCanvas.getUpdatedAt());
             }
 
             @Override
@@ -680,7 +682,7 @@ public class PaintActivity extends AppCompatActivity {
             PixelApp.litePalCanvas = litePalCanvas;
             litePalCanvas.setCanvasName("无题");
             litePalCanvas.setPixelCount(pixelCount);
-            litePalCanvas.setCreatorID(PixelApp.pixelUser.getObjectId());
+            litePalCanvas.setCreatorID(BmobUser.getCurrentUser(PixelUser.class).getObjectId());
             litePalCanvas.setCreatedAt(dateFormat.format(date));
             litePalCanvas.setUpdatedAt(dateFormat.format(date));
             litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));

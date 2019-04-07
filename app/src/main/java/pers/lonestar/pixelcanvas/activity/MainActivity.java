@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import cn.bmob.v3.BmobUser;
 import de.hdodenhof.circleimageview.CircleImageView;
-import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.fragment.FollowFragment;
 import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         pixelUser = BmobUser.getCurrentUser(PixelUser.class);
-        PixelApp.pixelUser = pixelUser;
         drawerLayout = findViewById(R.id.main_drawerlayout);
         navigationView = findViewById(R.id.nav_view);
         tabLayout = findViewById(R.id.main_tablayout);
@@ -80,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                            intent.putExtra("pixel_user", PixelApp.pixelUser);
+                            PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
+                            intent.putExtra("pixel_user", currentUser);
                             startActivity(intent);
                             drawerLayout.closeDrawers();
                         }
@@ -125,7 +124,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_profile:
                         intent = new Intent(MainActivity.this, ProfileActivity.class);
                         //访问个人主页，传递PixelUser对象
-                        intent.putExtra("pixel_user", PixelApp.pixelUser);
+                        PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
+                        intent.putExtra("pixel_user", currentUser);
                         break;
                     case R.id.nav_follow:
                         intent = new Intent(MainActivity.this, FollowActivity.class);

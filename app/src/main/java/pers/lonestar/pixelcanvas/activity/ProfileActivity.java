@@ -289,7 +289,9 @@ public class ProfileActivity extends AppCompatActivity {
             editFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    //转到个人信息编辑页面
+                    Intent intent = new Intent(ProfileActivity.this, ProfileEditActivity.class);
+                    startActivity(intent);
                 }
             });
         }

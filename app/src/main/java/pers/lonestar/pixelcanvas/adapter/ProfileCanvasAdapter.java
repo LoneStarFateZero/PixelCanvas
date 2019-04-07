@@ -80,15 +80,15 @@ public class ProfileCanvasAdapter extends RecyclerView.Adapter<RecyclerView.View
             FootViewHolder footViewHolder = (FootViewHolder) holder;
             switch (loadState) {
                 case LOADING: // 正在加载
+                    footViewHolder.llEnd.setVisibility(View.GONE);
                     footViewHolder.pbLoading.setVisibility(View.VISIBLE);
                     footViewHolder.tvLoading.setVisibility(View.VISIBLE);
-                    footViewHolder.llEnd.setVisibility(View.GONE);
                     break;
 
                 case LOADING_COMPLETE: // 加载完成
+                    footViewHolder.llEnd.setVisibility(View.GONE);
                     footViewHolder.pbLoading.setVisibility(View.INVISIBLE);
                     footViewHolder.tvLoading.setVisibility(View.INVISIBLE);
-                    footViewHolder.llEnd.setVisibility(View.GONE);
                     break;
 
                 case LOADING_END: // 加载到底
