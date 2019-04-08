@@ -193,6 +193,12 @@ public class CanvasInfoActivity extends AppCompatActivity {
                     @Override
                     public void insertComment(CanvasComment canvasComment) {
                         commentList.add(0, canvasComment);
+                        //没评论到有第一条评论
+                        //可见性应该设置一下
+                        if (!commentList.isEmpty()) {
+                            noComment.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }
                         adapter.notifyDataSetChanged();
                     }
                 });

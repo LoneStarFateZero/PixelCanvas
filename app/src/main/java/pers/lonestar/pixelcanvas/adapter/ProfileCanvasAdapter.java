@@ -1,5 +1,6 @@
 package pers.lonestar.pixelcanvas.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import pers.lonestar.pixelcanvas.R;
+import pers.lonestar.pixelcanvas.activity.CanvasInfoActivity;
+import pers.lonestar.pixelcanvas.activity.MainActivity;
 import pers.lonestar.pixelcanvas.activity.ProfileActivity;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
@@ -69,13 +72,22 @@ public class ProfileCanvasAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
             RecyclerViewHolder recyclerViewHolder = (RecyclerViewHolder) holder;
-            BmobCanvas bmobCanvas = bmobCanvasList.get(position);
+            final BmobCanvas bmobCanvas = bmobCanvasList.get(position);
             //缩略图
             Glide.with(ProfileActivity.getInstance()).load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail())).into(recyclerViewHolder.thumbnail);
             //作品名称
             recyclerViewHolder.canvasName.setText(bmobCanvas.getCanvasName());
             //上传时间
             recyclerViewHolder.canvasUpdated.setText(bmobCanvas.getUpdatedAt());
+            recyclerViewHolder.thumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.getInstance(), CanvasInfoActivity.class);
+                    intent.putExtra("pixel_canvas", bmobCanvas);
+                    intent.putExtra("pixel_user", bmobCanvas.getCreator());
+                    ProfileActivity.getInstance().startActivity(intent);
+                }
+            });
         } else if (holder instanceof FootViewHolder) {
             FootViewHolder footViewHolder = (FootViewHolder) holder;
             switch (loadState) {

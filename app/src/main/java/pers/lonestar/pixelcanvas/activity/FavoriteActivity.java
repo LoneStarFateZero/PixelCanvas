@@ -1,7 +1,10 @@
 package pers.lonestar.pixelcanvas.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
+
+import com.ldoublem.loadingviewlib.view.LVBlazeWood;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import pers.lonestar.pixelcanvas.listener.FavoriteRecyclerOnScrollListener;
 public class FavoriteActivity extends AppCompatActivity {
     private static FavoriteActivity instance;
     private RecyclerView recyclerView;
+    private LVBlazeWood lvBlazeWood;
     private FavoriteAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Toolbar toolbar;
@@ -86,10 +90,15 @@ public class FavoriteActivity extends AppCompatActivity {
                 loadMoreData();
             }
         });
+
+        lvBlazeWood = findViewById(R.id.favorite_activity_loadinganim);
     }
 
     private void refreshData() {
+        loadingAnimStart();
+        querySkip = 0;
         loadMoreFavoriteQuery = new BmobQuery<>();
+        loadMoreFavoriteQuery.setLimit(pageLimit);
         loadMoreFavoriteQuery.order("-createdAt");
         loadMoreFavoriteQuery.include("canvas,creator");
         loadMoreFavoriteQuery.addWhereEqualTo("favoriteUser", pixelUser);
@@ -106,6 +115,7 @@ public class FavoriteActivity extends AppCompatActivity {
                     else {
                         adapter.setLoadState(adapter.LOADING_COMPLETE);
                     }
+                    loadingAnimStop();
                 } else
                     Toast.makeText(FavoriteActivity.this, "收藏列表获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
             }
@@ -132,5 +142,20 @@ public class FavoriteActivity extends AppCompatActivity {
                     Toast.makeText(FavoriteActivity.this, "收藏列表获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //数据加载动画启动
+    private void loadingAnimStart() {
+        recyclerView.setVisibility(View.INVISIBLE);
+        lvBlazeWood.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(false);
+        lvBlazeWood.startAnim();
+    }
+
+    //数据加载动画停止
+    private void loadingAnimStop() {
+        lvBlazeWood.stopAnim();
+        lvBlazeWood.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 }
