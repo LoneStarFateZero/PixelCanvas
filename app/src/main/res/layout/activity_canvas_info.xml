@@ -81,7 +81,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
-                    android:text="+1赞"
                     android:textColor="@color/colorAccent" />
             </LinearLayout>
 
@@ -109,7 +108,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
-                    android:text="+1收藏"
                     android:textColor="@color/colorFont" />
             </LinearLayout>
 

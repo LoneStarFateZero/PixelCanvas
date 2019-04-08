@@ -14,6 +14,10 @@
             android:icon="@drawable/ic_friends"
             android:title="关注列表" />
         <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_favorite"
+            android:title="收藏列表" />
+        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="设置" />

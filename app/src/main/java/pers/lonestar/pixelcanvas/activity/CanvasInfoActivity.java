@@ -30,6 +30,7 @@ import pers.lonestar.pixelcanvas.adapter.CommentAdapter;
 import pers.lonestar.pixelcanvas.dialog.CommentDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.CanvasComment;
+import pers.lonestar.pixelcanvas.infostore.CanvasFavorite;
 import pers.lonestar.pixelcanvas.infostore.CanvasLike;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.listener.CommentInsertListener;
@@ -55,6 +56,8 @@ public class CanvasInfoActivity extends AppCompatActivity {
     private List<CanvasComment> commentList;
     private String canvasLikeId;
     private int canvasLikeCount;
+    private String canvasFavoriteId;
+    private int canvasFavoriteCount;
 
     public static CanvasInfoActivity getInstance() {
         return instance;
@@ -72,6 +75,7 @@ public class CanvasInfoActivity extends AppCompatActivity {
 
         initView();
         loadLike();
+        loadFavorite();
         initListener();
         loadCanvasInfo();
         loadComment();
@@ -105,7 +109,6 @@ public class CanvasInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //点赞
                 if (likeButton.isChecked()) {
-                    Toast.makeText(CanvasInfoActivity.this, "点赞", Toast.LENGTH_SHORT).show();
                     PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
                     CanvasLike canvasLike = new CanvasLike();
                     canvasLike.setCanvas(bmobCanvas);
@@ -116,7 +119,7 @@ public class CanvasInfoActivity extends AppCompatActivity {
                             if (e == null) {
                                 canvasLikeId = s;
                                 ++canvasLikeCount;
-                                likeCount.setText("+" + canvasLikeCount + "赞");
+                                likeCount.setText("+" + canvasLikeCount + " 赞");
                             } else {
                                 likeButton.setChecked(false);
                             }
@@ -125,14 +128,13 @@ public class CanvasInfoActivity extends AppCompatActivity {
                 }
                 //取消点赞
                 else {
-                    Toast.makeText(CanvasInfoActivity.this, "取消点赞", Toast.LENGTH_SHORT).show();
                     CanvasLike canvasLike = new CanvasLike();
                     canvasLike.delete(canvasLikeId, new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e == null) {
                                 --canvasLikeCount;
-                                likeCount.setText("+" + canvasLikeCount + "赞");
+                                likeCount.setText("+" + canvasLikeCount + " 赞");
                             } else {
                                 likeButton.setChecked(true);
                             }
@@ -141,6 +143,48 @@ public class CanvasInfoActivity extends AppCompatActivity {
                 }
             }
         });
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //收藏
+                if (favoriteButton.isChecked()) {
+                    PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
+                    CanvasFavorite canvasFavorite = new CanvasFavorite();
+                    canvasFavorite.setCanvas(bmobCanvas);
+                    canvasFavorite.setCreator(pixelUser);
+                    canvasFavorite.setFavoriteUser(currentUser);
+                    canvasFavorite.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null) {
+                                canvasFavoriteId = s;
+                                ++canvasFavoriteCount;
+                                favoriteCount.setText("+" + canvasFavoriteCount + " 收藏");
+                            } else {
+                                favoriteButton.setChecked(false);
+                            }
+                        }
+                    });
+                }
+                //取消收藏
+                else {
+                    CanvasFavorite canvasFavorite = new CanvasFavorite();
+                    canvasFavorite.delete(canvasFavoriteId, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                --canvasFavoriteCount;
+                                favoriteCount.setText("+" + canvasFavoriteCount + " 收藏");
+                            } else {
+                                favoriteButton.setChecked(true);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,9 +269,45 @@ public class CanvasInfoActivity extends AppCompatActivity {
             public void done(Integer integer, BmobException e) {
                 if (e == null) {
                     canvasLikeCount = integer;
-                    likeCount.setText("+" + canvasLikeCount + "赞");
+                    likeCount.setText("+" + canvasLikeCount + " 赞");
                 } else {
-                    likeCount.setText("+0赞");
+                    likeCount.setText("+0 赞");
+                }
+            }
+        });
+    }
+
+    private void loadFavorite() {
+        BmobQuery<CanvasFavorite> bmobFavoriteQuery = new BmobQuery<>();
+        PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
+        bmobFavoriteQuery.addWhereEqualTo("canvas", bmobCanvas);
+        bmobFavoriteQuery.addWhereEqualTo("favoriteUser", currentUser);
+        bmobFavoriteQuery.findObjects(new FindListener<CanvasFavorite>() {
+            @Override
+            public void done(List<CanvasFavorite> list, BmobException e) {
+                if (e == null) {
+                    if (list.isEmpty()) {
+                        favoriteButton.setChecked(false);
+                    } else {
+                        favoriteButton.setChecked(true);
+                        canvasFavoriteId = list.get(0).getObjectId();
+                    }
+                } else {
+                    favoriteButton.setChecked(false);
+                }
+            }
+        });
+
+        bmobFavoriteQuery = new BmobQuery<>();
+        bmobFavoriteQuery.addWhereEqualTo("canvas", bmobCanvas);
+        bmobFavoriteQuery.count(CanvasFavorite.class, new CountListener() {
+            @Override
+            public void done(Integer integer, BmobException e) {
+                if (e == null) {
+                    canvasFavoriteCount = integer;
+                    favoriteCount.setText("+" + canvasFavoriteCount + " 收藏");
+                } else {
+                    favoriteCount.setText("+0 收藏");
                 }
             }
         });

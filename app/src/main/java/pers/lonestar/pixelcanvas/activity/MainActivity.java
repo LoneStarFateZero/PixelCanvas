@@ -134,6 +134,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_follow:
                         intent = new Intent(MainActivity.this, FollowActivity.class);
                         break;
+                    case R.id.nav_favorite:
+                        intent = new Intent(MainActivity.this, FavoriteActivity.class);
+                        break;
                     case R.id.nav_settings:
                         intent = new Intent(MainActivity.this, SettingsActivity.class);
                         break;
