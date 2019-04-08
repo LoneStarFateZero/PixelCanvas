@@ -18,14 +18,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.CommentAdapter;
 import pers.lonestar.pixelcanvas.dialog.CommentDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.CanvasComment;
+import pers.lonestar.pixelcanvas.infostore.CanvasLike;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.listener.CommentInsertListener;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
@@ -48,6 +53,8 @@ public class CanvasInfoActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private CommentAdapter adapter;
     private List<CanvasComment> commentList;
+    private String canvasLikeId;
+    private int canvasLikeCount;
 
     public static CanvasInfoActivity getInstance() {
         return instance;
@@ -64,6 +71,7 @@ public class CanvasInfoActivity extends AppCompatActivity {
         pixelUser = (PixelUser) intent.getSerializableExtra("pixel_user");
 
         initView();
+        loadLike();
         initListener();
         loadCanvasInfo();
         loadComment();
@@ -92,6 +100,47 @@ public class CanvasInfoActivity extends AppCompatActivity {
     }
 
     private void initListener() {
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点赞
+                if (likeButton.isChecked()) {
+                    Toast.makeText(CanvasInfoActivity.this, "点赞", Toast.LENGTH_SHORT).show();
+                    PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
+                    CanvasLike canvasLike = new CanvasLike();
+                    canvasLike.setCanvas(bmobCanvas);
+                    canvasLike.setLikeUser(currentUser);
+                    canvasLike.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null) {
+                                canvasLikeId = s;
+                                ++canvasLikeCount;
+                                likeCount.setText("+" + canvasLikeCount + "赞");
+                            } else {
+                                likeButton.setChecked(false);
+                            }
+                        }
+                    });
+                }
+                //取消点赞
+                else {
+                    Toast.makeText(CanvasInfoActivity.this, "取消点赞", Toast.LENGTH_SHORT).show();
+                    CanvasLike canvasLike = new CanvasLike();
+                    canvasLike.delete(canvasLikeId, new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                --canvasLikeCount;
+                                likeCount.setText("+" + canvasLikeCount + "赞");
+                            } else {
+                                likeButton.setChecked(true);
+                            }
+                        }
+                    });
+                }
+            }
+        });
         commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +192,42 @@ public class CanvasInfoActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(CanvasInfoActivity.this, "评论加载失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void loadLike() {
+        BmobQuery<CanvasLike> bmobQuery = new BmobQuery<>();
+        PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
+        bmobQuery.addWhereEqualTo("canvas", bmobCanvas);
+        bmobQuery.addWhereEqualTo("likeUser", currentUser);
+        bmobQuery.findObjects(new FindListener<CanvasLike>() {
+            @Override
+            public void done(List<CanvasLike> list, BmobException e) {
+                if (e == null) {
+                    if (list.isEmpty()) {
+                        likeButton.setChecked(false);
+                    } else {
+                        likeButton.setChecked(true);
+                        canvasLikeId = list.get(0).getObjectId();
+                    }
+                } else {
+                    likeButton.setChecked(false);
+                }
+            }
+        });
+
+        bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("canvas", bmobCanvas);
+        bmobQuery.count(CanvasLike.class, new CountListener() {
+            @Override
+            public void done(Integer integer, BmobException e) {
+                if (e == null) {
+                    canvasLikeCount = integer;
+                    likeCount.setText("+" + canvasLikeCount + "赞");
+                } else {
+                    likeCount.setText("+0赞");
                 }
             }
         });

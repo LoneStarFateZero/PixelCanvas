@@ -1,17 +1,16 @@
 package pers.lonestar.pixelcanvas.infostore;
 
 import cn.bmob.v3.BmobObject;
-import pers.lonestar.pixelcanvas.customview.PixelCanvas;
 
 public class CanvasLike extends BmobObject {
-    private PixelCanvas canvas;
+    private BmobCanvas canvas;
     private PixelUser likeUser;
 
-    public PixelCanvas getCanvas() {
+    public BmobCanvas getCanvas() {
         return canvas;
     }
 
-    public void setCanvas(PixelCanvas canvas) {
+    public void setCanvas(BmobCanvas canvas) {
         this.canvas = canvas;
     }
 
