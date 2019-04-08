@@ -3,24 +3,24 @@ package pers.lonestar.pixelcanvas.infostore;
 import cn.bmob.v3.BmobObject;
 
 public class CanvasComment extends BmobObject {
-    private String canvasId;
-    private String commentUserId;
+    private BmobCanvas canvas;
+    private PixelUser commentUser;
     private String commentText;
 
-    public String getCanvasId() {
-        return canvasId;
+    public BmobCanvas getCanvas() {
+        return canvas;
     }
 
-    public void setCanvasId(String canvasId) {
-        this.canvasId = canvasId;
+    public void setCanvas(BmobCanvas canvas) {
+        this.canvas = canvas;
     }
 
-    public String getCommentUserId() {
-        return commentUserId;
+    public PixelUser getCommentUser() {
+        return commentUser;
     }
 
-    public void setCommentUserId(String commentUserId) {
-        this.commentUserId = commentUserId;
+    public void setCommentUser(PixelUser commentUser) {
+        this.commentUser = commentUser;
     }
 
     public String getCommentText() {
@@ -30,5 +30,4 @@ public class CanvasComment extends BmobObject {
     public void setCommentText(String commentText) {
         this.commentText = commentText;
     }
-
 }

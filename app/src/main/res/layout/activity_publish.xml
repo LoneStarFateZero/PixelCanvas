@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="标题（至多32个字符）"
+            android:text="标题（至多12个字符）"
             android:textColor="@color/colorAccent"
             android:textSize="15sp" />
 
@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:maxLength="32" />
+            android:maxLength="12"
+            android:maxLines="1" />
     </LinearLayout>
 </LinearLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/backgroundColor"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/comment_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="取消"
+            android:textColor="@color/colorFont"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="写评论"
+            android:textColor="@color/colorFont"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/comment_dialog_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="发送"
+            android:textColor="@color/colorFont"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <EditText
+        android:id="@+id/comment_dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F5F5F5"
+        android:gravity="top"
+        android:hint="想说点什么"
+        android:imeOptions="flagNoExtractUi"
+        android:lineSpacingMultiplier="1.2"
+        android:maxLength="400"
+        android:maxLines="6"
+        android:minHeight="150dp"
+        android:paddingLeft="15dp"
+        android:paddingTop="10dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp"
+        android:scrollbars="vertical"
+        android:textSize="20sp" />
+</LinearLayout>
