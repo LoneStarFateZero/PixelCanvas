@@ -118,38 +118,49 @@ public class FollowFragment extends Fragment {
                         bmobQueryList.add(tmpBmobCanvasQuery);
                     }
 
-                    //取当前时间对应的BmobDate用于数据查询
-                    Date currentDate = new Date(System.currentTimeMillis());
-                    BmobDate bmobCurrentDate = new BmobDate(currentDate);
-                    //初始化查询队列
-                    querySkip = 0;
-                    loadMoreCanvasQuery = new BmobQuery<>();
-                    loadMoreCanvasQuery.or(bmobQueryList);
-                    loadMoreCanvasQuery.order("-createdAt");
-                    loadMoreCanvasQuery.include("creator");
-                    loadMoreCanvasQuery.addWhereLessThan("createdAt", bmobCurrentDate);
-                    loadMoreCanvasQuery.setLimit(pageLimit);
-                    loadMoreCanvasQuery.setSkip(0);
-                    loadMoreCanvasQuery.findObjects(new FindListener<BmobCanvas>() {
-                        @Override
-                        public void done(List<BmobCanvas> list, BmobException e) {
-                            if (e == null) {
-                                //下拉刷新前先清空之前的数据
-                                bmobCanvasList.clear();
-                                //添加新数据
-                                bmobCanvasList.addAll(list);
-                                adapter.notifyDataSetChanged();
-                                if (list.isEmpty())
-                                    adapter.setLoadState(adapter.LOADING_END);
-                                else {
-                                    adapter.setLoadState(adapter.LOADING_COMPLETE);
+                    //关注列表不为空，则继续查询每个人的作品
+                    //否则不查询，会引起Bmob异常
+                    if (bmobQueryList.size() != 0) {
+                        //取当前时间对应的BmobDate用于数据查询
+                        Date currentDate = new Date(System.currentTimeMillis());
+                        BmobDate bmobCurrentDate = new BmobDate(currentDate);
+                        //初始化查询队列
+                        querySkip = 0;
+                        loadMoreCanvasQuery = new BmobQuery<>();
+                        loadMoreCanvasQuery.or(bmobQueryList);
+                        loadMoreCanvasQuery.order("-createdAt");
+                        loadMoreCanvasQuery.include("creator");
+                        loadMoreCanvasQuery.addWhereLessThan("createdAt", bmobCurrentDate);
+                        loadMoreCanvasQuery.setLimit(pageLimit);
+                        loadMoreCanvasQuery.setSkip(0);
+                        loadMoreCanvasQuery.findObjects(new FindListener<BmobCanvas>() {
+                            @Override
+                            public void done(List<BmobCanvas> list, BmobException e) {
+                                if (e == null) {
+                                    //下拉刷新前先清空之前的数据
+                                    bmobCanvasList.clear();
+                                    //添加新数据
+                                    bmobCanvasList.addAll(list);
+                                    adapter.notifyDataSetChanged();
+                                    if (list.isEmpty())
+                                        adapter.setLoadState(adapter.LOADING_END);
+                                    else {
+                                        adapter.setLoadState(adapter.LOADING_COMPLETE);
+                                    }
+                                } else {
+                                    Toast.makeText(MainActivity.getInstance(), "作品获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(MainActivity.getInstance(), "作品获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                                //数据加载完毕，停止加载动画
+                                loadingAnimStop();
                             }
-                            loadingAnimStop();
-                        }
-                    });
+                        });
+                    } else {
+                        //关注用户列表为空，则作品列表也为空
+                        bmobCanvasList.clear();
+                        adapter.notifyDataSetChanged();
+                        adapter.setLoadState(adapter.LOADING_END);
+                        loadingAnimStop();
+                    }
                 } else {
                     Toast.makeText(MainActivity.getInstance(), "关注用户获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }

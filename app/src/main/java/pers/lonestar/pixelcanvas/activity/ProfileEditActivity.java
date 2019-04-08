@@ -30,6 +30,7 @@ import androidx.appcompat.widget.Toolbar;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -41,7 +42,6 @@ public class ProfileEditActivity extends AppCompatActivity {
     private boolean changeFlag = false;
     private boolean avatarChangeFlag = false;
     private int REQUEST_CODE_IMAGE = 9527;
-    private int REQUEST_CODE_CAMERA = 1997;
     private CircleImageView avatar;
     private EditText nickNameEdit;
     private EditText introductionEdit;
@@ -203,6 +203,13 @@ public class ProfileEditActivity extends AppCompatActivity {
                 }
             });
         }
+
+        //更新本地缓存
+        BmobUser.fetchUserInfo(new FetchUserInfoListener<BmobUser>() {
+            @Override
+            public void done(BmobUser user, BmobException e) {
+            }
+        });
     }
 
     //退出编辑

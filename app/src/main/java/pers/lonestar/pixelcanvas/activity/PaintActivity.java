@@ -781,11 +781,13 @@ public class PaintActivity extends AppCompatActivity {
         if (globalChangeFlag) {
             DateFormat dateFormat = DateFormat.getDateTimeInstance();
             Date date = new Date(System.currentTimeMillis());
-            litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
-            litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
             litePalCanvas.setUpdatedAt(dateFormat.format(date));
-            litePalCanvas.save();
         }
+        //创建后未作出任何修改直接返回
+        //不及时保存画布数据可能造成空指针异常
+        litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
+        litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
+        litePalCanvas.save();
         PixelApp.pixelColor = null;
         PixelApp.litePalCanvas = null;
         finish();
@@ -794,7 +796,6 @@ public class PaintActivity extends AppCompatActivity {
     @Override
     //按下返回按钮
     public void onBackPressed() {
-        super.onBackPressed();
         backProcess();
     }
 

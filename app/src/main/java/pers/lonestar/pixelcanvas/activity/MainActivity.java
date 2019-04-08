@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        pixelUser = BmobUser.getCurrentUser(PixelUser.class);
         drawerLayout = findViewById(R.id.main_drawerlayout);
         navigationView = findViewById(R.id.nav_view);
         tabLayout = findViewById(R.id.main_tablayout);
@@ -72,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull final View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                pixelUser = BmobUser.getCurrentUser(PixelUser.class);
                 if (avatar == null) {
                     avatar = findViewById(R.id.nav_avatar);
                     avatar.setOnClickListener(new View.OnClickListener() {
@@ -87,17 +92,16 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (nickName == null) {
                     nickName = findViewById(R.id.nav_nickname);
-                    nickName.setText(pixelUser.getNickname());
                 }
                 if (introduction == null) {
                     introduction = findViewById(R.id.nav_introduction);
-                    if (pixelUser.getIntroduction() != null)
-                        introduction.setText(pixelUser.getIntroduction());
                 }
-            }
 
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
+                //设置昵称
+                nickName.setText(pixelUser.getNickname());
+                //设置个人简介
+                if (pixelUser.getIntroduction() != null)
+                    introduction.setText(pixelUser.getIntroduction());
                 //设置头像
                 Glide.with(MainActivity.this)
                         .load(pixelUser.getAvatarUrl())

@@ -138,7 +138,25 @@ public class ProfileActivity extends AppCompatActivity {
 
     //下拉刷新
     private void refreshData() {
+        //开启加载动画
         loadingAnimStart();
+
+        //更新当前主页用户信息
+        BmobQuery<PixelUser> bmobQuery = new BmobQuery<>();
+        bmobQuery.addWhereEqualTo("objectId", pixelUser.getObjectId());
+        bmobQuery.findObjects(new FindListener<PixelUser>() {
+            @Override
+            public void done(List<PixelUser> list, BmobException e) {
+                if (e == null) {
+                    PixelUser newPixelUser = list.get(0);
+                    pixelUser.setNickname(newPixelUser.getNickname());
+                    pixelUser.setIntroduction(newPixelUser.getIntroduction());
+                    pixelUser.setAvatarUrl(newPixelUser.getAvatarUrl());
+                    loadInfo();
+                }
+            }
+        });
+
         //取当前时间对应的BmobDate用于数据查询
         Date currentDate = new Date(System.currentTimeMillis());
         BmobDate bmobCurrentDate = new BmobDate(currentDate);

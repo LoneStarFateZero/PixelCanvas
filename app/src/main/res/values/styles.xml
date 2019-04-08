@@ -24,4 +24,10 @@
     <style name="AppTheme.PopupOverlay" parent="@style/Widget.AppCompat.Light.PopupMenu.Overflow">
         <item name="android:popupBackground">@color/colorPrimary</item>
     </style>
+
+    <style name="TabLayoutTheme" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">20dp</item>
+        <item name="android:textColor">@color/colorFont</item>
+        <item name="android:fontFamily">@font/zpix</item>
+    </style>
 </resources>

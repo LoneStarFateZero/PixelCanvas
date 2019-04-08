@@ -24,7 +24,8 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/main_tablayout"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+                android:layout_height="?attr/actionBarSize"
+                app:tabTextAppearance="@style/TabLayoutTheme" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.viewpager.widget.ViewPager

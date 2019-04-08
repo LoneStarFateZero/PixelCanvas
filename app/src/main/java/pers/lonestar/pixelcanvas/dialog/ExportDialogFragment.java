@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -55,7 +56,6 @@ public class ExportDialogFragment extends DialogFragment {
                     Toast.makeText(requireContext(), "请选择导出格式", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog.cancel();
-                    //TODO
                     //导出
                     saveToSystemGallery(requireContext(), litePalCanvas, canvas, format);
                 }
@@ -141,6 +141,8 @@ public class ExportDialogFragment extends DialogFragment {
             if (exportFormat != null) {
                 FileOutputStream fos = new FileOutputStream(file);
                 bmp.compress(exportFormat, 100, fos);
+                //通知系统图库扫描更新
+                MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, new String[]{"image/png", "image/jpeg", "image/webp"}, null);
                 fos.flush();
                 fos.close();
             } else {
@@ -149,10 +151,8 @@ public class ExportDialogFragment extends DialogFragment {
             }
             Toast.makeText(context, "图片已导出", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             Toast.makeText(context, "图片导出失败，请检查设置", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
-            e.printStackTrace();
             Toast.makeText(context, "图片导出失败，请检查设置", Toast.LENGTH_SHORT).show();
         }
 
