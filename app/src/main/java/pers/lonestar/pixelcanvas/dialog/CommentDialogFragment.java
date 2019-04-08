@@ -21,6 +21,7 @@ import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.CanvasComment;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.listener.CommentInsertListener;
 
 public class CommentDialogFragment extends DialogFragment {
     private TextView cancel;
@@ -28,6 +29,7 @@ public class CommentDialogFragment extends DialogFragment {
     private EditText content;
     private BmobCanvas canvas;
     private AlertDialog dialog;
+    private CommentInsertListener commentInsertListener;
     private boolean mBackCancel = false;//默认点击返回键关闭dialog
     private boolean mTouchOutsideCancel = false;//默认点击dialog外面屏幕，dialog关闭
 
@@ -55,7 +57,7 @@ public class CommentDialogFragment extends DialogFragment {
                     return;
                 }
                 PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
-                CanvasComment comment = new CanvasComment();
+                final CanvasComment comment = new CanvasComment();
                 comment.setCommentText(content.getText().toString());
                 comment.setCommentUser(currentUser);
                 comment.setCanvas(canvas);
@@ -64,6 +66,7 @@ public class CommentDialogFragment extends DialogFragment {
                     public void done(String s, BmobException e) {
                         if (e == null) {
                             dialog.cancel();
+                            commentInsertListener.insertComment(comment);
                             Toast.makeText(requireContext(), "评论成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(requireContext(), "评论失败，请检查网络设置", Toast.LENGTH_SHORT).show();
@@ -88,8 +91,9 @@ public class CommentDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    public void initParameter(BmobCanvas canvas) {
+    public void initParameter(BmobCanvas canvas, CommentInsertListener commentInsertListener) {
         this.canvas = canvas;
+        this.commentInsertListener = commentInsertListener;
     }
 
 }

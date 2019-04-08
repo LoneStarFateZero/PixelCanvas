@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/canvas_info_thumbnail"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
                 android:layout_gravity="center"
                 android:background="#F5F5F5"
                 android:foreground="@drawable/stroke"
@@ -66,8 +66,8 @@
 
                 <com.sackcentury.shinebuttonlib.ShineButton
                     android:id="@+id/canvas_info_like_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@android:color/darker_gray"
                     app:allow_random_color="true"
@@ -94,8 +94,8 @@
 
                 <com.sackcentury.shinebuttonlib.ShineButton
                     android:id="@+id/canvas_info_favorite_button"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@android:color/darker_gray"
                     app:allow_random_color="true"
@@ -121,8 +121,8 @@
 
                 <ImageView
                     android:id="@+id/canvas_info_comment"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@drawable/ic_comment_black_24dp" />
 
                 <TextView
@@ -148,8 +148,9 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/canvas_info_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
                 app:civ_border_color="#FFFFFF"
                 app:civ_border_width="2dp" />
 
@@ -168,9 +169,26 @@
             android:layout_height="1px"
             android:background="#FFFFFF" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/canvas_info_RecyclerView"
+        <TextView
+            android:id="@+id/canvas_info_nocomment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:gravity="center"
+            android:text="---这里什么也没有---"
+            android:textColor="@color/colorFont"
+            android:textSize="25sp"
+            android:visibility="gone" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/canvas_info_SwipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/canvas_info_RecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

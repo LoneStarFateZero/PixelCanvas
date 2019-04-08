@@ -141,8 +141,10 @@ public class FollowCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * @param loadState 0.正在加载 1.加载完成 2.加载到底
      */
     public void setLoadState(int loadState) {
-        this.loadState = loadState;
-        notifyItemChanged(bmobCanvasList.size());
+        if (this.loadState != LOADING_END) {
+            this.loadState = loadState;
+            notifyItemChanged(bmobCanvasList.size());
+        }
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {

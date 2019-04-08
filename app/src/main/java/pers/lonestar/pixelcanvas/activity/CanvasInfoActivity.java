@@ -16,6 +16,7 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -26,6 +27,7 @@ import pers.lonestar.pixelcanvas.dialog.CommentDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.CanvasComment;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.listener.CommentInsertListener;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class CanvasInfoActivity extends AppCompatActivity {
@@ -41,7 +43,9 @@ public class CanvasInfoActivity extends AppCompatActivity {
     private TextView favoriteCount;
     private ShineButton favoriteButton;
     private ImageView commentButton;
+    private TextView noComment;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private CommentAdapter adapter;
     private List<CanvasComment> commentList;
 
@@ -75,7 +79,9 @@ public class CanvasInfoActivity extends AppCompatActivity {
         favoriteCount = findViewById(R.id.canvas_info_favorite_count);
         favoriteButton = findViewById(R.id.canvas_info_favorite_button);
         commentButton = findViewById(R.id.canvas_info_comment);
+        noComment = findViewById(R.id.canvas_info_nocomment);
         recyclerView = findViewById(R.id.canvas_info_RecyclerView);
+        swipeRefreshLayout = findViewById(R.id.canvas_info_SwipeRefreshLayout);
     }
 
     private void loadCanvasInfo() {
@@ -90,11 +96,23 @@ public class CanvasInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CommentDialogFragment commentDialogFragment = new CommentDialogFragment();
-                commentDialogFragment.initParameter(bmobCanvas);
+                commentDialogFragment.initParameter(bmobCanvas, new CommentInsertListener() {
+                    @Override
+                    public void insertComment(CanvasComment canvasComment) {
+                        commentList.add(0, canvasComment);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
                 commentDialogFragment.show(getSupportFragmentManager(), "CommentDialog");
             }
         });
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadComment();
+            }
+        });
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         commentList = new ArrayList<>();
@@ -112,6 +130,14 @@ public class CanvasInfoActivity extends AppCompatActivity {
             @Override
             public void done(List<CanvasComment> list, BmobException e) {
                 if (e == null) {
+                    if (list.isEmpty()) {
+                        noComment.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        noComment.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
                     commentList.clear();
                     commentList.addAll(list);
                     adapter.notifyDataSetChanged();
