@@ -38,13 +38,13 @@ public class AboutActivity extends BaseSwipeBackActivity {
                 .addItem(new Element().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BmobUpdateAgent.update(AboutActivity.this);
+                        BmobUpdateAgent.forceUpdate(AboutActivity.this);
                     }
-                }).setTitle("Version 1.0"))
+                }).setTitle("Version 1.1"))
                 .addGroup("与我联系")
                 .addEmail("18815755562@163.com", "与我联系")
                 .addWebsite("https://github.com/LoneStarFateZero/PixelCanvas", "提点意见")
-                .addGitHub("LoneStarFateZero", "关注 Github")
+                .addGitHub("LoneStarFateZero", "关注Github")
                 .create();
         linearLayout.addView(aboutPage);
     }

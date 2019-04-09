@@ -1,7 +1,6 @@
 package pers.lonestar.pixelcanvas.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,13 +22,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.update.BmobUpdateAgent;
 import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.fragment.FollowFragment;
 import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ActivityCollector;
+import pers.lonestar.pixelcanvas.utils.UpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity instance;
@@ -53,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //检测更新
-        checkUpdate();
+        UpdateUtils.checkUpdate(this);
 
         ActivityCollector.addActivity(this);
         instance = this;
@@ -189,14 +187,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ActivityCollector.finishAll();
-    }
-
-    private void checkUpdate() {
-        SharedPreferences sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
-        boolean autoUpdate = sharedPreferences.getBoolean("auto_update", true);
-        //自动更新检测
-        if (autoUpdate) {
-            BmobUpdateAgent.update(this);
-        }
     }
 }

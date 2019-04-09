@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.AboutActivity"></activity>
+        <activity android:name=".activity.AboutActivity" />
         <activity
             android:name=".activity.RegisterActivity"
             android:launchMode="singleTask" />
@@ -74,13 +74,22 @@
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
             android:authorities="pers.lonestar.pixelcanvas.BmobContentProvider" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="pers.lonestar.pixelcanvas"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <meta-data
             android:name="pers.lonestar.pixelcanvas.utils.glide.GlideConfiguration"
             android:value="GlideModule" />
         <meta-data
             android:name="BMOB_CHANNEL"
-            android:value="bmob_console" />
+            android:value="bmobconsole" />
     </application>
 
 </manifest>
