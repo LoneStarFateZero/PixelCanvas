@@ -38,7 +38,8 @@ public class RegisterActivity extends AppCompatActivity {
                 pixelUser.setAvatarUrl(PixelApp.defaultAvatarUrl);
                 pixelUser.setUsername(userName);
                 pixelUser.setEmail(userName);
-                pixelUser.setNickname(userName);
+                pixelUser.setNickname("无名");
+                pixelUser.setIntroduction("编辑个人简介");
                 pixelUser.setPassword(password);
                 pixelUser.signUp(new SaveListener<PixelUser>() {
                     @Override

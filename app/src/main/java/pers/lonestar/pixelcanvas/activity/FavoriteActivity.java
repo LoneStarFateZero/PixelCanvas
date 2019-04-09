@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +24,7 @@ import pers.lonestar.pixelcanvas.infostore.CanvasFavorite;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.listener.FavoriteRecyclerOnScrollListener;
 
-public class FavoriteActivity extends AppCompatActivity {
+public class FavoriteActivity extends BaseSwipeBackActivity {
     private static FavoriteActivity instance;
     private RecyclerView recyclerView;
     private LVBlazeWood lvBlazeWood;
@@ -56,7 +55,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private void initView() {
         pixelUser = BmobUser.getCurrentUser(PixelUser.class);
 
-        toolbar = findViewById(R.id.favorite_activity_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.favorite_activity_toolbar);
         toolbar.setTitle("收藏列表");
         toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
         setSupportActionBar(toolbar);
@@ -66,7 +65,7 @@ public class FavoriteActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-        swipeRefreshLayout = findViewById(R.id.favorite_activity_SwipeRefreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.favorite_activity_SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -74,7 +73,7 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.favorite_activity_recyclerview);
+        recyclerView = (RecyclerView) findViewById(R.id.favorite_activity_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteList = new ArrayList<>();
         adapter = new FavoriteAdapter(favoriteList);
@@ -91,7 +90,7 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         });
 
-        lvBlazeWood = findViewById(R.id.favorite_activity_loadinganim);
+        lvBlazeWood = (LVBlazeWood) findViewById(R.id.favorite_activity_loadinganim);
     }
 
     private void refreshData() {

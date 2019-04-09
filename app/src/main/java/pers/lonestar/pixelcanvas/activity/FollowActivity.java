@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +21,7 @@ import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.FollowUserAdapter;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 
-public class FollowActivity extends AppCompatActivity {
+public class FollowActivity extends BaseSwipeBackActivity {
     private static FollowActivity instance;
     private RecyclerView recyclerView;
     private FollowUserAdapter adapter;
@@ -48,7 +47,7 @@ public class FollowActivity extends AppCompatActivity {
     private void initView() {
         pixelUser = BmobUser.getCurrentUser(PixelUser.class);
 
-        toolbar = findViewById(R.id.follow_activity_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.follow_activity_toolbar);
         toolbar.setTitle("关注列表");
         //设置标题字体样式为像素字体，否则为默认字体，与整体像素风格不匹配
         toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
@@ -59,7 +58,7 @@ public class FollowActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
         }
 
-        swipeRefreshLayout = findViewById(R.id.follow_activity_SwipeRefreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.follow_activity_SwipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -67,7 +66,7 @@ public class FollowActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = findViewById(R.id.follow_activity_recyclerview);
+        recyclerView = (RecyclerView) findViewById(R.id.follow_activity_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         pixelUserList = new ArrayList<>();
         adapter = new FollowUserAdapter(pixelUserList);

@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +38,7 @@ import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.listener.EndlessRecyclerOnScrollListener;
 import pers.lonestar.pixelcanvas.utils.BlurTransformation;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends BaseSwipeBackActivity {
     private static ProfileActivity instance;
     private Toolbar toolbar;
     //背景
@@ -48,6 +47,8 @@ public class ProfileActivity extends AppCompatActivity {
     private CircleImageView avatar;
     //昵称
     private TextView userNickName;
+    //昵称
+    private TextView userIntroduction;
     //信息编辑浮动按钮
     private FloatingActionButton editFab;
     //用户关注浮动按钮
@@ -89,18 +90,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     //初始化View
     private void initView() {
-        backgroundImg = findViewById(R.id.profile_background_img);
-        avatar = findViewById(R.id.profile_avatar);
-        editFab = findViewById(R.id.profile_edit_fab);
-        followFab = findViewById(R.id.profile_follow_fab);
-        toolbar = findViewById(R.id.profile_toolbar);
-        userNickName = findViewById(R.id.profile_nickname);
-        swipeRefreshLayout = findViewById(R.id.profile_swipe);
-        lvBlazeWood = findViewById(R.id.profile_loadinganim);
-        recyclerView = findViewById(R.id.profile_recyclerview);
+        backgroundImg = (ImageView) findViewById(R.id.profile_background_img);
+        avatar = (CircleImageView) findViewById(R.id.profile_avatar);
+        editFab = (FloatingActionButton) findViewById(R.id.profile_edit_fab);
+        followFab = (FloatingActionButton) findViewById(R.id.profile_follow_fab);
+        toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
+        userNickName = (TextView) findViewById(R.id.profile_nickname);
+        userIntroduction = (TextView) findViewById(R.id.profile_intro);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.profile_swipe);
+        lvBlazeWood = (LVBlazeWood) findViewById(R.id.profile_loadinganim);
+        recyclerView = (RecyclerView) findViewById(R.id.profile_recyclerview);
 
         //如果访问的是他人的主页，则不显示编辑按钮，只有自己的主页才可以编辑
-        toolbar.setTitleTextAppearance(this, R.style.TitleStyle);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -165,6 +166,7 @@ public class ProfileActivity extends AppCompatActivity {
         querySkip = 0;
         loadMoreQuery = new BmobQuery<>();
         loadMoreQuery.addWhereEqualTo("creator", pixelUser);
+        loadMoreQuery.include("creator");
         loadMoreQuery.addWhereLessThan("createdAt", bmobCurrentDate);
         loadMoreQuery.order("-createdAt");
         loadMoreQuery.setLimit(pageLimit);
@@ -228,6 +230,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .apply(RequestOptions.bitmapTransform(new BlurTransformation(15, 1)))
                 .into(backgroundImg);
         userNickName.setText(pixelUser.getNickname());
+        userIntroduction.setText(pixelUser.getIntroduction());
 
         //关注状态查询
         final PixelUser curPixelUser = BmobUser.getCurrentUser(PixelUser.class);

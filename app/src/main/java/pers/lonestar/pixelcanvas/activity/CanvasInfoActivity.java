@@ -2,6 +2,7 @@ package pers.lonestar.pixelcanvas.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +14,8 @@ import com.sackcentury.shinebuttonlib.ShineButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -36,9 +38,10 @@ import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.listener.CommentInsertListener;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
-public class CanvasInfoActivity extends AppCompatActivity {
+public class CanvasInfoActivity extends BaseSwipeBackActivity {
     private static CanvasInfoActivity instance;
     private BmobCanvas bmobCanvas;
+    private Toolbar toolbar;
     private PixelUser pixelUser;
     private ImageView thumbnail;
     private CircleImageView avatar;
@@ -82,18 +85,26 @@ public class CanvasInfoActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        thumbnail = findViewById(R.id.canvas_info_thumbnail);
-        avatar = findViewById(R.id.canvas_info_avatar);
-        nickName = findViewById(R.id.canvas_info_nickname);
-        canvasName = findViewById(R.id.canvas_info_canvas_name);
-        likeCount = findViewById(R.id.canvas_info_like_count);
-        likeButton = findViewById(R.id.canvas_info_like_button);
-        favoriteCount = findViewById(R.id.canvas_info_favorite_count);
-        favoriteButton = findViewById(R.id.canvas_info_favorite_button);
-        commentButton = findViewById(R.id.canvas_info_comment);
-        noComment = findViewById(R.id.canvas_info_nocomment);
-        recyclerView = findViewById(R.id.canvas_info_RecyclerView);
-        swipeRefreshLayout = findViewById(R.id.canvas_info_SwipeRefreshLayout);
+        thumbnail = (ImageView) findViewById(R.id.canvas_info_thumbnail);
+        avatar = (CircleImageView) findViewById(R.id.canvas_info_avatar);
+        nickName = (TextView) findViewById(R.id.canvas_info_nickname);
+        canvasName = (TextView) findViewById(R.id.canvas_info_canvas_name);
+        likeCount = (TextView) findViewById(R.id.canvas_info_like_count);
+        likeButton = (ShineButton) findViewById(R.id.canvas_info_like_button);
+        favoriteCount = (TextView) findViewById(R.id.canvas_info_favorite_count);
+        favoriteButton = (ShineButton) findViewById(R.id.canvas_info_favorite_button);
+        commentButton = (ImageView) findViewById(R.id.canvas_info_comment);
+        noComment = (TextView) findViewById(R.id.canvas_info_nocomment);
+        recyclerView = (RecyclerView) findViewById(R.id.canvas_info_RecyclerView);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.canvas_info_SwipeRefreshLayout);
+        toolbar = (Toolbar) findViewById(R.id.canvas_info_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
     }
 
     private void loadCanvasInfo() {
@@ -217,6 +228,16 @@ public class CanvasInfoActivity extends AppCompatActivity {
         commentList = new ArrayList<>();
         adapter = new CommentAdapter(commentList);
         recyclerView.setAdapter(adapter);
+
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击头像跳转到个人主页
+                Intent intent = new Intent(CanvasInfoActivity.getInstance(), ProfileActivity.class);
+                intent.putExtra("pixel_user", pixelUser);
+                CanvasInfoActivity.getInstance().startActivity(intent);
+            }
+        });
     }
 
     private void loadComment() {
@@ -317,5 +338,15 @@ public class CanvasInfoActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 }

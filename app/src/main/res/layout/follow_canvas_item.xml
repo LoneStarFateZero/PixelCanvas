@@ -25,7 +25,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 app:civ_border_color="#1B1B1B"
-                app:civ_border_width="2dp" />
+                app:civ_border_width="1dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,16 +40,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="用户昵称" />
+                    android:maxLines="1" />
 
                 <TextView
                     android:id="@+id/follow_canvas_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="发布时间" />
+                    android:maxLines="1" />
             </LinearLayout>
         </LinearLayout>
 
@@ -60,7 +58,6 @@
             android:layout_margin="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="作品名称"
             android:textSize="25sp" />
 
         <include layout="@layout/stamp" />

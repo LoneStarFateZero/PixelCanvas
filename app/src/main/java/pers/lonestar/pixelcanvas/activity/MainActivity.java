@@ -100,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 //设置昵称
                 nickName.setText(pixelUser.getNickname());
                 //设置个人简介
-                if (pixelUser.getIntroduction() != null)
-                    introduction.setText(pixelUser.getIntroduction());
+                introduction.setText(pixelUser.getIntroduction());
                 //设置头像
                 Glide.with(MainActivity.this)
                         .load(pixelUser.getAvatarUrl())

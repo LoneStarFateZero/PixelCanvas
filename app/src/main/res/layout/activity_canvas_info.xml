@@ -43,6 +43,11 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#FFFFFF" />
+
         <TextView
             android:id="@+id/canvas_info_canvas_name"
             android:layout_width="wrap_content"
@@ -66,8 +71,8 @@
 
                 <com.sackcentury.shinebuttonlib.ShineButton
                     android:id="@+id/canvas_info_like_button"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@android:color/darker_gray"
                     app:allow_random_color="true"
@@ -93,8 +98,8 @@
 
                 <com.sackcentury.shinebuttonlib.ShineButton
                     android:id="@+id/canvas_info_favorite_button"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@android:color/darker_gray"
                     app:allow_random_color="true"
@@ -119,8 +124,9 @@
 
                 <ImageView
                     android:id="@+id/canvas_info_comment"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_horizontal"
                     android:src="@drawable/ic_comment_black_24dp" />
 
                 <TextView
@@ -141,25 +147,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/canvas_info_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="10dp"
+                android:layout_margin="10dp"
                 app:civ_border_color="#FFFFFF"
-                app:civ_border_width="2dp" />
+                app:civ_border_width="1dp" />
 
             <TextView
                 android:id="@+id/canvas_info_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"
+                android:layout_margin="10dp"
                 android:textColor="@color/colorFont"
-                android:textSize="15sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <View
@@ -186,7 +192,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/canvas_info_RecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

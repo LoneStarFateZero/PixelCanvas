@@ -24,10 +24,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.FavoriteActivity"></activity>
-        <activity android:name=".activity.ProfileEditActivity" />
-        <activity android:name=".activity.FollowActivity" />
-        <activity android:name=".activity.CanvasInfoActivity" />
         <activity
             android:name=".activity.RegisterActivity"
             android:launchMode="singleTask" />
@@ -58,7 +54,18 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppThemeMain" />
+        <activity
+            android:name=".activity.FavoriteActivity"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.ProfileEditActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.FollowActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".activity.CanvasInfoActivity" />
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"

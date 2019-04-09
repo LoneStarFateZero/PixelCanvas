@@ -16,11 +16,11 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            app:civ_border_color="#1B1B1B"
-            app:civ_border_width="2dp"
             android:id="@+id/follow_user_item_avatar"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="1dp" />
 
         <TextView
             android:id="@+id/follow_user_item_nickname"
@@ -30,7 +30,6 @@
             android:layout_marginStart="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="用户昵称"
             android:textSize="20sp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

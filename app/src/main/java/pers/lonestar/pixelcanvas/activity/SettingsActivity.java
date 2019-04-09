@@ -2,10 +2,9 @@ package pers.lonestar.pixelcanvas.activity;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import pers.lonestar.pixelcanvas.R;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseSwipeBackActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
