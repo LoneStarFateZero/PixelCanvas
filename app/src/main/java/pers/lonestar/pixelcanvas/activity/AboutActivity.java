@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import cn.bmob.v3.update.BmobUpdateAgent;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 import pers.lonestar.pixelcanvas.R;
@@ -34,7 +35,12 @@ public class AboutActivity extends BaseSwipeBackActivity {
                 .isRTL(false)
                 .setImage(R.drawable.ic_launcher)
                 .setDescription("一个简单的像素绘图和分享APP，你可以通过拖动画笔绘制一个简单的像素艺术，并和大家分享你的像素艺术。")
-                .addItem(new Element().setTitle("Version 1.0"))
+                .addItem(new Element().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BmobUpdateAgent.update(AboutActivity.this);
+                    }
+                }).setTitle("Version 1.0"))
                 .addGroup("与我联系")
                 .addEmail("18815755562@163.com", "与我联系")
                 .addWebsite("https://github.com/LoneStarFateZero/PixelCanvas", "提点意见")

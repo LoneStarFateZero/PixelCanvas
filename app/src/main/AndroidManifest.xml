@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许读取手机状态 用于创建BmobInstallation -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name=".PixelApp"
@@ -66,6 +67,9 @@
             android:name=".activity.FollowActivity"
             android:launchMode="singleTask" />
         <activity android:name=".activity.CanvasInfoActivity" />
+        <activity
+            android:name="cn.bmob.v3.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
@@ -74,6 +78,9 @@
         <meta-data
             android:name="pers.lonestar.pixelcanvas.utils.glide.GlideConfiguration"
             android:value="GlideModule" />
+        <meta-data
+            android:name="BMOB_CHANNEL"
+            android:value="bmob_console" />
     </application>
 
 </manifest>
