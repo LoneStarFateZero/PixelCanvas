@@ -70,6 +70,7 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_canvas_info);
+
         instance = this;
 
         Intent intent = getIntent();
@@ -348,5 +349,10 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

@@ -22,6 +22,7 @@ import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PublishActivity extends AppCompatActivity {
@@ -34,6 +35,8 @@ public class PublishActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
+
+        ActivityCollector.addActivity(this);
 
         Intent intent = getIntent();
         litePalCanvas = (LitePalCanvas) intent.getSerializableExtra("local_canvas");
@@ -77,7 +80,7 @@ public class PublishActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 postCanvasFile();
                 //考虑发布作品之后转到个人主页
-
+                ActivityCollector.removeActivity(PublishActivity.this);
                 finish();
             }
         });
@@ -116,6 +119,7 @@ public class PublishActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                ActivityCollector.removeActivity(this);
                 finish();
                 break;
             case R.id.post_canvas:
@@ -123,5 +127,11 @@ public class PublishActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        ActivityCollector.removeActivity(this);
+        finish();
     }
 }

@@ -19,4 +19,9 @@ public class BaseSwipeBackActivity extends SwipeBackActivity {
         // 滑动退出的效果只能从边界滑动才有效果，如果要扩大touch的范围，可以调用这个方法
         //mSwipeBackLayout.setEdgeSize(200);
     }
+
+    @Override
+    public void scrollToFinishActivity() {
+        super.scrollToFinishActivity();
+    }
 }

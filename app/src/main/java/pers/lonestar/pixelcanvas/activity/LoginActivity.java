@@ -14,6 +14,7 @@ import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText usernameText;
@@ -25,12 +26,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ActivityCollector.addActivity(this);
+
         //本地是否有用户缓存
         if (BmobUser.isLogin()) {
             fetchUserInfo();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-            finish();
+            ActivityCollector.finishAll();
         } else {
             Toast.makeText(LoginActivity.this, "尚未登录，请先登录", Toast.LENGTH_SHORT).show();
         }
@@ -70,9 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        usernameText.setText("1589186895@qq.com");
-        passwordText.setText("123456");
     }
 
     private void fetchUserInfo() {
@@ -86,5 +87,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        ActivityCollector.finishAll();
     }
 }

@@ -80,7 +80,9 @@ public class ProfileActivity extends BaseSwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
         instance = this;
+
         Intent intent = getIntent();
         pixelUser = (PixelUser) intent.getSerializableExtra("pixel_user");
         initView();
@@ -341,5 +343,10 @@ public class ProfileActivity extends BaseSwipeBackActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

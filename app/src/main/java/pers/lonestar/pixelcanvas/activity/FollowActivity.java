@@ -38,6 +38,7 @@ public class FollowActivity extends BaseSwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follow);
+
         instance = this;
 
         initView();
@@ -98,5 +99,10 @@ public class FollowActivity extends BaseSwipeBackActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

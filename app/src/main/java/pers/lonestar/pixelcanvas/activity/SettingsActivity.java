@@ -1,7 +1,9 @@
 package pers.lonestar.pixelcanvas.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,6 +77,10 @@ public class SettingsActivity extends BaseSwipeBackActivity {
             @Override
             public void onClick(View v) {
                 final GlideCatchUtil glideCatchUtil = GlideCatchUtil.getInstance();
+                if (glideCatchUtil.getCacheSize().equals("0.0Byte")) {
+                    Toast.makeText(SettingsActivity.this, "没有缓存需要清理", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //显示清理对话框，包括缓存大小
                 new AlertDialog.Builder(SettingsActivity.this)
                         .setMessage("确定要清理掉 " + glideCatchUtil.getCacheSize() + " 图片缓存吗？")
@@ -97,14 +103,18 @@ public class SettingsActivity extends BaseSwipeBackActivity {
         about.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(SettingsActivity.this, AboutActivity.class);
+                startActivity(intent);
             }
         });
 
         appInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent();
+                intent.setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
             }
         });
 
@@ -115,9 +125,13 @@ public class SettingsActivity extends BaseSwipeBackActivity {
                 new AlertDialog.Builder(SettingsActivity.this)
                         .setMessage("您确定要退出当前帐号吗？")
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            //用户退出当前帐号
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 BmobUser.logOut();
+                                finish();
+                                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                                startActivity(intent);
                             }
                         }).setNegativeButton("取消", null)
                         .create()
@@ -134,5 +148,10 @@ public class SettingsActivity extends BaseSwipeBackActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

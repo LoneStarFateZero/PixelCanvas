@@ -23,6 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activity.AboutActivity"></activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:launchMode="singleTask" />
@@ -69,8 +70,10 @@
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
             android:authorities="pers.lonestar.pixelcanvas.BmobContentProvider" />
+
         <meta-data
             android:name="pers.lonestar.pixelcanvas.utils.glide.GlideConfiguration"
             android:value="GlideModule" />
     </application>
+
 </manifest>

@@ -27,6 +27,7 @@ import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.fragment.FollowFragment;
 import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 
 public class MainActivity extends AppCompatActivity {
     private static MainActivity instance;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ActivityCollector.addActivity(this);
         instance = this;
 
         initView();
@@ -176,5 +179,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    public void onBackPressed() {
+        ActivityCollector.finishAll();
     }
 }

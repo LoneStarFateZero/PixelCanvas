@@ -21,9 +21,5 @@
             android:id="@+id/paint_nav_share"
             android:icon="@drawable/ic_share"
             android:title="分享" />
-        <item
-            android:id="@+id/paint_nav_settings"
-            android:icon="@drawable/ic_settings"
-            android:title="设置" />
     </group>
 </menu>

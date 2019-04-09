@@ -1,6 +1,7 @@
 package pers.lonestar.pixelcanvas.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class FavoriteActivity extends BaseSwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
+
         instance = this;
 
         initView();
@@ -156,5 +158,20 @@ public class FavoriteActivity extends BaseSwipeBackActivity {
         lvBlazeWood.stopAnim();
         lvBlazeWood.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

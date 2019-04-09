@@ -14,6 +14,7 @@ import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText usernameText;
@@ -24,6 +25,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        ActivityCollector.addActivity(this);
 
         usernameText = findViewById(R.id.register_username_text);
         passwordText = findViewById(R.id.register_password_text);
@@ -48,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "注册成功：" + BmobUser.getCurrentUser(PixelUser.class).getNickname(), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                             startActivity(intent);
-                            finish();
+                            ActivityCollector.finishAll();
                         } else {
                             Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
                         }

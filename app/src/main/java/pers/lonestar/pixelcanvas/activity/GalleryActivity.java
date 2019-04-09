@@ -46,20 +46,11 @@ public class GalleryActivity extends BaseSwipeBackActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
         instance = this;
 
         initView();
         initListener();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return true;
     }
 
     private void initListener() {
@@ -114,5 +105,20 @@ public class GalleryActivity extends BaseSwipeBackActivity {
         litePalCanvasList.addAll(LitePal.order("id desc").find(LitePalCanvas.class));
         localCanvasAdapter.notifyDataSetChanged();
 //        litePalCanvasList = LitePal.order("id desc").find(LitePalCanvas.class);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }
