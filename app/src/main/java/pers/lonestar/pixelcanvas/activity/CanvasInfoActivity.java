@@ -209,7 +209,7 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                         //可见性应该设置一下
                         if (!commentList.isEmpty()) {
                             noComment.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -253,10 +253,10 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                 if (e == null) {
                     if (list.isEmpty()) {
                         noComment.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
+                        swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
                         noComment.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                     }
                     swipeRefreshLayout.setRefreshing(false);
                     commentList.clear();

@@ -6,8 +6,8 @@ android {
         applicationId "pers.lonestar.pixelcanvas"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.1"
+        versionCode 5
+        versionName "1.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

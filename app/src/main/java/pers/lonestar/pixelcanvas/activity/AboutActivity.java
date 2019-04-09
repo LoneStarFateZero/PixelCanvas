@@ -1,11 +1,16 @@
 package pers.lonestar.pixelcanvas.activity;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import cn.bmob.v3.update.BmobUpdateAgent;
 import mehdi.sakout.aboutpage.AboutPage;
@@ -13,6 +18,7 @@ import mehdi.sakout.aboutpage.Element;
 import pers.lonestar.pixelcanvas.R;
 
 public class AboutActivity extends BaseSwipeBackActivity {
+    private int REQUEST_CODE_PERMISSION = 1997;
     private LinearLayout linearLayout;
     private Toolbar toolbar;
 
@@ -38,9 +44,9 @@ public class AboutActivity extends BaseSwipeBackActivity {
                 .addItem(new Element().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        BmobUpdateAgent.forceUpdate(AboutActivity.this);
+                        requestMatissePermissions();
                     }
-                }).setTitle("Version 1.1"))
+                }).setTitle("Version 1.4"))
                 .addGroup("与我联系")
                 .addEmail("18815755562@163.com", "与我联系")
                 .addWebsite("https://github.com/LoneStarFateZero/PixelCanvas", "提点意见")
@@ -62,5 +68,34 @@ public class AboutActivity extends BaseSwipeBackActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    private void requestMatissePermissions() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //用户同意，执行操作
+                BmobUpdateAgent.forceUpdate(this);
+            } else {
+                //用户不同意，向用户展示该权限作用
+                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("应用需要读取和写入外部存储来选择图片、导出图片和更新，否则部分功能可能无法使用")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestMatissePermissions();
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .create()
+                            .show();
+                }
+            }
+        }
     }
 }

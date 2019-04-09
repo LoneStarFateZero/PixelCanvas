@@ -1,6 +1,9 @@
 package pers.lonestar.pixelcanvas.activity;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -31,6 +35,7 @@ import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 import pers.lonestar.pixelcanvas.utils.UpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
+    private int REQUEST_CODE_PERMISSION = 1997;
     private static MainActivity instance;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -51,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        UpdateUtils.checkUpdate(this);
 
         ActivityCollector.addActivity(this);
         instance = this;
@@ -187,5 +190,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         ActivityCollector.finishAll();
+    }
+
+    private void requestUpdatePermissions() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //用户同意，执行操作
+                UpdateUtils.checkUpdate(this);
+            } else {
+                //用户不同意，向用户展示该权限作用
+                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("应用需要读取和写入外部存储来选择图片、导出图片和更新，否则部分功能可能无法使用")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestUpdatePermissions();
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .create()
+                            .show();
+                }
+            }
+        }
     }
 }
