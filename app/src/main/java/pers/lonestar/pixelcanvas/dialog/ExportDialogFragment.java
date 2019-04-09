@@ -155,18 +155,6 @@ public class ExportDialogFragment extends DialogFragment {
         } catch (IOException e) {
             Toast.makeText(context, "图片导出失败，请检查设置", Toast.LENGTH_SHORT).show();
         }
-
-        /*
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), fileName, null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(file.getAbsolutePath())));
-        */
     }
 
     //获取View的Bitmap，用于图像生成和设置

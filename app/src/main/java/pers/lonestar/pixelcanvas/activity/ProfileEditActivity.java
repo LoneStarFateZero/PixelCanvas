@@ -1,8 +1,10 @@
 package pers.lonestar.pixelcanvas.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +24,7 @@ import com.zhihu.matisse.engine.impl.PicassoEngine;
 
 import java.io.File;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -42,6 +45,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private boolean changeFlag = false;
     private boolean avatarChangeFlag = false;
     private int REQUEST_CODE_IMAGE = 9527;
+    private int REQUEST_CODE_PERMISSION = 1997;
     private CircleImageView avatar;
     private EditText nickNameEdit;
     private EditText introductionEdit;
@@ -118,7 +122,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseAvatar();
+                requestMatissePermissions();
             }
         });
     }
@@ -232,6 +236,10 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
     }
 
+    private void requestMatissePermissions() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -242,6 +250,31 @@ public class ProfileEditActivity extends AppCompatActivity {
             Glide.with(this).load(avatarUri).into(avatar);
             changeFlag = true;
             avatarChangeFlag = true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //用户同意，执行操作
+                chooseAvatar();
+            } else {
+                //用户不同意，向用户展示该权限作用
+                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("应用需要读取和写入外部存储来选择图片和导出图片，否则部分功能可能无法使用")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestMatissePermissions();
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .create()
+                            .show();
+                }
+            }
         }
     }
 

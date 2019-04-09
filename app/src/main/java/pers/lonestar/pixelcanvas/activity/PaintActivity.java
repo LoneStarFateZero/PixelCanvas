@@ -1,7 +1,9 @@
 package pers.lonestar.pixelcanvas.activity;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -50,6 +52,7 @@ import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
+    private int REQUEST_CODE_PERMISSION = 1997;
     private DrawerLayout drawerLayout;
     private LineCanvas lineCanvas;
     private PixelCanvas pixelCanvas;
@@ -140,14 +143,13 @@ public class PaintActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                drawerLayout.closeDrawers();
                 switch (item.getItemId()) {
                     case R.id.paint_nav_clear:
                         clearCanvas();
                         break;
                     case R.id.paint_nav_export:
                         //显示导出对话框
-                        showExportDialog();
+                        requestExportPermissions();
                         break;
                     case R.id.paint_nav_publish:
                         Intent postIntent = new Intent(PaintActivity.this, PublishActivity.class);
@@ -165,6 +167,7 @@ public class PaintActivity extends AppCompatActivity {
                         shareCanvas();
                         break;
                 }
+                drawerLayout.closeDrawers();
                 return true;
             }
         });
@@ -705,6 +708,35 @@ public class PaintActivity extends AppCompatActivity {
         ExportDialogFragment fragment = new ExportDialogFragment();
         fragment.initParameter(litePalCanvas, pixelFramelayout);
         fragment.show(getSupportFragmentManager(), "ExportDialog");
+    }
+
+    private void requestExportPermissions() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //用户同意，执行操作
+                showExportDialog();
+            } else {
+                //用户不同意，向用户展示该权限作用
+                if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    new AlertDialog.Builder(this)
+                            .setMessage("应用需要读取和写入外部存储来选择图片和导出图片，否则部分功能可能无法使用")
+                            .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    requestExportPermissions();
+                                }
+                            })
+                            .setNegativeButton("取消", null)
+                            .create()
+                            .show();
+                }
+            }
+        }
     }
 
     //重命名对话框
