@@ -35,6 +35,7 @@ import java.util.Stack;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -112,9 +113,6 @@ public class PaintActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                backProcess();
-                break;
             case R.id.undo:
                 undoCanvas();
                 break;
@@ -154,7 +152,15 @@ public class PaintActivity extends AppCompatActivity {
                         //显示导出对话框
                         requestExportPermissions();
                         break;
+                    //作品发布
+                    //如果进入后不做其他操作直接发布，会出现缩略图为空的异常
+                    ///TODO
                     case R.id.paint_nav_publish:
+                        //创建后未作出任何修改直接返回
+                        //不及时保存画布数据可能造成空指针异常
+                        litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
+                        litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
+                        litePalCanvas.save();
                         Intent postIntent = new Intent(PaintActivity.this, PublishActivity.class);
                         postIntent.putExtra("local_canvas", litePalCanvas);
                         GalleryActivity.getInstance().startActivity(postIntent);
@@ -170,6 +176,22 @@ public class PaintActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
         //抽屉滑动监听，用于缩略图重绘的处理
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -723,7 +745,7 @@ public class PaintActivity extends AppCompatActivity {
                 //用户不同意，向用户展示该权限作用
                 if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     new AlertDialog.Builder(this)
-                            .setMessage("应用需要读取和写入外部存储来选择图片和导出图片，否则部分功能可能无法使用")
+                            .setMessage("应用需要读取和写入外部存储来导出图片，否则部分功能可能无法使用")
                             .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

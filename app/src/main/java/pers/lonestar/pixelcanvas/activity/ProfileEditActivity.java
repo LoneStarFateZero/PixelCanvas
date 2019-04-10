@@ -264,7 +264,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 //用户不同意，向用户展示该权限作用
                 if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     new AlertDialog.Builder(this)
-                            .setMessage("应用需要读取和写入外部存储来选择图片和导出图片，否则部分功能可能无法使用")
+                            .setMessage("应用需要读取和写入外部存储来选择图片，否则部分功能可能无法使用")
                             .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

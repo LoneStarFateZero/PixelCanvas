@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import cn.bmob.v3.listener.BmobUpdateListener;
 import cn.bmob.v3.update.BmobUpdateAgent;
+import cn.bmob.v3.update.UpdateResponse;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 import pers.lonestar.pixelcanvas.R;
@@ -46,7 +49,7 @@ public class AboutActivity extends BaseSwipeBackActivity {
                     public void onClick(View v) {
                         requestMatissePermissions();
                     }
-                }).setTitle("Version 1.4"))
+                }).setTitle("Version 1.0.8"))
                 .addGroup("与我联系")
                 .addEmail("18815755562@163.com", "与我联系")
                 .addWebsite("https://github.com/LoneStarFateZero/PixelCanvas", "提点意见")
@@ -80,6 +83,15 @@ public class AboutActivity extends BaseSwipeBackActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //用户同意，执行操作
                 BmobUpdateAgent.forceUpdate(this);
+                //更新监听
+                BmobUpdateAgent.setUpdateListener(new BmobUpdateListener() {
+                    @Override
+                    public void onUpdateReturned(int statusCode, UpdateResponse updateResponse) {
+                        //statusCode: 1无新版本 0有新版本 -1出错
+                        if (statusCode == 1)
+                            Toast.makeText(AboutActivity.this, "暂时没有检测到新版本", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 //用户不同意，向用户展示该权限作用
                 if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
