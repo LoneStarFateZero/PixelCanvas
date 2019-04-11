@@ -49,7 +49,7 @@ public class AboutActivity extends BaseSwipeBackActivity {
                     public void onClick(View v) {
                         requestMatissePermissions();
                     }
-                }).setTitle("当前版本 1.0.9"))
+                }).setTitle("当前版本 1.0.10"))
                 .addGroup("与我联系")
                 .addEmail("18815755562@163.com", "与我联系")
                 .addWebsite("https://github.com/LoneStarFateZero/PixelCanvas", "提点意见")

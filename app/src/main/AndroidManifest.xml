@@ -24,49 +24,52 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".activity.AboutActivity" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.RegisterActivity"
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.LoginActivity"
-            android:launchMode="singleTask">
+            android:launchMode="standard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.PaintActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.PublishActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTask" />
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".activity.GalleryActivity"
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.ProfileActivity"
-            android:launchMode="standard"
+            android:launchMode="singleTop"
             android:theme="@style/ProfileActivityTheme" />
         <activity
-            android:name=".activity.GalleryActivity"
+            android:name=".activity.FollowActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.FavoriteActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.SettingsActivity"
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppThemeMain" />
         <activity
-            android:name=".activity.FavoriteActivity"
-            android:launchMode="singleTask" />
-        <activity
             android:name=".activity.ProfileEditActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".activity.FollowActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".activity.CanvasInfoActivity" />
+            android:name=".activity.CanvasInfoActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
