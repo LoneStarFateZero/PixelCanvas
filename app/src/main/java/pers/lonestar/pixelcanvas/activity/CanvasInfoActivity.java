@@ -2,6 +2,7 @@ package pers.lonestar.pixelcanvas.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.CanvasComment;
 import pers.lonestar.pixelcanvas.infostore.CanvasFavorite;
 import pers.lonestar.pixelcanvas.infostore.CanvasLike;
+import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.listener.CommentInsertListener;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
@@ -341,11 +343,28 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
         });
     }
 
+    private void downloadCanvas() {
+        LitePalCanvas litePalCanvas = new LitePalCanvas();
+        litePalCanvas.setCanvasName(bmobCanvas.getCanvasName() + "-下载");
+        litePalCanvas.setCreatorID(bmobCanvas.getCreator().getObjectId());
+        litePalCanvas.setPixelCount(bmobCanvas.getPixelCount());
+        litePalCanvas.setJsonData(bmobCanvas.getJsonData());
+        litePalCanvas.setCreatedAt(bmobCanvas.getCreatedAt());
+        litePalCanvas.setUpdatedAt(bmobCanvas.getUpdatedAt());
+        litePalCanvas.setThumbnail(bmobCanvas.getThumbnail());
+        litePalCanvas.save();
+        Toast.makeText(this, "已下载到本地", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.download:
+                //下载作品到本地
+                downloadCanvas();
                 break;
         }
         return true;
@@ -354,5 +373,12 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    //Toolbar菜单项
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.canvas_info_menu, menu);
+        return true;
     }
 }

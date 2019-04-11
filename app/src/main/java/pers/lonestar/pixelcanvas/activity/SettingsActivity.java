@@ -129,9 +129,9 @@ public class SettingsActivity extends BaseSwipeBackActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 BmobUser.logOut();
-                                finish();
-                                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class);
+                                Intent intent = new Intent(SettingsActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
+                                finish();
                             }
                         }).setNegativeButton("取消", null)
                         .create()

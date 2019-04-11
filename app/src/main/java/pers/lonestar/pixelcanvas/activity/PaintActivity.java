@@ -50,7 +50,6 @@ import pers.lonestar.pixelcanvas.customview.StrokeCanvas;
 import pers.lonestar.pixelcanvas.dialog.ExportDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
-import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
@@ -90,8 +89,6 @@ public class PaintActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paint);
-
-        ActivityCollector.addActivity(this);
 
         //优先初始化View
         initView();
@@ -843,8 +840,6 @@ public class PaintActivity extends AppCompatActivity {
         litePalCanvas.save();
         PixelApp.pixelColor = null;
         PixelApp.litePalCanvas = null;
-
-        ActivityCollector.removeActivity(this);
         finish();
     }
 

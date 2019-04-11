@@ -33,7 +33,6 @@ import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.fragment.FollowFragment;
 import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
-import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 import pers.lonestar.pixelcanvas.utils.UpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         requestUpdatePermissions();
-        ActivityCollector.addActivity(this);
         instance = this;
 
         initView();
@@ -210,10 +208,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    @Override
-    public void onBackPressed() {
-        ActivityCollector.finishAll();
-    }
 
     private void requestUpdatePermissions() {
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);

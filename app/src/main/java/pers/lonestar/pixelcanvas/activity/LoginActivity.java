@@ -14,7 +14,6 @@ import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
-import pers.lonestar.pixelcanvas.utils.ActivityCollector;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText usernameText;
@@ -27,14 +26,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ActivityCollector.addActivity(this);
-
         //本地是否有用户缓存
         if (BmobUser.isLogin()) {
             fetchUserInfo();
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            ActivityCollector.finishAll();
         } else {
             Toast.makeText(LoginActivity.this, "尚未登录，请先登录", Toast.LENGTH_SHORT).show();
         }
@@ -56,9 +52,8 @@ public class LoginActivity extends AppCompatActivity {
                     public void done(PixelUser pixelUser, BmobException e) {
                         if (e == null) {
                             Toast.makeText(LoginActivity.this, "登录成功：" + BmobUser.getCurrentUser(PixelUser.class).getNickname(), Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
-                            finish();
                         } else {
                             Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                         }
@@ -87,10 +82,5 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        ActivityCollector.finishAll();
     }
 }
