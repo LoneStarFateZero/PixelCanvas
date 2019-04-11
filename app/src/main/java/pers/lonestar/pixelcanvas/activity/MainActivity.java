@@ -7,9 +7,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -33,6 +35,7 @@ import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.fragment.FollowFragment;
 import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
+import pers.lonestar.pixelcanvas.utils.BlurTransformation;
 import pers.lonestar.pixelcanvas.utils.UpdateUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private CircleImageView avatar;
+    private ImageView avatarBackground;
     private TextView nickName;
     private TextView introduction;
     private PixelUser pixelUser;
@@ -120,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
+                if (avatarBackground == null) {
+                    avatarBackground = findViewById(R.id.nav_bg);
+                }
                 if (nickName == null) {
                     nickName = findViewById(R.id.nav_nickname);
                 }
@@ -135,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(MainActivity.this)
                         .load(pixelUser.getAvatarUrl())
                         .into(avatar);
+                Glide.with(MainActivity.this)
+                        .load(pixelUser.getAvatarUrl())
+                        .apply(RequestOptions.bitmapTransform(new BlurTransformation(10, 1)))
+                        .into(avatarBackground);
             }
 
             @Override
