@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 
 import androidx.annotation.NonNull;
@@ -30,9 +31,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
+import pers.lonestar.pixelcanvas.infostore.FileCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
 
 public class ExportDialogFragment extends DialogFragment {
+    private static final int FORMAT_SVG = 1;
+    private static final int FORMAT_PIXEL = 5;
+    private static final int FORMAT_PNG = 2;
+    private static final int FORMAT_JPEG = 3;
+    private static final int FORMAT_WEBP = 4;
     private Button export;
     private TextView formatText;
     private AlertDialog dialog;
@@ -84,16 +91,19 @@ public class ExportDialogFragment extends DialogFragment {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.format_svg:
-                        format = 1;
+                        format = FORMAT_SVG;
+                        break;
+                    case R.id.format_pixel:
+                        format = FORMAT_PIXEL;
                         break;
                     case R.id.format_png:
-                        format = 2;
+                        format = FORMAT_PNG;
                         break;
                     case R.id.format_jpeg:
-                        format = 3;
+                        format = FORMAT_JPEG;
                         break;
                     case R.id.format_webp:
-                        format = 4;
+                        format = FORMAT_WEBP;
                         break;
                 }
                 formatText.setText(item.getTitle().toString());
@@ -118,18 +128,21 @@ public class ExportDialogFragment extends DialogFragment {
         String fileName = null;
         Bitmap.CompressFormat exportFormat = null;
         switch (format) {
-            case 1:
+            case FORMAT_SVG:
                 fileName = litePalCanvas.getCanvasName() + ".svg";
                 break;
-            case 2:
+            case FORMAT_PIXEL:
+                fileName = litePalCanvas.getCanvasName() + ".canvas";
+                break;
+            case FORMAT_PNG:
                 fileName = litePalCanvas.getCanvasName() + ".png";
                 exportFormat = Bitmap.CompressFormat.PNG;
                 break;
-            case 3:
+            case FORMAT_JPEG:
                 fileName = litePalCanvas.getCanvasName() + ".jpg";
                 exportFormat = Bitmap.CompressFormat.JPEG;
                 break;
-            case 4:
+            case FORMAT_WEBP:
                 fileName = litePalCanvas.getCanvasName() + ".webp";
                 exportFormat = Bitmap.CompressFormat.WEBP;
                 break;
@@ -146,8 +159,11 @@ public class ExportDialogFragment extends DialogFragment {
                 fos.flush();
                 fos.close();
             } else {
-                //导出SVG文本
-                exportSVG(file);
+                if (format == FORMAT_SVG)
+                    //导出SVG文本
+                    exportSVG(file);
+                else if (format == FORMAT_PIXEL)
+                    exportPixelCanvas(file);
             }
             Toast.makeText(context, "图片已导出", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
@@ -161,7 +177,7 @@ public class ExportDialogFragment extends DialogFragment {
     private Bitmap loadBitmapFromView(View view) {
         Bitmap bmp = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bmp);
-        if (format == 3)
+        if (format == FORMAT_JPEG)
             //避免JPEG格式不支持透明背景，产生黑色背景
             //故采用白色背景覆盖
             c.drawColor(Color.WHITE);
@@ -188,6 +204,22 @@ public class ExportDialogFragment extends DialogFragment {
         PrintWriter printWriter = new PrintWriter(file);
         printWriter.write(stringBuilder.toString());
         printWriter.close();
+    }
+
+    //导出成pixel canvas自定义类型文件
+    private void exportPixelCanvas(File file) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        FileCanvas fileCanvas = new FileCanvas();
+        fileCanvas.setCanvasName(litePalCanvas.getCanvasName());
+        fileCanvas.setCreatorID(litePalCanvas.getCreatorID());
+        fileCanvas.setPixelCount(litePalCanvas.getPixelCount());
+        fileCanvas.setJsonData(litePalCanvas.getJsonData());
+        fileCanvas.setCreatedAt(litePalCanvas.getCreatedAt());
+        fileCanvas.setUpdatedAt(litePalCanvas.getUpdatedAt());
+        fileCanvas.setThumbnail(litePalCanvas.getThumbnail());
+        objectOutputStream.writeObject(fileCanvas);
+        objectOutputStream.close();
     }
 
     public void initParameter(LitePalCanvas litePalCanvas, View canvas) {

@@ -1,18 +1,28 @@
 package pers.lonestar.pixelcanvas.activity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.litepal.LitePal;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.LocalCanvasAdapter;
 import pers.lonestar.pixelcanvas.dialog.NewCanvasDialogFragment;
+import pers.lonestar.pixelcanvas.infostore.FileCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
+import pers.lonestar.pixelcanvas.utils.FileUtils;
 
 public class GalleryActivity extends BaseSwipeBackActivity {
     private FloatingActionButton fab;
@@ -107,11 +119,60 @@ public class GalleryActivity extends BaseSwipeBackActivity {
 //        litePalCanvasList = LitePal.order("id desc").find(LitePalCanvas.class);
     }
 
+    private void importLocalFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        //设置类型
+        intent.setType("file/*.pixel");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {//是否选择，没选择就不会继续
+            Uri uri = data.getData();//得到uri，后面就是将uri转化成file的过程。
+            if (uri != null) {
+                try {
+                    File file = new File(FileUtils.getFilePathByUri(this, uri));
+                    ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file));
+                    FileCanvas fileCanvas = (FileCanvas) objectInputStream.readObject();
+                    objectInputStream.close();
+                    LitePalCanvas litePalCanvas = new LitePalCanvas();
+                    litePalCanvas.setCanvasName(fileCanvas.getCanvasName());
+                    litePalCanvas.setCreatedAt(fileCanvas.getCreatedAt());
+                    litePalCanvas.setUpdatedAt(fileCanvas.getUpdatedAt());
+                    litePalCanvas.setCreatorID(fileCanvas.getCreatorID());
+                    litePalCanvas.setPixelCount(fileCanvas.getPixelCount());
+                    litePalCanvas.setJsonData(fileCanvas.getJsonData());
+                    litePalCanvas.setThumbnail(fileCanvas.getThumbnail());
+                    litePalCanvas.save();
+                    litePalCanvasList.add(0, litePalCanvas);
+                    localCanvasAdapter.notifyDataSetChanged();
+                    Toast.makeText(this, "作品已导入", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(this, "作品文件读取错误，请检查设置", Toast.LENGTH_LONG).show();
+                } catch (ClassNotFoundException e) {
+                    Toast.makeText(this, "作品文件格式不正确，请检查是否为canvas文件", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
+    //Toolbar菜单项
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gallery_toolbar_menu, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.import_file:
+                importLocalFile();
                 break;
         }
         return true;

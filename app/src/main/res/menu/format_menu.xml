@@ -5,6 +5,9 @@
             android:id="@+id/format_svg"
             android:title="SVG" />
         <item
+            android:id="@+id/format_pixel"
+            android:title="画布文件" />
+        <item
             android:id="@+id/format_png"
             android:title="PNG" />
         <item
