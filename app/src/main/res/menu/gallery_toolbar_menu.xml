@@ -3,7 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/import_file"
-        android:icon="@drawable/ic_undo"
+        android:icon="@drawable/ic_import"
         android:title="导入"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/edit_gallery"
+        android:icon="@drawable/ic_pencil"
+        android:title="编辑"
         app:showAsAction="always" />
 </menu>

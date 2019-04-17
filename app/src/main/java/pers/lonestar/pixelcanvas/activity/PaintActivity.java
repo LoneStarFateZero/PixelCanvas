@@ -1,6 +1,7 @@
 package pers.lonestar.pixelcanvas.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,11 +11,13 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -759,16 +762,21 @@ public class PaintActivity extends AppCompatActivity {
 
     //重命名对话框
     private void showRenameDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(PaintActivity.this);
         View view = View.inflate(PaintActivity.this, R.layout.rename_dialog, null);
         final EditText renameText = view.findViewById(R.id.rename_text);
         renameText.setText(litePalCanvas.getCanvasName());
-        renameText.setOnClickListener(new View.OnClickListener() {
+        renameText.selectAll();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                renameText.selectAll();
+            public void run() {
+                renameText.requestFocus();
+                InputMethodManager inputManager =
+                        (InputMethodManager) renameText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(renameText, 0);
             }
-        });
-        AlertDialog.Builder dialog = new AlertDialog.Builder(PaintActivity.this);
+        }, 300);
         dialog.setView(view);
         dialog.setTitle("重命名");
         dialog.setCancelable(true);

@@ -1,18 +1,22 @@
 package pers.lonestar.pixelcanvas.adapter;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -28,13 +32,18 @@ import pers.lonestar.pixelcanvas.activity.GalleryActivity;
 import pers.lonestar.pixelcanvas.activity.PaintActivity;
 import pers.lonestar.pixelcanvas.activity.PublishActivity;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
+import pers.lonestar.pixelcanvas.infostore.ShowCheckBox;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.ViewHolder> {
     private List<LitePalCanvas> litePalCanvasList;
+    private List<Boolean> litePalCanvasChooseList;
+    private ShowCheckBox showCheckBox;
 
-    public LocalCanvasAdapter(List<LitePalCanvas> litePalCanvasList) {
+    public LocalCanvasAdapter(List<LitePalCanvas> litePalCanvasList, List<Boolean> litePalCanvasChooseList, ShowCheckBox showCheckBox) {
         this.litePalCanvasList = litePalCanvasList;
+        this.litePalCanvasChooseList = litePalCanvasChooseList;
+        this.showCheckBox = showCheckBox;
     }
 
     @NonNull
@@ -56,46 +65,46 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
         holder.canvasName.setText(litePalCanvas.getCanvasName());
         holder.canvasSize.setText("尺寸:" + litePalCanvas.getPixelCount() + "x" + litePalCanvas.getPixelCount());
         holder.canvasUpdated.setText(litePalCanvas.getUpdatedAt());
-        holder.canvasMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //弹出菜单
-                PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
-                popupMenu.getMenuInflater().inflate(R.menu.canvas_list_menu, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.list_post:
-                                Intent intent = new Intent(GalleryActivity.getInstance(), PublishActivity.class);
-                                intent.putExtra("local_canvas", litePalCanvas);
-                                GalleryActivity.getInstance().startActivity(intent);
-                                break;
-                            case R.id.list_rename:
-                                showRenameDialog(litePalCanvas, position);
-                                break;
-                            case R.id.list_copy:
-                                showCopyDialog(litePalCanvas);
-                                break;
-                            case R.id.list_delete:
-                                showDeleteDialog(litePalCanvas, position);
-                                break;
-                        }
-                        return true;
-                    }
-                });
-                popupMenu.show();
-            }
-        });
-        holder.canvasItemView.setOnClickListener(new View.OnClickListener() {
-            //点击转到对应编辑活动
-            @Override
-            public void onClick(View v) {
-                PixelApp.litePalCanvas = litePalCanvas;
-                Intent intent = new Intent(GalleryActivity.getInstance(), PaintActivity.class);
-                GalleryActivity.getInstance().startActivity(intent);
-            }
-        });
+        //显示选择框
+        if (showCheckBox.isShowCheckBox()) {
+            holder.canvasMenu.setVisibility(View.INVISIBLE);
+            holder.checkBox.setVisibility(View.VISIBLE);
+            holder.checkBox.setChecked(litePalCanvasChooseList.get(position));
+            holder.canvasMenu.setOnClickListener(null);
+            holder.canvasItemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    litePalCanvasChooseList.set(position, !holder.checkBox.isChecked());
+                    holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                }
+            });
+            holder.canvasItemView.setOnLongClickListener(null);
+        } else {
+            holder.canvasMenu.setVisibility(View.VISIBLE);
+            holder.checkBox.setVisibility(View.GONE);
+            holder.canvasMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPopupMenu(v, litePalCanvas, position);
+                }
+            });
+            holder.canvasItemView.setOnClickListener(new View.OnClickListener() {
+                //点击转到对应编辑活动
+                @Override
+                public void onClick(View v) {
+                    PixelApp.litePalCanvas = litePalCanvas;
+                    Intent intent = new Intent(GalleryActivity.getInstance(), PaintActivity.class);
+                    GalleryActivity.getInstance().startActivity(intent);
+                }
+            });
+            holder.canvasItemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showPopupMenu(v, litePalCanvas, position);
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
@@ -103,39 +112,53 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
         return litePalCanvasList.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        View canvasItemView;
-        ImageView thumbnail;
-        TextView canvasName;
-        TextView canvasSize;
-        TextView canvasUpdated;
-        ImageView canvasMenu;
-        Bitmap thumbnailBitmap;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            canvasItemView = itemView;
-            thumbnail = itemView.findViewById(R.id.item_canvas_image);
-            canvasName = itemView.findViewById(R.id.item_canvas_name);
-            canvasSize = itemView.findViewById(R.id.item_canvas_size);
-            canvasUpdated = itemView.findViewById(R.id.item_canvas_updated);
-            canvasMenu = itemView.findViewById(R.id.item_menu);
-            thumbnailBitmap = null;
-        }
+    //弹出菜单
+    private void showPopupMenu(View v, final LitePalCanvas litePalCanvas, final int position) {
+        //弹出菜单
+        PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+        popupMenu.getMenuInflater().inflate(R.menu.canvas_list_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.list_post:
+                        Intent intent = new Intent(GalleryActivity.getInstance(), PublishActivity.class);
+                        intent.putExtra("local_canvas", litePalCanvas);
+                        GalleryActivity.getInstance().startActivity(intent);
+                        break;
+                    case R.id.list_rename:
+                        showRenameDialog(litePalCanvas, position);
+                        break;
+                    case R.id.list_copy:
+                        showCopyDialog(litePalCanvas);
+                        break;
+                    case R.id.list_delete:
+                        showDeleteDialog(litePalCanvas, position);
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
     }
 
     //重命名对话框
     private void showRenameDialog(final LitePalCanvas litePalCanvas, final int position) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
         View view = View.inflate(GalleryActivity.getInstance(), R.layout.rename_dialog, null);
         final EditText renameText = view.findViewById(R.id.rename_text);
         renameText.setText(litePalCanvas.getCanvasName());
-        renameText.setOnClickListener(new View.OnClickListener() {
+        renameText.selectAll();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                renameText.selectAll();
+            public void run() {
+                renameText.requestFocus();
+                InputMethodManager inputManager =
+                        (InputMethodManager) renameText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(renameText, 0);
             }
-        });
-        AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.getInstance());
+        }, 300);
         dialog.setView(view);
         dialog.setTitle("重命名");
         dialog.setCancelable(true);
@@ -154,6 +177,29 @@ public class LocalCanvasAdapter extends RecyclerView.Adapter<LocalCanvasAdapter.
         });
         dialog.setNegativeButton("取消", null);
         dialog.show();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        View canvasItemView;
+        ImageView thumbnail;
+        TextView canvasName;
+        TextView canvasSize;
+        TextView canvasUpdated;
+        ImageView canvasMenu;
+        Bitmap thumbnailBitmap;
+        MaterialCheckBox checkBox;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            canvasItemView = itemView;
+            thumbnail = itemView.findViewById(R.id.item_canvas_image);
+            canvasName = itemView.findViewById(R.id.item_canvas_name);
+            canvasSize = itemView.findViewById(R.id.item_canvas_size);
+            canvasUpdated = itemView.findViewById(R.id.item_canvas_updated);
+            canvasMenu = itemView.findViewById(R.id.item_menu);
+            checkBox = itemView.findViewById(R.id.item_canvas_checkbox);
+            thumbnailBitmap = null;
+        }
     }
 
     //复制对话框

@@ -12,9 +12,10 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gallery_activity_recyclerview"
@@ -25,10 +26,36 @@
             android:id="@+id/gallery_activity_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:src="@drawable/ic_pencil_create" />
-    </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/gallery_activity_bottom_choose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#F5F5F5"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/gallery_activity_botton_chooseall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:layout_toStartOf="@+id/gallery_activity_botton_delete"
+            android:text="全选" />
+
+        <Button
+            android:id="@+id/gallery_activity_botton_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="删除" />
+    </RelativeLayout>
 </LinearLayout>

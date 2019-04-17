@@ -1,12 +1,15 @@
 package pers.lonestar.pixelcanvas.activity;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -24,6 +27,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,14 +36,20 @@ import pers.lonestar.pixelcanvas.adapter.LocalCanvasAdapter;
 import pers.lonestar.pixelcanvas.dialog.NewCanvasDialogFragment;
 import pers.lonestar.pixelcanvas.infostore.FileCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
+import pers.lonestar.pixelcanvas.infostore.ShowCheckBox;
 import pers.lonestar.pixelcanvas.utils.FileUtils;
 
 public class GalleryActivity extends BaseSwipeBackActivity {
     private FloatingActionButton fab;
     private NewCanvasDialogFragment fragment;
     private RecyclerView recyclerView;
+    private RelativeLayout bottomChoose;
+    private Button chooseAllButton;
+    private Button deleteButton;
     private Toolbar toolbar;
     private List<LitePalCanvas> litePalCanvasList;
+    private List<Boolean> litePalCanvasChooseList;
+    private ShowCheckBox showCheckBox;
     private LocalCanvasAdapter localCanvasAdapter;
     private static GalleryActivity instance;
 
@@ -60,6 +70,8 @@ public class GalleryActivity extends BaseSwipeBackActivity {
         setContentView(R.layout.activity_gallery);
 
         instance = this;
+        showCheckBox = new ShowCheckBox();
+        showCheckBox.setShowCheckBox(false);
 
         initView();
         initListener();
@@ -73,11 +85,53 @@ public class GalleryActivity extends BaseSwipeBackActivity {
                 fragment.show(getSupportFragmentManager(), "NewCanvasDialog");
             }
         });
+        chooseAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < litePalCanvasChooseList.size(); i++) {
+                    litePalCanvasChooseList.set(i, true);
+                    localCanvasAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(GalleryActivity.this);
+                dialog.setMessage("是否删除选中作品？\n（操作不可恢复）")
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                List<LitePalCanvas> newLitePalCanvasList = new ArrayList<>();
+                                for (int i = 0; i < litePalCanvasChooseList.size(); i++) {
+                                    if (!litePalCanvasChooseList.get(i)) {
+                                        newLitePalCanvasList.add(litePalCanvasList.get(i));
+                                    }
+                                    //已选择，删除
+                                    else {
+                                        litePalCanvasList.get(i).delete();
+                                    }
+                                }
+                                litePalCanvasChooseList.clear();
+                                litePalCanvasList.clear();
+                                litePalCanvasList.addAll(newLitePalCanvasList);
+                                showCheckBox.setShowCheckBox(false);
+                                fab.setVisibility(View.VISIBLE);
+                                bottomChoose.setVisibility(View.GONE);
+                                localCanvasAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .setCancelable(true)
+                        .show();
+            }
+        });
 
         litePalCanvasList = new ArrayList<>();
+        litePalCanvasChooseList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        localCanvasAdapter = new LocalCanvasAdapter(litePalCanvasList);
+        localCanvasAdapter = new LocalCanvasAdapter(litePalCanvasList, litePalCanvasChooseList, showCheckBox);
         recyclerView.setAdapter(localCanvasAdapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -85,12 +139,10 @@ public class GalleryActivity extends BaseSwipeBackActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
-                        fab.show();
                         Glide.with(GalleryActivity.this).resumeRequests();
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING:
                         Glide.with(GalleryActivity.this).pauseRequests();
-                        fab.hide();
                         break;
                 }
             }
@@ -100,6 +152,9 @@ public class GalleryActivity extends BaseSwipeBackActivity {
     private void initView() {
         fab = (FloatingActionButton) findViewById(R.id.gallery_activity_fab);
         recyclerView = (RecyclerView) findViewById(R.id.gallery_activity_recyclerview);
+        bottomChoose = (RelativeLayout) findViewById(R.id.gallery_activity_bottom_choose);
+        chooseAllButton = (Button) findViewById(R.id.gallery_activity_botton_chooseall);
+        deleteButton = (Button) findViewById(R.id.gallery_activity_botton_delete);
         toolbar = (Toolbar) findViewById(R.id.gallery_activity_toolbar);
         toolbar.setTitle("本地作品");
         //设置标题字体样式为像素字体，否则为默认字体，与整体像素风格不匹配
@@ -113,6 +168,8 @@ public class GalleryActivity extends BaseSwipeBackActivity {
     }
 
     private void initCanvasList() {
+        //初始化本地作品列表
+        showCheckBox.setShowCheckBox(false);
         litePalCanvasList.clear();
         litePalCanvasList.addAll(LitePal.order("id desc").find(LitePalCanvas.class));
         localCanvasAdapter.notifyDataSetChanged();
@@ -158,6 +215,24 @@ public class GalleryActivity extends BaseSwipeBackActivity {
         }
     }
 
+    //是否显示选择框
+    private void showCheckBox() {
+        if (showCheckBox.isShowCheckBox()) {
+            showCheckBox.setShowCheckBox(false);
+            fab.setVisibility(View.VISIBLE);
+            bottomChoose.setVisibility(View.GONE);
+        } else {
+            showCheckBox.setShowCheckBox(true);
+            fab.setVisibility(View.GONE);
+            bottomChoose.setVisibility(View.VISIBLE);
+            litePalCanvasChooseList.clear();
+            for (int i = 0; i < litePalCanvasList.size(); i++) {
+                litePalCanvasChooseList.add(false);
+            }
+        }
+        localCanvasAdapter.notifyDataSetChanged();
+    }
+
     //Toolbar菜单项
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,12 +249,21 @@ public class GalleryActivity extends BaseSwipeBackActivity {
             case R.id.import_file:
                 importLocalFile();
                 break;
+            case R.id.edit_gallery:
+                showCheckBox();
+                break;
         }
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        finish();
+        if (showCheckBox.isShowCheckBox()) {
+            showCheckBox.setShowCheckBox(false);
+            fab.setVisibility(View.VISIBLE);
+            bottomChoose.setVisibility(View.GONE);
+            localCanvasAdapter.notifyDataSetChanged();
+        } else
+            finish();
     }
 }
