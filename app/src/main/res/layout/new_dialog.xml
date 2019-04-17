@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/materialWhite"
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,11 +13,11 @@
         android:padding="10dp">
 
         <TextView
-            android:textColor="@color/colorFont"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="新建画布"
+            android:textColor="@color/colorFont"
             android:textSize="30sp" />
     </LinearLayout>
 
@@ -24,17 +25,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="画布尺寸"
-        android:textSize="25sp" />
+        android:text="画布尺寸 ->"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="23sp" />
 
     <TextView
         android:id="@+id/canvas_size_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         android:clickable="true"
+        android:gravity="center_horizontal"
         android:text="选择画布尺寸"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp" />
 
     <Button
@@ -42,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:background="@drawable/dialog_button"
+        android:background="@drawable/common_button_bg"
         android:text="创建"
         android:textSize="25sp" />
 </LinearLayout>

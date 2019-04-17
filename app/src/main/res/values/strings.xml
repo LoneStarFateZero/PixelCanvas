@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">像素画板</string>
+    <string name="version_name">当前版本 1.0.12</string>
+    <string name="about_description">一个简单的像素绘图和分享APP，你可以通过拖动画笔绘制一个简单的像素艺术，并和大家分享你的像素艺术。</string>
+    <string name="about_contact">与我联系</string>
+    <string name="my_emailaddress">18815755562@163.com</string>
+    <string name="about_github_page">https://github.com/LoneStarFateZero/PixelCanvas</string>
+    <string name="about_github_issue">提点意见</string>
+    <string name="about_github_id">LoneStarFateZero</string>
+    <string name="about_github_follow">关注Github</string>
 </resources>

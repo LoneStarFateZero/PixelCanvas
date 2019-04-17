@@ -43,17 +43,17 @@ public class AboutActivity extends BaseSwipeBackActivity {
         View aboutPage = new AboutPage(this)
                 .isRTL(false)
                 .setImage(R.drawable.ic_launcher)
-                .setDescription("一个简单的像素绘图和分享APP，你可以通过拖动画笔绘制一个简单的像素艺术，并和大家分享你的像素艺术。")
+                .setDescription(getString(R.string.about_description))
                 .addItem(new Element().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestMatissePermissions();
                     }
-                }).setTitle("当前版本 1.0.10"))
-                .addGroup("与我联系")
-                .addEmail("18815755562@163.com", "与我联系")
-                .addWebsite("https://github.com/LoneStarFateZero/PixelCanvas", "提点意见")
-                .addGitHub("LoneStarFateZero", "关注Github")
+                }).setTitle(getString(R.string.version_name)))
+                .addGroup(getString(R.string.about_contact))
+                .addEmail(getString(R.string.my_emailaddress), getString(R.string.about_contact))
+                .addWebsite(getString(R.string.about_github_page), getString(R.string.about_github_issue))
+                .addGitHub(getString(R.string.about_github_id), getString(R.string.about_github_follow))
                 .create();
         linearLayout.addView(aboutPage);
     }

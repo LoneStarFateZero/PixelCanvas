@@ -41,7 +41,7 @@
         android:id="@+id/comment_dialog_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#F5F5F5"
+        android:background="@color/materialWhite"
         android:gravity="top"
         android:hint="想说点什么"
         android:imeOptions="flagNoExtractUi"

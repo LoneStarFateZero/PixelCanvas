@@ -150,8 +150,7 @@ public class FollowFragment extends Fragment {
                                 } else {
                                     Toast.makeText(MainActivity.getInstance(), "作品获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                                 }
-                                //数据加载完毕，停止加载动画
-                                loadingAnimStop();
+
                             }
                         });
                     } else {
@@ -159,11 +158,12 @@ public class FollowFragment extends Fragment {
                         bmobCanvasList.clear();
                         adapter.notifyDataSetChanged();
                         adapter.setLoadState(adapter.LOADING_END);
-                        loadingAnimStop();
                     }
                 } else {
                     Toast.makeText(MainActivity.getInstance(), "关注用户获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
+                //数据加载完毕，停止加载动画
+                loadingAnimStop();
             }
         });
     }

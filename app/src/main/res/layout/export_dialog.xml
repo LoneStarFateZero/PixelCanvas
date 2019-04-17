@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/materialWhite"
     android:orientation="vertical">
 
     <LinearLayout
@@ -24,17 +25,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="导出格式"
-        android:textSize="25sp" />
+        android:text="导出格式 ->"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="23sp" />
 
     <TextView
         android:id="@+id/format_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         android:clickable="true"
+        android:gravity="center_horizontal"
         android:text="选择导出格式"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp" />
 
     <Button
@@ -42,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:background="@drawable/dialog_button"
+        android:background="@drawable/common_button_bg"
         android:text="导出"
         android:textSize="25sp" />
 </LinearLayout>
