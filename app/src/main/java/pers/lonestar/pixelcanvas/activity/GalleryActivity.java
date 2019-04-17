@@ -45,6 +45,7 @@ public class GalleryActivity extends BaseSwipeBackActivity {
     private RecyclerView recyclerView;
     private RelativeLayout bottomChoose;
     private Button chooseAllButton;
+    private Button reverseChooseAllButton;
     private Button deleteButton;
     private Toolbar toolbar;
     private List<LitePalCanvas> litePalCanvasList;
@@ -85,13 +86,22 @@ public class GalleryActivity extends BaseSwipeBackActivity {
                 fragment.show(getSupportFragmentManager(), "NewCanvasDialog");
             }
         });
+        reverseChooseAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < litePalCanvasChooseList.size(); i++) {
+                    litePalCanvasChooseList.set(i, !litePalCanvasChooseList.get(i));
+                }
+                localCanvasAdapter.notifyDataSetChanged();
+            }
+        });
         chooseAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (int i = 0; i < litePalCanvasChooseList.size(); i++) {
                     litePalCanvasChooseList.set(i, true);
-                    localCanvasAdapter.notifyDataSetChanged();
                 }
+                localCanvasAdapter.notifyDataSetChanged();
             }
         });
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +164,7 @@ public class GalleryActivity extends BaseSwipeBackActivity {
         recyclerView = (RecyclerView) findViewById(R.id.gallery_activity_recyclerview);
         bottomChoose = (RelativeLayout) findViewById(R.id.gallery_activity_bottom_choose);
         chooseAllButton = (Button) findViewById(R.id.gallery_activity_botton_chooseall);
+        reverseChooseAllButton = (Button) findViewById(R.id.gallery_activity_botton_reverse_chooseall);
         deleteButton = (Button) findViewById(R.id.gallery_activity_botton_delete);
         toolbar = (Toolbar) findViewById(R.id.gallery_activity_toolbar);
         toolbar.setTitle("本地作品");
