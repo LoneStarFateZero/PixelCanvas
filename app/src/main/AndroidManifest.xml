@@ -24,6 +24,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.AboutActivity"
             android:launchMode="singleTask" />
@@ -32,12 +39,7 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.LoginActivity"
-            android:launchMode="standard">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:launchMode="standard" />
         <activity
             android:name=".activity.PaintActivity"
             android:launchMode="singleTask" />
@@ -69,7 +71,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".activity.CanvasInfoActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:theme="@style/ProfileActivityTheme" />
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />

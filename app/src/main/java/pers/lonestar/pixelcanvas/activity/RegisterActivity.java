@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
@@ -25,9 +26,14 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        Intent intent = getIntent();
+        String userName = intent.getStringExtra("user_name");
+        String userPassword = intent.getStringExtra("user_password");
 
         usernameText = findViewById(R.id.register_username_text);
+        usernameText.setText(userName);
         passwordText = findViewById(R.id.register_password_text);
+        passwordText.setText(userPassword);
         secondPasswordText = findViewById(R.id.register_second_password_text);
         registerButton = findViewById(R.id.finish_register_button);
 
@@ -46,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                 pixelUser.setAvatarUrl(PixelApp.defaultAvatarUrl);
                 pixelUser.setUsername(userName);
                 pixelUser.setEmail(userName);
-                pixelUser.setNickname("无名");
+                pixelUser.setNickname("小透明");
                 pixelUser.setIntroduction("编辑个人简介");
                 pixelUser.setPassword(password);
                 pixelUser.signUp(new SaveListener<PixelUser>() {
