@@ -25,6 +25,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
@@ -36,13 +44,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Stack;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import cn.bmob.v3.BmobUser;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
@@ -242,10 +243,15 @@ public class PaintActivity extends AppCompatActivity {
                     System.arraycopy(PixelApp.pixelColor[i + 1], 0, PixelApp.pixelColor[i], 0, pixelCount);
                 }
                 System.arraycopy(tmpPixelColorRow, 0, PixelApp.pixelColor[pixelCount - 1], 0, pixelCount);
-                //入撤销栈
-                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                //清除恢复栈
-                pixelColorRedoStack.clear();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //入撤销栈
+                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                        //清除恢复栈
+                        pixelColorRedoStack.clear();
+                    }
+                }).start();
                 //画布重绘
                 pixelCanvas.reDrawCanvas();
             }
@@ -263,8 +269,13 @@ public class PaintActivity extends AppCompatActivity {
                 }
                 System.arraycopy(tmpPixelColorRow, 0, PixelApp.pixelColor[0], 0, pixelCount);
 
-                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                pixelColorRedoStack.clear();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                        pixelColorRedoStack.clear();
+                    }
+                }).start();
                 pixelCanvas.reDrawCanvas();
             }
         });
@@ -287,8 +298,13 @@ public class PaintActivity extends AppCompatActivity {
                     PixelApp.pixelColor[i][pixelCount - 1] = tmpPixelColorRow[i];
                 }
 
-                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                pixelColorRedoStack.clear();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                        pixelColorRedoStack.clear();
+                    }
+                }).start();
                 pixelCanvas.reDrawCanvas();
             }
         });
@@ -311,8 +327,13 @@ public class PaintActivity extends AppCompatActivity {
                     PixelApp.pixelColor[i][0] = tmpPixelColorRow[i];
                 }
 
-                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                pixelColorRedoStack.clear();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                        pixelColorRedoStack.clear();
+                    }
+                }).start();
                 pixelCanvas.reDrawCanvas();
             }
         });
@@ -439,7 +460,7 @@ public class PaintActivity extends AppCompatActivity {
                         }
 
                         pencil.layout(left, top, right, bottom);
-                        pencil.postInvalidate();
+                        pencil.invalidate();
 
                         //重绘红色边框指示器
                         //确定位置
@@ -452,7 +473,7 @@ public class PaintActivity extends AppCompatActivity {
                         int border_bottom = border_top + borderIndicator.getHeight();
                         int border_right = border_left + borderIndicator.getWidth();
                         borderIndicator.layout(border_left, border_top, border_right, border_bottom);
-                        borderIndicator.postInvalidate();
+                        borderIndicator.invalidate();
 
                         //边框位置也可用于画图
                         if (dotButton.isPressed()) {
@@ -478,11 +499,16 @@ public class PaintActivity extends AppCompatActivity {
                             //如果发生修改动作才进行覆盖保存
                             if (canvasChangeFlag) {
                                 canvasChangeFlag = false;
-                                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                                pixelColorRedoStack.clear();
-                                litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
-                                litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
-                                litePalCanvas.save();
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                                        pixelColorRedoStack.clear();
+                                        litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
+                                        litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
+                                        litePalCanvas.save();
+                                    }
+                                }).start();
                             }
                         }
 
@@ -494,11 +520,16 @@ public class PaintActivity extends AppCompatActivity {
                         if (!dotButton.isPressed() && canvasChangeFlag) {
                             //如果发生修改动作才进行覆盖保存
                             canvasChangeFlag = false;
-                            pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                            pixelColorRedoStack.clear();
-                            litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
-                            litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
-                            litePalCanvas.save();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                                    pixelColorRedoStack.clear();
+                                    litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
+                                    litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
+                                    litePalCanvas.save();
+                                }
+                            }).start();
                         }
                         break;
                 }
@@ -524,7 +555,12 @@ public class PaintActivity extends AppCompatActivity {
         pixelSize = ParameterUtils.canvasWidth / pixelCount;
         pixelColorRedoStack = new Stack<>();
         pixelColorUndoStack = new Stack<>();
-        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+            }
+        }).start();
 
         //绘制画布
         pixelCanvas.setPixelSize(pixelSize);
@@ -570,8 +606,13 @@ public class PaintActivity extends AppCompatActivity {
     private void clearCanvas() {
         globalChangeFlag = true;
         PixelApp.pixelColor = new int[pixelCount][pixelCount];
-        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-        pixelColorRedoStack.clear();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                pixelColorRedoStack.clear();
+            }
+        }).start();
         pixelCanvas.reDrawCanvas();
     }
 
@@ -653,8 +694,13 @@ public class PaintActivity extends AppCompatActivity {
             }
             pixelCanvas.reDrawCanvas();
             //保存入栈
-            pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-            pixelColorRedoStack.clear();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                    pixelColorRedoStack.clear();
+                }
+            }).start();
         } else {
             Toast.makeText(PaintActivity.this, "请先将橡皮擦切换为画笔", Toast.LENGTH_SHORT).show();
         }
@@ -714,7 +760,6 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-    //TODO
     //分享功能，考虑生成多种格式分享
     private void shareCanvas() {
         Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), loadBitmapFromView(pixelFramelayout), null, null));

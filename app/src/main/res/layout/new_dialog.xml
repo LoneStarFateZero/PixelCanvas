@@ -2,32 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/materialWhite"
+    android:background="@drawable/dialog_stroke_bg"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:background="@color/backgroundColor"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="新建画布"
+        android:textColor="@color/colorFont"
+        android:textSize="30sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_dotted_line"
+            android:layerType="software" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="新建画布"
-            android:textColor="@color/colorFont"
-            android:textSize="30sp" />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="画布尺寸 ->"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="23sp" />
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:background="@color/dialogBackgroundColor"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="画布尺寸↓"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="23sp" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/canvas_size_text"

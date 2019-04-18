@@ -4,7 +4,7 @@
     android:id="@+id/paint_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/materialWhite">
+    android:background="@color/dialogBackgroundColor">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,7 +28,8 @@
             <FrameLayout
                 android:id="@+id/paint_framelayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/colorFont">
 
                 <pers.lonestar.pixelcanvas.customview.PixelCanvas
                     android:id="@+id/pixel_canvas"
