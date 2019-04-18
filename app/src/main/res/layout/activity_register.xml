@@ -37,8 +37,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:hint="请输入用户名"
+                android:hint="请输入用户名(邮箱)"
                 android:inputType="textEmailAddress"
+                android:maxLength="60"
                 android:textColor="@color/colorFont"
                 android:textColorHint="@color/colorFont" />
         </LinearLayout>
@@ -61,16 +62,42 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:hint="请输入密码"
+                android:hint="请输入密码 (最大长度为20)"
                 android:inputType="textPassword"
+                android:maxLength="20"
+                android:textColor="@color/colorFont"
+                android:textColorHint="@color/colorFont" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="密码确认"
+                android:textColor="@color/colorFont" />
+
+            <EditText
+                android:id="@+id/register_second_password_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:hint="确认密码"
+                android:inputType="textPassword"
+                android:maxLength="20"
                 android:textColor="@color/colorFont"
                 android:textColorHint="@color/colorFont" />
         </LinearLayout>
 
         <Button
             android:id="@+id/finish_register_button"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
+            android:layout_width="144dp"
+            android:layout_height="57dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:background="@drawable/ic_go_register" />

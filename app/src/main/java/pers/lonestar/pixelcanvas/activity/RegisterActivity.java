@@ -18,6 +18,7 @@ import pers.lonestar.pixelcanvas.infostore.PixelUser;
 public class RegisterActivity extends AppCompatActivity {
     private EditText usernameText;
     private EditText passwordText;
+    private EditText secondPasswordText;
     private Button registerButton;
 
     @Override
@@ -27,6 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         usernameText = findViewById(R.id.register_username_text);
         passwordText = findViewById(R.id.register_password_text);
+        secondPasswordText = findViewById(R.id.register_second_password_text);
         registerButton = findViewById(R.id.finish_register_button);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -34,6 +36,12 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String userName = usernameText.getText().toString();
                 String password = passwordText.getText().toString();
+                String secondPassword = secondPasswordText.getText().toString();
+
+                if (!checkInfo(userName, password, secondPassword)) {
+                    return;
+                }
+
                 PixelUser pixelUser = new PixelUser();
                 pixelUser.setAvatarUrl(PixelApp.defaultAvatarUrl);
                 pixelUser.setUsername(userName);
@@ -49,11 +57,33 @@ public class RegisterActivity extends AppCompatActivity {
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+                            if (e.getErrorCode() == 202)
+                                Toast.makeText(RegisterActivity.this, "此用户名已被使用", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(RegisterActivity.this, "注册失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
+    }
+
+    private boolean checkInfo(String userName, String password, String secnodPassword) {
+        //用户名为空
+        if (userName.equals("")) {
+            Toast.makeText(this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //密码为空
+        if (password.equals("")) {
+            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //二次密码不正确
+        if (!secnodPassword.equals(password)) {
+            Toast.makeText(this, "密码不匹配", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }

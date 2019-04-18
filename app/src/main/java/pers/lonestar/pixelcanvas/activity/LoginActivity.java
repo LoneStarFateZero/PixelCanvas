@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String userName = usernameText.getText().toString();
                 String password = passwordText.getText().toString();
+                if (!checkInfo(userName, password))
+                    return;
                 PixelUser pixelUser = new PixelUser();
                 pixelUser.setUsername(userName);
                 pixelUser.setPassword(password);
@@ -55,7 +57,10 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(LoginActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                            if (e.getErrorCode() == 101)
+                                Toast.makeText(LoginActivity.this, "用户名或密码不正确", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(LoginActivity.this, "登录失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -82,5 +87,19 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private boolean checkInfo(String userName, String password) {
+        //用户名为空
+        if (userName.equals("")) {
+            Toast.makeText(this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //密码为空
+        if (password.equals("")) {
+            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }
