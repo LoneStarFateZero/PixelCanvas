@@ -51,6 +51,41 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp" />
 
+    <LinearLayout
+        android:id="@+id/pixel_scale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="30dp"
+            android:layout_toStartOf="@+id/pixel_scale"
+            android:text="像素尺寸："
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/pixel_scale_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:background="@color/dialogBackgroundColor"
+            android:foreground="@drawable/common_stroke_bg"
+            android:inputType="number"
+            android:maxLength="10"
+            android:padding="10dp"
+            android:textSize="20sp" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/export_button"
         android:layout_width="match_parent"

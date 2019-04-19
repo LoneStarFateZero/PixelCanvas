@@ -14,9 +14,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,10 +32,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.FileCanvas;
@@ -42,6 +45,8 @@ public class ExportDialogFragment extends DialogFragment {
     private static final int FORMAT_WEBP = 4;
     private Button export;
     private TextView formatText;
+    private LinearLayout pixelScale;
+    private EditText pixelScaleEditText;
     private AlertDialog dialog;
     private int format;
     private LitePalCanvas litePalCanvas;
@@ -77,6 +82,9 @@ public class ExportDialogFragment extends DialogFragment {
             }
         });
 
+        pixelScale = view.findViewById(R.id.pixel_scale);
+        pixelScaleEditText = view.findViewById(R.id.pixel_scale_edittext);
+
         builder.setView(view);
         dialog = builder.create();
         return dialog;
@@ -92,18 +100,24 @@ public class ExportDialogFragment extends DialogFragment {
                 switch (item.getItemId()) {
                     case R.id.format_svg:
                         format = FORMAT_SVG;
+                        pixelScale.setVisibility(View.VISIBLE);
+                        pixelScaleEditText.setText("1");
                         break;
                     case R.id.format_pixel:
                         format = FORMAT_PIXEL;
+                        pixelScale.setVisibility(View.GONE);
                         break;
                     case R.id.format_png:
                         format = FORMAT_PNG;
+                        pixelScale.setVisibility(View.GONE);
                         break;
                     case R.id.format_jpeg:
                         format = FORMAT_JPEG;
+                        pixelScale.setVisibility(View.GONE);
                         break;
                     case R.id.format_webp:
                         format = FORMAT_WEBP;
+                        pixelScale.setVisibility(View.GONE);
                         break;
                 }
                 formatText.setText(item.getTitle().toString());
@@ -129,6 +143,10 @@ public class ExportDialogFragment extends DialogFragment {
         Bitmap.CompressFormat exportFormat = null;
         switch (format) {
             case FORMAT_SVG:
+                if (pixelScaleEditText.getText().toString().equals("")) {
+                    Toast.makeText(context, "像素尺寸不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 fileName = litePalCanvas.getCanvasName() + ".svg";
                 break;
             case FORMAT_PIXEL:
@@ -190,13 +208,26 @@ public class ExportDialogFragment extends DialogFragment {
 
     //导出SVG格式，默认像素大小为1
     private void exportSVG(File file) throws FileNotFoundException {
+        int pixelScaleSize = Integer.parseInt(pixelScaleEditText.getEditableText().toString());
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
-                "<svg version=\"1.1\" width=\"" + PixelApp.pixelColor.length + "\" height=\"" + PixelApp.pixelColor.length + "\" xmlns=\"http://www.w3.org/2000/svg\">\n");
+                "<svg version=\"1.1\" width=\"" + PixelApp.pixelColor.length * pixelScaleSize + "\" height=\"" + PixelApp.pixelColor.length * pixelScaleSize + "\" xmlns=\"http://www.w3.org/2000/svg\">\n");
         for (int i = 0; i < PixelApp.pixelColor.length; i++) {
             for (int j = 0; j < PixelApp.pixelColor.length; j++) {
                 if (PixelApp.pixelColor[i][j] != 0)
-                    stringBuilder.append("<rect x=\"" + j + "\" y=\"" + i + "\" width=\"1\" height=\"1\" fill=\"#" + Integer.toHexString((PixelApp.pixelColor[i][j] & 0xff0000) >> 16) + Integer.toHexString((PixelApp.pixelColor[i][j] & 0x00ff00) >> 8) + Integer.toHexString(PixelApp.pixelColor[i][j] & 0x0000ff) + "\" />\n");
+                    stringBuilder.append("<rect x=\"")
+                            .append(j * pixelScaleSize)
+                            .append("\" y=\"")
+                            .append(i * pixelScaleSize)
+                            .append("\" width=\"")
+                            .append(pixelScaleSize)
+                            .append("\" height=\"")
+                            .append(pixelScaleSize)
+                            .append("\" fill=\"#")
+                            .append(Integer.toHexString((PixelApp.pixelColor[i][j] & 0xff0000) >> 16))
+                            .append(Integer.toHexString((PixelApp.pixelColor[i][j] & 0x00ff00) >> 8))
+                            .append(Integer.toHexString(PixelApp.pixelColor[i][j] & 0x0000ff))
+                            .append("\" />\n");
             }
         }
         stringBuilder.append("</svg>");
