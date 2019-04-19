@@ -20,12 +20,10 @@
             android:layout_margin="10dp"
             android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/follow_canvas_avatar"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:civ_border_color="#1B1B1B"
-                app:civ_border_width="1dp" />
+                android:layout_height="50dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

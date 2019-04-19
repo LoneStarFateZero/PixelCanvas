@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.util.List;
+
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.FollowActivity;
 import pers.lonestar.pixelcanvas.activity.ProfileActivity;
@@ -35,7 +38,10 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final PixelUser pixelUser = pixelUserList.get(position);
-        Glide.with(FollowActivity.getInstance()).load(pixelUser.getAvatarUrl()).into(holder.avatar);
+        Glide.with(FollowActivity.getInstance())
+                .load(pixelUser.getAvatarUrl())
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(holder.avatar);
         holder.nickName.setText(pixelUser.getNickname());
         holder.userItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +61,7 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
         View userItem;
-        CircleImageView avatar;
+        ImageView avatar;
         TextView nickName;
 
         public ViewHolder(@NonNull View itemView) {

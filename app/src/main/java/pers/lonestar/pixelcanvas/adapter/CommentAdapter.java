@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+
+import java.util.List;
+
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.CanvasInfoActivity;
 import pers.lonestar.pixelcanvas.activity.ProfileActivity;
@@ -35,7 +38,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Recycler
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         final CanvasComment canvasComment = commentList.get(position);
-        Glide.with(CanvasInfoActivity.getInstance()).load(canvasComment.getCommentUser().getAvatarUrl()).into(holder.avatar);
+        Glide.with(CanvasInfoActivity.getInstance())
+                .load(canvasComment.getCommentUser().getAvatarUrl())
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(holder.avatar);
         holder.nickName.setText(canvasComment.getCommentUser().getNickname());
         holder.commentTime.setText(canvasComment.getCreatedAt());
         holder.commentContent.setText(canvasComment.getCommentText());
@@ -56,7 +62,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.Recycler
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView avatar;
+        ImageView avatar;
         TextView nickName;
         TextView commentTime;
         TextView commentContent;

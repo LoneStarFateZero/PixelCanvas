@@ -13,16 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.PicassoEngine;
-
-import java.io.File;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,13 +23,23 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
+
+import java.io.File;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
-import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
@@ -46,7 +49,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private boolean avatarChangeFlag = false;
     private int REQUEST_CODE_IMAGE = 9527;
     private int REQUEST_CODE_PERMISSION = 1997;
-    private CircleImageView avatar;
+    private ImageView avatar;
     private EditText nickNameEdit;
     private EditText introductionEdit;
     private TextView nickName;
@@ -88,7 +91,10 @@ public class ProfileEditActivity extends AppCompatActivity {
         nickNameEdit.setText(currentUser.getNickname());
         introduction.setText(currentUser.getIntroduction());
         introductionEdit.setText(currentUser.getIntroduction());
-        Glide.with(this).load(currentUser.getAvatarUrl()).into(avatar);
+        Glide.with(this)
+                .load(currentUser.getAvatarUrl())
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(avatar);
 
         nickNameEdit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -248,7 +254,10 @@ public class ProfileEditActivity extends AppCompatActivity {
             Matisse.obtainPathResult(data);
             avatarUri = Matisse.obtainResult(data).get(0);
             avatarPath = Matisse.obtainPathResult(data).get(0);
-            Glide.with(this).load(avatarUri).into(avatar);
+            Glide.with(this)
+                    .load(avatarUri)
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(avatar);
             changeFlag = true;
             avatarChangeFlag = true;
         }

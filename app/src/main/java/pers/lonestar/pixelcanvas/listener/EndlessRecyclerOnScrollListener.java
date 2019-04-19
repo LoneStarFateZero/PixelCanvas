@@ -1,22 +1,24 @@
 package pers.lonestar.pixelcanvas.listener;
 
-import com.bumptech.glide.Glide;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import pers.lonestar.pixelcanvas.activity.ProfileActivity;
+
+import com.bumptech.glide.Glide;
+
+import org.jetbrains.annotations.NotNull;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
     //用来标记是否正在向上滑动
     private boolean isSlidingUpward = false;
 
     @Override
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+    public void onScrollStateChanged(@NotNull RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
         // 当不滑动时
         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-            Glide.with(ProfileActivity.getInstance()).resumeRequests();
+            if (recyclerView.getContext() != null)
+                Glide.with(recyclerView.getContext()).resumeRequests();
             //获取最后一个完全显示的itemPosition
             int lastItemPosition = manager.findLastCompletelyVisibleItemPosition();
             int itemCount = manager.getItemCount();
@@ -26,12 +28,12 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
                 onLoadMore();
             }
         } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-            Glide.with(ProfileActivity.getInstance()).pauseRequests();
+            Glide.with(recyclerView.getContext()).pauseRequests();
         }
     }
 
     @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         // 大于0表示正在向上滑动，小于等于0表示停止或向下滑动
         isSlidingUpward = dy > 0;

@@ -15,12 +15,10 @@
         android:layout_margin="5dp"
         android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/follow_user_item_avatar"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:civ_border_color="@color/colorPrimary"
-            app:civ_border_width="1dp" />
+            android:layout_height="50dp" />
 
         <TextView
             android:id="@+id/follow_user_item_nickname"

@@ -8,7 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ldoublem.loadingviewlib.view.LVBlazeWood;
@@ -17,11 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobDate;
@@ -30,7 +32,6 @@ import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
-import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.ProfileCanvasAdapter;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
@@ -44,7 +45,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
     //背景
     private ImageView backgroundImg;
     //头像
-    private CircleImageView avatar;
+    private ImageView avatar;
     //昵称
     private TextView userNickName;
     //昵称
@@ -93,7 +94,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
     //初始化View
     private void initView() {
         backgroundImg = (ImageView) findViewById(R.id.profile_background_img);
-        avatar = (CircleImageView) findViewById(R.id.profile_avatar);
+        avatar = (ImageView) findViewById(R.id.profile_avatar);
         editFab = (FloatingActionButton) findViewById(R.id.profile_edit_fab);
         followFab = (FloatingActionButton) findViewById(R.id.profile_follow_fab);
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
@@ -191,7 +192,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
                     }
                     loadingAnimStop();
                 } else {
-                    Toast.makeText(ProfileActivity.getInstance(), "作品获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, "作品获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -216,7 +217,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
                         adapter.notifyDataSetChanged();
                     }
                 } else {
-                    Toast.makeText(ProfileActivity.getInstance(), "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, "数据获取失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -226,6 +227,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
     private void loadInfo() {
         Glide.with(this)
                 .load(pixelUser.getAvatarUrl())
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                 .into(avatar);
         Glide.with(this)
                 .load(pixelUser.getAvatarUrl())

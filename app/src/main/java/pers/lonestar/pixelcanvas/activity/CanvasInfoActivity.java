@@ -9,17 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.sackcentury.shinebuttonlib.ShineButton;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.sackcentury.shinebuttonlib.ShineButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -27,7 +30,6 @@ import cn.bmob.v3.listener.CountListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
-import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.CommentAdapter;
 import pers.lonestar.pixelcanvas.dialog.CommentDialogFragment;
@@ -46,7 +48,7 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
     private Toolbar toolbar;
     private PixelUser pixelUser;
     private ImageView thumbnail;
-    private CircleImageView avatar;
+    private ImageView avatar;
     private TextView nickName;
     private TextView canvasName;
     private TextView likeCount;
@@ -89,7 +91,7 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
 
     private void initView() {
         thumbnail = (ImageView) findViewById(R.id.canvas_info_thumbnail);
-        avatar = (CircleImageView) findViewById(R.id.canvas_info_avatar);
+        avatar = (ImageView) findViewById(R.id.canvas_info_avatar);
         nickName = (TextView) findViewById(R.id.canvas_info_nickname);
         canvasName = (TextView) findViewById(R.id.canvas_info_canvas_name);
         likeCount = (TextView) findViewById(R.id.canvas_info_like_count);
@@ -111,8 +113,13 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
     }
 
     private void loadCanvasInfo() {
-        Glide.with(this).load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail())).into(thumbnail);
-        Glide.with(this).load(pixelUser.getAvatarUrl()).into(avatar);
+        Glide.with(this)
+                .load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail()))
+                .into(thumbnail);
+        Glide.with(this)
+                .load(pixelUser.getAvatarUrl())
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(avatar);
         nickName.setText(pixelUser.getNickname());
         canvasName.setText(bmobCanvas.getCanvasName());
     }

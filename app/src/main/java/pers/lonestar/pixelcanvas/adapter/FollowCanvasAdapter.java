@@ -9,13 +9,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.activity.CanvasInfoActivity;
 import pers.lonestar.pixelcanvas.activity.MainActivity;
@@ -81,9 +83,14 @@ public class FollowCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             //设置发布时间
             recyclerViewHolder.createdTime.setText(bmobCanvas.getCreatedAt());
             //缩略图
-            Glide.with(MainActivity.getInstance()).load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail())).into(recyclerViewHolder.thumbnail);
+            Glide.with(MainActivity.getInstance())
+                    .load(ParameterUtils.bytesToBitmap(bmobCanvas.getThumbnail()))
+                    .into(recyclerViewHolder.thumbnail);
             //设置当前头像
-            Glide.with(MainActivity.getInstance()).load(bmobCanvas.getCreator().getAvatarUrl()).into(recyclerViewHolder.avatar);
+            Glide.with(MainActivity.getInstance())
+                    .load(bmobCanvas.getCreator().getAvatarUrl())
+                    .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                    .into(recyclerViewHolder.avatar);
             //点击头像转到个人主页
             recyclerViewHolder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -148,7 +155,7 @@ public class FollowCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView avatar;
+        ImageView avatar;
         TextView nickName;
         TextView createdTime;
         TextView canvasName;

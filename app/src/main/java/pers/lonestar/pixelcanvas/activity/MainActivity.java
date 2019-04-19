@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobUser;
-import de.hdodenhof.circleimageview.CircleImageView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.fragment.FollowFragment;
 import pers.lonestar.pixelcanvas.fragment.WorldFragmnet;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private CircleImageView avatar;
+    private ImageView avatar;
     private ImageView avatarBackground;
     private TextView nickName;
     private TextView introduction;
@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 //设置头像
                 Glide.with(MainActivity.this)
                         .load(pixelUser.getAvatarUrl())
+                        .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                         .into(avatar);
                 Glide.with(MainActivity.this)
                         .load(pixelUser.getAvatarUrl())
