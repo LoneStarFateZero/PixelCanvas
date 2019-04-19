@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,7 @@ import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 public class PaintActivity extends AppCompatActivity {
     private int REQUEST_CODE_PERMISSION = 1997;
     private DrawerLayout drawerLayout;
+    private RelativeLayout screenLayout;
     private LineCanvas lineCanvas;
     private PixelCanvas pixelCanvas;
     private StrokeCanvas strokeCanvas;
@@ -141,6 +143,17 @@ public class PaintActivity extends AppCompatActivity {
 
     //初始化监听
     private void initListener() {
+        screenLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (toolbar.getVisibility() == View.VISIBLE) {
+                    toolbar.setVisibility(View.INVISIBLE);
+                } else {
+                    toolbar.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         //导航栏菜单项监听
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -585,6 +598,7 @@ public class PaintActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.paint_toolbar);
         navigationView = findViewById(R.id.paint_nav);
         drawerLayout = findViewById(R.id.paint_drawer);
+        screenLayout = findViewById(R.id.paint_screen);
         moveUpView = findViewById(R.id.paint_move_up);
         moveDownView = findViewById(R.id.paint_move_down);
         moveLeftView = findViewById(R.id.paint_move_left);

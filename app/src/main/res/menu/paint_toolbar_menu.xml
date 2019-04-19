@@ -30,10 +30,10 @@
         android:id="@+id/paint_move"
         android:icon="@drawable/ic_move"
         android:title="移动"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/linetoggle"
         android:icon="@drawable/ic_line"
         android:title="线框"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>
