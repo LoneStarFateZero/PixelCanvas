@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -42,6 +44,7 @@ import pers.lonestar.pixelcanvas.utils.UpdateUtils;
 public class MainActivity extends AppCompatActivity {
     private int REQUEST_CODE_PERMISSION = 1997;
     private static MainActivity instance;
+    private SearchView searchView;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
@@ -249,5 +252,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_search_bar, menu);
+        final MenuItem searchMenuItem = menu.findItem(R.id.main_toolbar_search);
+        searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setQueryHint("输入作品名称或用户名");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //收起SearchView视图
+                searchView.onActionViewCollapsed();
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                intent.putExtra("query_data", query);
+                startActivity(intent);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+        return true;
     }
 }
