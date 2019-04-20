@@ -76,17 +76,28 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
         setContentView(R.layout.activity_canvas_info);
 
         instance = this;
+        initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         Intent intent = getIntent();
         bmobCanvas = (BmobCanvas) intent.getSerializableExtra("pixel_canvas");
         pixelUser = (PixelUser) intent.getSerializableExtra("pixel_user");
 
-        initView();
         loadLike();
         loadFavorite();
         initListener();
         loadCanvasInfo();
         loadComment();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     private void initView() {

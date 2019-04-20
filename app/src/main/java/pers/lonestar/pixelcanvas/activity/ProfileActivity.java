@@ -83,12 +83,23 @@ public class ProfileActivity extends BaseSwipeBackActivity {
         setContentView(R.layout.activity_profile);
 
         instance = this;
+        initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         Intent intent = getIntent();
         pixelUser = (PixelUser) intent.getSerializableExtra("pixel_user");
-        initView();
         loadInfo();
         refreshData();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     //初始化View

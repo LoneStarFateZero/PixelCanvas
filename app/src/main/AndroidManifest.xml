@@ -64,7 +64,7 @@
         <activity
             android:name=".activity.ProfileActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/ProfileActivityTheme" />
         <activity
             android:name=".activity.FollowActivity"
@@ -90,7 +90,7 @@
         <activity
             android:name=".activity.CanvasInfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/ProfileActivityTheme" />
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"
