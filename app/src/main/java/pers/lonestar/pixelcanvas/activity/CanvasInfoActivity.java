@@ -65,6 +65,7 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
     private int canvasLikeCount;
     private String canvasFavoriteId;
     private int canvasFavoriteCount;
+    private String canvasID;
 
     public static CanvasInfoActivity getInstance() {
         return instance;
@@ -76,17 +77,12 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
         setContentView(R.layout.activity_canvas_info);
 
         instance = this;
-        initView();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
         Intent intent = getIntent();
         bmobCanvas = (BmobCanvas) intent.getSerializableExtra("pixel_canvas");
         pixelUser = (PixelUser) intent.getSerializableExtra("pixel_user");
+        canvasID = bmobCanvas.getObjectId();
 
+        initView();
         loadLike();
         loadFavorite();
         initListener();
@@ -98,6 +94,20 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+
+        Intent newIntent = getIntent();
+        bmobCanvas = (BmobCanvas) newIntent.getSerializableExtra("pixel_canvas");
+        pixelUser = (PixelUser) newIntent.getSerializableExtra("pixel_user");
+
+        if (!canvasID.equals(bmobCanvas.getObjectId())) {
+            canvasID = bmobCanvas.getObjectId();
+            initView();
+            loadLike();
+            loadFavorite();
+            initListener();
+            loadCanvasInfo();
+            loadComment();
+        }
     }
 
     private void initView() {

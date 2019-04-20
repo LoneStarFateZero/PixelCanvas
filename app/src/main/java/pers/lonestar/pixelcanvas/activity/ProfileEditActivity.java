@@ -190,7 +190,6 @@ public class ProfileEditActivity extends AppCompatActivity {
                             public void done(BmobException e) {
                                 if (e == null) {
                                     Toast.makeText(ProfileEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                                    finish();
                                 } else {
                                     Toast.makeText(ProfileEditActivity.this, "用户信息保存失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                                 }
@@ -303,6 +302,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                 break;
             case R.id.edit_save:
                 saveInfo();
+                finish();
                 break;
         }
         return true;

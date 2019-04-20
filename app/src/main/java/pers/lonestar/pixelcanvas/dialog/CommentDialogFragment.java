@@ -14,10 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 import pers.lonestar.pixelcanvas.R;
+import pers.lonestar.pixelcanvas.activity.CanvasInfoActivity;
 import pers.lonestar.pixelcanvas.infostore.BmobCanvas;
 import pers.lonestar.pixelcanvas.infostore.CanvasComment;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
@@ -65,14 +67,14 @@ public class CommentDialogFragment extends DialogFragment {
                     @Override
                     public void done(String s, BmobException e) {
                         if (e == null) {
-                            dialog.cancel();
                             commentInsertListener.insertComment(comment);
-                            Toast.makeText(requireContext(), "评论成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CanvasInfoActivity.getInstance(), "评论成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(requireContext(), "评论失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CanvasInfoActivity.getInstance(), "评论失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+                dialog.cancel();
             }
         });
 

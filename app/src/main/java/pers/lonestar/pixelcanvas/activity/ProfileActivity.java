@@ -72,34 +72,41 @@ public class ProfileActivity extends BaseSwipeBackActivity {
     private int querySkip;
     private int pageLimit = 5;
     private Boolean isFollowing;
+    private String userID;
 
     public static ProfileActivity getInstance() {
         return instance;
     }
 
+    //SingleTask启动模式，在此第一次创建活动实例
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
         instance = this;
-        initView();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
         Intent intent = getIntent();
         pixelUser = (PixelUser) intent.getSerializableExtra("pixel_user");
+        userID = pixelUser.getObjectId();
+        initView();
         loadInfo();
         refreshData();
     }
 
+    //SingleTask启动模式，新启动活动在此获取新Intent
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+
+        Intent newIntent = getIntent();
+        pixelUser = (PixelUser) newIntent.getSerializableExtra("pixel_user");
+        if (!userID.equals(pixelUser.getObjectId())) {
+            userID = pixelUser.getObjectId();
+            initView();
+            loadInfo();
+            refreshData();
+        }
     }
 
     //初始化View
