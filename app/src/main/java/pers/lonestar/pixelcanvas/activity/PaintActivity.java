@@ -75,6 +75,10 @@ public class PaintActivity extends AppCompatActivity {
     private TextView canvasSize;
     private TextView canvasCreate;
     private TextView canvasUpdate;
+    private TextView pencilRow;
+    private TextView pencilCol;
+    private TextView canvasRow;
+    private TextView canvasCol;
     private BorderIndicator borderIndicator;
     private Button dotButton;
     private FloatingActionButton fab;
@@ -657,7 +661,13 @@ public class PaintActivity extends AppCompatActivity {
 
                         }
 
-                        pencil.layout(left, top, right, bottom);
+//                        pencil.layout(left, top, right, bottom);
+//                        FrameLayout.LayoutParams pencilParams = new FrameLayout.LayoutParams(pencil.getWidth(), pencil.getHeight());
+                        FrameLayout.LayoutParams pencilParams = (FrameLayout.LayoutParams) pencil.getLayoutParams();
+                        pencilParams.setMargins(left, top, pixelFramelayout.getWidth() - right, pixelFramelayout.getHeight() - bottom);    //控件相对父控件左上右下的距离
+                        pencilParams.width = pencil.getWidth();
+                        pencilParams.height = pencil.getHeight();
+                        pencil.setLayoutParams(pencilParams);
 
                         //重绘红色边框指示器
                         //确定位置
@@ -670,19 +680,26 @@ public class PaintActivity extends AppCompatActivity {
                         border_bottom = border_top + borderIndicator.getHeight();
                         border_right = border_left + borderIndicator.getWidth();
 
-                        borderIndicator.layout(border_left, border_top, border_right, border_bottom);
+//                        borderIndicator.layout(border_left, border_top, border_right, border_bottom);
+//                        FrameLayout.LayoutParams borderParams = new FrameLayout.LayoutParams(borderIndicator.getWidth(), borderIndicator.getHeight());
+                        FrameLayout.LayoutParams borderParams = (FrameLayout.LayoutParams) borderIndicator.getLayoutParams();
+                        borderParams.setMargins(border_left, border_top, pixelFramelayout.getWidth() - border_right, pixelFramelayout.getHeight() - border_bottom);    //控件相对父控件左上右下的距离
+                        borderParams.width = borderIndicator.getWidth();
+                        borderParams.height = borderIndicator.getHeight();
+                        borderIndicator.setLayoutParams(borderParams);
+
+                        int x = left / pixelSize;
+                        int y = bottom / pixelSize;
+                        //防止数组越界
+                        if (x >= pixelCount) {
+                            x = pixelCount - 1;
+                        }
+                        if (y >= pixelCount) {
+                            y = pixelCount - 1;
+                        }
 
                         //边框位置也可用于画图
                         if (dotButton.isPressed()) {
-                            int x = left / pixelSize;
-                            int y = bottom / pixelSize;
-                            //防止数组越界
-                            if (x >= pixelCount) {
-                                x = pixelCount - 1;
-                            }
-                            if (y >= pixelCount) {
-                                y = pixelCount - 1;
-                            }
                             //同色像素块不必重新绘制
                             if (PixelApp.pixelColor[y][x] != pencilColor) {
                                 canvasChangeFlag = true;
@@ -712,15 +729,11 @@ public class PaintActivity extends AppCompatActivity {
                         // 记录当前的位置
                         lastX = (int) event.getRawX();
                         lastY = (int) event.getRawY();
+
+                        pencilRow.setText("" + y);
+                        pencilCol.setText("" + x);
                         break;
                     case MotionEvent.ACTION_UP:
-                        FrameLayout.LayoutParams pencilParams = new FrameLayout.LayoutParams(pencil.getWidth(), pencil.getHeight());
-                        pencilParams.setMargins(left, top, pixelFramelayout.getWidth() - right, pixelFramelayout.getHeight() - bottom);    //控件相对父控件左上右下的距离
-                        pencil.setLayoutParams(pencilParams);
-
-                        FrameLayout.LayoutParams borderParams = new FrameLayout.LayoutParams(borderIndicator.getWidth(), borderIndicator.getHeight());
-                        borderParams.setMargins(border_left, border_top, pixelFramelayout.getWidth() - border_right, pixelFramelayout.getHeight() - border_bottom);    //控件相对父控件左上右下的距离
-                        borderIndicator.setLayoutParams(borderParams);
 
                         if (!dotButton.isPressed() && canvasChangeFlag) {
                             //如果发生修改动作才进行覆盖保存
@@ -775,6 +788,12 @@ public class PaintActivity extends AppCompatActivity {
 
         //设定红色边框指示
         borderIndicator.setPixelCount(pixelCount);
+
+        //画布底部准星和尺寸大小提示文字
+        pencilRow.setText("" + 0);
+        pencilCol.setText("" + 0);
+        canvasRow.setText("" + pixelCount);
+        canvasCol.setText("" + pixelCount);
     }
 
     //初始化View组件
@@ -795,6 +814,11 @@ public class PaintActivity extends AppCompatActivity {
         moveDownView = findViewById(R.id.paint_move_down);
         moveLeftView = findViewById(R.id.paint_move_left);
         moveRightView = findViewById(R.id.paint_move_right);
+        pencilRow = findViewById(R.id.paint_pencil_row);
+        pencilCol = findViewById(R.id.paint_pencil_col);
+        canvasRow = findViewById(R.id.paint_canvas_row);
+        canvasCol = findViewById(R.id.paint_canvas_col);
+
 
         //设置自定义Toolbar
         setSupportActionBar(toolbar);
