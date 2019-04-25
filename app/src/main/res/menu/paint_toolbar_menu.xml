@@ -22,10 +22,15 @@
         android:title="油漆桶"
         app:showAsAction="always" />
     <item
+        android:id="@+id/pencil_shape"
+        android:icon="@drawable/ic_shape_dot"
+        android:title="形状"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/colorPicker"
         android:icon="@drawable/ic_picker"
         android:title="取色"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/paint_move"
         android:icon="@drawable/ic_move"

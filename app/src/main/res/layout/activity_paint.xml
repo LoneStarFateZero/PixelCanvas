@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/paint_toolbar"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:layout_marginTop="50dp">
 
             <FrameLayout
@@ -106,7 +106,6 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:elevation="10dp"
             android:src="@drawable/ic_palette" />
 
         <Button

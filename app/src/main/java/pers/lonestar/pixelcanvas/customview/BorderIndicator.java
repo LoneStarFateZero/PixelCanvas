@@ -55,6 +55,6 @@ public class BorderIndicator extends View {
     private void initPaint() {
         paint = new Paint();
         paint.setStrokeWidth(6);
-        paint.setColor(getResources().getColor(R.color.borderStroke));
+        paint.setColor(getResources().getColor(R.color.borderStroke, null));
     }
 }

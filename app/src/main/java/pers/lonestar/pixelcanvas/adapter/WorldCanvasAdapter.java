@@ -145,10 +145,9 @@ public class WorldCanvasAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      * @param loadState 0.正在加载 1.加载完成 2.加载到底
      */
     public void setLoadState(int loadState) {
-        if (this.loadState != LOADING_END) {
-            this.loadState = loadState;
-            notifyItemChanged(bmobCanvasList.size());
-        }
+        //如果之前已到底，刷新仍到底，底部view则不刷新
+        this.loadState = loadState;
+        notifyItemChanged(bmobCanvasList.size());
     }
 
     @Override

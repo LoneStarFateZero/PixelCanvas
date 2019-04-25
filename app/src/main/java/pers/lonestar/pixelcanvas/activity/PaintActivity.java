@@ -58,6 +58,10 @@ import pers.lonestar.pixelcanvas.infostore.PixelUser;
 import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
+    private static final int SHAPE_DOT = 0;
+    private static final int SHAPE_LINE = 1;
+    private static final int SHAPE_RECT = 2;
+    private static final int SHAPE_RECT_FILLED = 3;
     private int REQUEST_CODE_PERMISSION = 1997;
     private DrawerLayout drawerLayout;
     private RelativeLayout screenLayout;
@@ -80,6 +84,10 @@ public class PaintActivity extends AppCompatActivity {
     private View moveDownView;
     private View moveLeftView;
     private View moveRightView;
+    private Menu mMenu;
+    private int pencilShape = SHAPE_DOT;
+    private int pencilPreX = -1;
+    private int pencilPreY = -1;
     private int pixelCount;
     private int pixelSize;
     private int pencilColor;
@@ -109,7 +117,27 @@ public class PaintActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.paint_toolbar_menu, menu);
+        mMenu = menu;
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        switch (pencilShape) {
+            case SHAPE_DOT:
+                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_dot);
+                break;
+//            case SHAPE_LINE:
+//                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_line);
+//                break;
+            case SHAPE_RECT:
+                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect);
+                break;
+            case SHAPE_RECT_FILLED:
+                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect_fill);
+                break;
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     //Toolbar菜单项监听
@@ -127,6 +155,9 @@ public class PaintActivity extends AppCompatActivity {
                 break;
             case R.id.paint_bucket:
                 paintBucket();
+                break;
+            case R.id.pencil_shape:
+                changeShape();
                 break;
             case R.id.colorPicker:
                 pickColor();
@@ -352,6 +383,7 @@ public class PaintActivity extends AppCompatActivity {
         });
         View.OnTouchListener fabOnTouchListener = new View.OnTouchListener() {
             int lastX, lastY;
+            int left = 0, top = 0, right = 0, bottom = 0;
             boolean isMoved;
 
             @Override
@@ -364,32 +396,32 @@ public class PaintActivity extends AppCompatActivity {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         isMoved = true;
-                        int dx = (int) event.getRawX() - lastX;//位移量X
-                        int dy = (int) event.getRawY() - lastY;//位移量Y
-                        int left = v.getLeft() + dx;
-                        int top = v.getTop() + dy;
-                        int right = v.getRight() + dx;
-                        int bottom = v.getBottom() + dy;
+                        int dx = (int) event.getRawX() - lastX;
+                        int dy = (int) event.getRawY() - lastY;
+                        left = v.getLeft() + dx;
+                        top = v.getTop() + dy;
+                        right = v.getRight() + dx;
+                        bottom = v.getBottom() + dy;
 
                         //防止超出边界
                         if (left < 0) {
                             left = 0;
                             right = left + v.getWidth();
                         }
-                        if (right > drawerLayout.getWidth()) {
-                            right = drawerLayout.getWidth();
+                        if (right > screenLayout.getWidth()) {
+                            right = screenLayout.getWidth();
                             left = right - v.getWidth();
                         }
                         if (top < 0) {
                             top = 0;
                             bottom = top + v.getHeight();
                         }
-                        if (bottom > drawerLayout.getHeight()) {
-                            bottom = drawerLayout.getHeight();
+                        if (bottom > screenLayout.getHeight()) {
+                            bottom = screenLayout.getHeight();
                             top = bottom - v.getHeight();
                         }
+
                         v.layout(left, top, right, bottom);
-                        v.postInvalidate();
                         // 记录当前的位置
                         lastX = (int) event.getRawX();
                         lastY = (int) event.getRawY();
@@ -414,6 +446,14 @@ public class PaintActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(PaintActivity.this, "请先将橡皮擦切换为画笔", Toast.LENGTH_SHORT).show();
                             }
+                        } else {
+//                            RelativeLayout.LayoutParams fabParams =
+////                                    (RelativeLayout.LayoutParams) v.getLayoutParams();
+                            RelativeLayout.LayoutParams fabParams = new RelativeLayout.LayoutParams(v.getWidth(), v.getHeight());
+                            fabParams.setMargins(left, top, screenLayout.getWidth() - right, screenLayout.getHeight() - bottom);    //控件相对父控件左上右下的距离
+                            fabParams.width = v.getWidth();
+                            fabParams.height = v.getHeight();
+                            v.setLayoutParams(fabParams);
                         }
                         break;
                 }
@@ -422,6 +462,145 @@ public class PaintActivity extends AppCompatActivity {
         };
         //浮动按钮点击，弹出颜色选择对话框
         fab.setOnTouchListener(fabOnTouchListener);
+
+        dotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //画笔新位置=原位置+偏移量
+                int penleft = pencil.getLeft();
+                int penbottom = pencil.getBottom();
+                int penx = penleft / pixelSize;
+                int peny = penbottom / pixelSize;
+                //防止数组越界
+                if (penx >= pixelCount) {
+                    penx = pixelCount - 1;
+                }
+                if (peny >= pixelCount) {
+                    peny = pixelCount - 1;
+                }
+                if (pencilPreX == -1 && pencilPreY == -1) {
+                    pencilPreX = penx;
+                    pencilPreY = peny;
+                    PixelApp.pixelColor[peny][penx] = pencilColor;
+                    pixelCanvas.reDrawCanvas();
+                    //保存入栈
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                            pixelColorRedoStack.clear();
+                        }
+                    }).start();
+                } else {
+                    switch (pencilShape) {
+                        case SHAPE_DOT:
+                            pencilPreX = -1;
+                            pencilPreY = -1;
+                            PixelApp.pixelColor[peny][penx] = pencilColor;
+                            pixelCanvas.reDrawCanvas();
+                            //保存入栈
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                                    pixelColorRedoStack.clear();
+                                }
+                            }).start();
+                            break;
+                        case SHAPE_LINE:
+                            break;
+                        case SHAPE_RECT:
+                            if (pencilPreX >= penx && pencilPreY >= peny) {
+                                for (int i = peny; i <= pencilPreY; i++) {
+                                    PixelApp.pixelColor[i][pencilPreX] = pencilColor;
+                                    PixelApp.pixelColor[i][penx] = pencilColor;
+                                }
+                                for (int i = penx; i <= pencilPreX; i++) {
+                                    PixelApp.pixelColor[pencilPreY][i] = pencilColor;
+                                    PixelApp.pixelColor[peny][i] = pencilColor;
+                                }
+                            } else if (pencilPreX >= penx) {
+                                for (int i = pencilPreY; i <= peny; i++) {
+                                    PixelApp.pixelColor[i][pencilPreX] = pencilColor;
+                                    PixelApp.pixelColor[i][penx] = pencilColor;
+                                }
+                                for (int i = penx; i <= pencilPreX; i++) {
+                                    PixelApp.pixelColor[pencilPreY][i] = pencilColor;
+                                    PixelApp.pixelColor[peny][i] = pencilColor;
+                                }
+                            } else if (pencilPreY >= peny) {
+                                for (int i = peny; i <= pencilPreY; i++) {
+                                    PixelApp.pixelColor[i][pencilPreX] = pencilColor;
+                                    PixelApp.pixelColor[i][penx] = pencilColor;
+                                }
+                                for (int i = pencilPreX; i <= penx; i++) {
+                                    PixelApp.pixelColor[pencilPreY][i] = pencilColor;
+                                    PixelApp.pixelColor[peny][i] = pencilColor;
+                                }
+                            } else {
+                                for (int i = pencilPreY; i <= peny; i++) {
+                                    PixelApp.pixelColor[i][pencilPreX] = pencilColor;
+                                    PixelApp.pixelColor[i][penx] = pencilColor;
+                                }
+                                for (int i = pencilPreX; i <= penx; i++) {
+                                    PixelApp.pixelColor[pencilPreY][i] = pencilColor;
+                                    PixelApp.pixelColor[peny][i] = pencilColor;
+                                }
+                            }
+                            pencilPreX = -1;
+                            pencilPreY = -1;
+                            pixelCanvas.reDrawCanvas();
+                            //保存入栈
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                                    pixelColorRedoStack.clear();
+                                }
+                            }).start();
+                            break;
+                        case SHAPE_RECT_FILLED:
+                            if (pencilPreX >= penx && pencilPreY >= peny) {
+                                for (int i = peny; i <= pencilPreY; i++) {
+                                    for (int j = penx; j <= pencilPreX; j++) {
+                                        PixelApp.pixelColor[i][j] = pencilColor;
+                                    }
+                                }
+                            } else if (pencilPreX >= penx) {
+                                for (int i = pencilPreY; i <= peny; i++) {
+                                    for (int j = penx; j <= pencilPreX; j++) {
+                                        PixelApp.pixelColor[i][j] = pencilColor;
+                                    }
+                                }
+                            } else if (pencilPreY >= peny) {
+                                for (int i = peny; i <= pencilPreY; i++) {
+                                    for (int j = pencilPreX; j <= penx; j++) {
+                                        PixelApp.pixelColor[i][j] = pencilColor;
+                                    }
+                                }
+                            } else {
+                                for (int i = pencilPreY; i <= peny; i++) {
+                                    for (int j = pencilPreX; j <= penx; j++) {
+                                        PixelApp.pixelColor[i][j] = pencilColor;
+                                    }
+                                }
+                            }
+                            pencilPreX = -1;
+                            pencilPreY = -1;
+                            pixelCanvas.reDrawCanvas();
+                            //保存入栈
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                                    pixelColorRedoStack.clear();
+                                }
+                            }).start();
+                            break;
+                    }
+                }
+            }
+        });
     }
 
     //初始化画笔，包括画笔颜色，滑动监听等
@@ -431,6 +610,8 @@ public class PaintActivity extends AppCompatActivity {
         //画布上的铅笔滑动监听
         View.OnTouchListener pencilOnTouchListener = new View.OnTouchListener() {
             int lastX, lastY;
+            int left, top, right, bottom;
+            int border_left, border_top, border_right, border_bottom;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -445,10 +626,10 @@ public class PaintActivity extends AppCompatActivity {
                         int dy = (int) event.getRawY() - lastY;//位移量Y
 
                         //画笔新位置=原位置+偏移量
-                        int left = pencil.getLeft() + dx;
-                        int top = pencil.getTop() + dy;
-                        int right = pencil.getRight() + dx;
-                        int bottom = pencil.getBottom() + dy;
+                        left = pencil.getLeft() + dx;
+                        top = pencil.getTop() + dy;
+                        right = pencil.getRight() + dx;
+                        bottom = pencil.getBottom() + dy;
 
                         //防止超出边界
                         if (left < 0) {
@@ -473,20 +654,19 @@ public class PaintActivity extends AppCompatActivity {
                         }
 
                         pencil.layout(left, top, right, bottom);
-                        pencil.invalidate();
 
                         //重绘红色边框指示器
                         //确定位置
-                        int border_left = left / pixelSize * pixelSize;
+                        border_left = left / pixelSize * pixelSize;
                         if (border_left == 960)
                             border_left -= pixelSize;
-                        int border_top = bottom / pixelSize * pixelSize;
+                        border_top = bottom / pixelSize * pixelSize;
                         if (border_top == 960)
                             border_top -= pixelSize;
-                        int border_bottom = border_top + borderIndicator.getHeight();
-                        int border_right = border_left + borderIndicator.getWidth();
+                        border_bottom = border_top + borderIndicator.getHeight();
+                        border_right = border_left + borderIndicator.getWidth();
+
                         borderIndicator.layout(border_left, border_top, border_right, border_bottom);
-                        borderIndicator.invalidate();
 
                         //边框位置也可用于画图
                         if (dotButton.isPressed()) {
@@ -530,6 +710,14 @@ public class PaintActivity extends AppCompatActivity {
                         lastY = (int) event.getRawY();
                         break;
                     case MotionEvent.ACTION_UP:
+                        FrameLayout.LayoutParams pencilParams = new FrameLayout.LayoutParams(pencil.getWidth(), pencil.getHeight());
+                        pencilParams.setMargins(left, top, pixelFramelayout.getWidth() - right, pixelFramelayout.getHeight() - bottom);    //控件相对父控件左上右下的距离
+                        pencil.setLayoutParams(pencilParams);
+
+                        FrameLayout.LayoutParams borderParams = new FrameLayout.LayoutParams(borderIndicator.getWidth(), borderIndicator.getHeight());
+                        borderParams.setMargins(border_left, border_top, pixelFramelayout.getWidth() - border_right, pixelFramelayout.getHeight() - border_bottom);    //控件相对父控件左上右下的距离
+                        borderIndicator.setLayoutParams(borderParams);
+
                         if (!dotButton.isPressed() && canvasChangeFlag) {
                             //如果发生修改动作才进行覆盖保存
                             canvasChangeFlag = false;
@@ -908,6 +1096,29 @@ public class PaintActivity extends AppCompatActivity {
         PixelApp.pixelColor = null;
         PixelApp.litePalCanvas = null;
         finish();
+    }
+
+    private void changeShape() {
+        switch (pencilShape) {
+            case SHAPE_DOT:
+                pencilShape = SHAPE_RECT;
+                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect);
+                break;
+//            case SHAPE_LINE:
+//                pencilShape = SHAPE_RECT;
+//                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect);
+//                break;
+            case SHAPE_RECT:
+                pencilShape = SHAPE_RECT_FILLED;
+                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect_fill);
+                break;
+            case SHAPE_RECT_FILLED:
+                pencilShape = SHAPE_DOT;
+                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_dot);
+                break;
+        }
+        pencilPreX = -1;
+        pencilPreY = -1;
     }
 
     @Override

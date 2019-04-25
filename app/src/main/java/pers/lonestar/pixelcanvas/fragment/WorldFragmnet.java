@@ -6,18 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.ldoublem.loadingviewlib.view.LVBlazeWood;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.ldoublem.loadingviewlib.view.LVBlazeWood;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
@@ -37,7 +38,7 @@ public class WorldFragmnet extends Fragment {
     private LVBlazeWood lvBlazeWood;
     private View view;
     private int querySkip;
-    private int pageLimit = 10;
+    private int pageLimit = 4;
 
     @Nullable
     @Override
