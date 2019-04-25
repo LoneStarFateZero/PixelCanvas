@@ -169,6 +169,8 @@ public class PaintActivity extends AppCompatActivity {
                 moveCanvas();
                 break;
         }
+        pencilPreX = -1;
+        pencilPreY = -1;
         return true;
     }
 
@@ -217,6 +219,8 @@ public class PaintActivity extends AppCompatActivity {
                         shareCanvas();
                         break;
                 }
+                pencilPreX = -1;
+                pencilPreY = -1;
                 drawerLayout.closeDrawers();
                 return true;
             }
@@ -1117,8 +1121,6 @@ public class PaintActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_dot);
                 break;
         }
-        pencilPreX = -1;
-        pencilPreY = -1;
     }
 
     @Override
