@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/paint_toolbar"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp">
 
             <FrameLayout
@@ -105,7 +105,9 @@
             android:layout_below="@+id/paint_all_framelayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:foreground="@drawable/common_stroke_bg"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <ImageView
                 android:layout_width="25dp"

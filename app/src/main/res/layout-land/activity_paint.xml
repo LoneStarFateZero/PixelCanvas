@@ -103,11 +103,9 @@
             android:id="@+id/paint_activity_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/paint_toolbar"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:elevation="10dp"
             android:src="@drawable/ic_palette" />
 
         <Button
@@ -127,7 +125,9 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:layout_toStartOf="@+id/paint_all_framelayout"
-            android:orientation="horizontal">
+            android:foreground="@drawable/common_stroke_bg"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <ImageView
                 android:layout_width="25dp"

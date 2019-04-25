@@ -184,7 +184,7 @@ public class PaintActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (toolbar.getVisibility() == View.VISIBLE) {
-                    toolbar.setVisibility(View.INVISIBLE);
+                    toolbar.setVisibility(View.GONE);
                 } else {
                     toolbar.setVisibility(View.VISIBLE);
                 }
