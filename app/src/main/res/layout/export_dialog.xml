@@ -34,7 +34,7 @@
             android:background="@color/dialogBackgroundColor"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="导出↓"
+            android:text="导出格式↓"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="23sp" />
     </RelativeLayout>
