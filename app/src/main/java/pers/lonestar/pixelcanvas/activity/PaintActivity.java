@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,6 +80,13 @@ public class PaintActivity extends AppCompatActivity {
     private TextView pencilCol;
     private TextView canvasRow;
     private TextView canvasCol;
+    private LinearLayout rectTextLayout;
+    private LinearLayout sightTextLayout;
+    private LinearLayout canvasTextLayout;
+    private TextView rectFirstRow;
+    private TextView rectFirstCol;
+    private TextView rectLastRow;
+    private TextView rectLastCol;
     private BorderIndicator borderIndicator;
     private Button dotButton;
     private FloatingActionButton fab;
@@ -173,8 +181,13 @@ public class PaintActivity extends AppCompatActivity {
                 moveCanvas();
                 break;
         }
+        //一旦点击菜单，则坐标和矩形位置提示全部重置
         pencilPreX = -1;
         pencilPreY = -1;
+        rectTextLayout.setVisibility(View.GONE);
+        sightTextLayout.setVisibility(View.VISIBLE);
+        canvasRow.setText("" + pixelCount);
+        canvasCol.setText("" + pixelCount);
         return true;
     }
 
@@ -223,8 +236,13 @@ public class PaintActivity extends AppCompatActivity {
                         shareCanvas();
                         break;
                 }
+                //一旦点击菜单，则坐标和矩形位置提示全部重置
                 pencilPreX = -1;
                 pencilPreY = -1;
+                rectTextLayout.setVisibility(View.GONE);
+                sightTextLayout.setVisibility(View.VISIBLE);
+                canvasRow.setText("" + pixelCount);
+                canvasCol.setText("" + pixelCount);
                 drawerLayout.closeDrawers();
                 return true;
             }
@@ -489,6 +507,20 @@ public class PaintActivity extends AppCompatActivity {
                 if (pencilPreX == -1 && pencilPreY == -1) {
                     pencilPreX = penx;
                     pencilPreY = peny;
+                    //若当前笔刷为矩形，则显示矩形位置提示文字
+                    if (pencilShape == SHAPE_RECT || pencilShape == SHAPE_RECT_FILLED) {
+                        //显示矩形位置提示文字
+                        rectTextLayout.setVisibility(View.VISIBLE);
+                        //矩形提示文字已包含，不需显示准星位置提示文字
+                        sightTextLayout.setVisibility(View.GONE);
+                        rectFirstCol.setText("" + penx);
+                        rectFirstRow.setText("" + peny);
+                        rectLastCol.setText("" + penx);
+                        rectLastRow.setText("" + peny);
+                        canvasCol.setText("" + 1);
+                        canvasRow.setText("" + 1);
+                    }
+
                     PixelApp.pixelColor[peny][penx] = pencilColor;
                     pixelCanvas.reDrawCanvas();
                     //保存入栈
@@ -555,8 +587,13 @@ public class PaintActivity extends AppCompatActivity {
                                     PixelApp.pixelColor[peny][i] = pencilColor;
                                 }
                             }
+                            //一次矩形笔刷绘制完成，坐标和矩形位置提示全部重置
                             pencilPreX = -1;
                             pencilPreY = -1;
+                            rectTextLayout.setVisibility(View.GONE);
+                            sightTextLayout.setVisibility(View.VISIBLE);
+                            canvasRow.setText("" + pixelCount);
+                            canvasCol.setText("" + pixelCount);
                             pixelCanvas.reDrawCanvas();
                             //保存入栈
                             new Thread(new Runnable() {
@@ -593,8 +630,13 @@ public class PaintActivity extends AppCompatActivity {
                                     }
                                 }
                             }
+                            //一次矩形笔刷绘制完成，坐标和矩形位置提示全部重置
                             pencilPreX = -1;
                             pencilPreY = -1;
+                            rectTextLayout.setVisibility(View.GONE);
+                            sightTextLayout.setVisibility(View.VISIBLE);
+                            canvasRow.setText("" + pixelCount);
+                            canvasCol.setText("" + pixelCount);
                             pixelCanvas.reDrawCanvas();
                             //保存入栈
                             new Thread(new Runnable() {
@@ -732,6 +774,12 @@ public class PaintActivity extends AppCompatActivity {
 
                         pencilRow.setText("" + y);
                         pencilCol.setText("" + x);
+                        rectLastCol.setText("" + x);
+                        rectLastRow.setText("" + y);
+                        if (pencilShape == SHAPE_RECT || pencilShape == SHAPE_RECT_FILLED) {
+                            canvasRow.setText("" + (Math.abs(y - pencilPreY) + 1));
+                            canvasCol.setText("" + (Math.abs(x - pencilPreX) + 1));
+                        }
                         break;
                     case MotionEvent.ACTION_UP:
 
@@ -818,7 +866,13 @@ public class PaintActivity extends AppCompatActivity {
         pencilCol = findViewById(R.id.paint_pencil_col);
         canvasRow = findViewById(R.id.paint_canvas_row);
         canvasCol = findViewById(R.id.paint_canvas_col);
-
+        rectTextLayout = findViewById(R.id.paint_rect_pos_text);
+        sightTextLayout = findViewById(R.id.paint_sight_pos_text);
+        canvasTextLayout = findViewById(R.id.paint_canvas_size_text);
+        rectFirstRow = findViewById(R.id.paint_rect_first_row);
+        rectFirstCol = findViewById(R.id.paint_rect_first_col);
+        rectLastRow = findViewById(R.id.paint_rect_last_row);
+        rectLastCol = findViewById(R.id.paint_rect_last_col);
 
         //设置自定义Toolbar
         setSupportActionBar(toolbar);
