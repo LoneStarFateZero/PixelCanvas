@@ -7,7 +7,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/materialWhite"
     app:cardCornerRadius="10dp"
-    app:cardElevation="5dp">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,14 +38,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:ellipsize="end"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:id="@+id/follow_canvas_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1" />
+                    android:maxLines="1"
+                    android:textColor="@color/colorPrimaryDark" />
             </LinearLayout>
         </LinearLayout>
 
@@ -56,9 +58,10 @@
             android:layout_margin="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="25sp" />
 
-        <include layout="@layout/stamp" />
+        <include layout="@layout/stamp_large" />
 
         <ImageView
             android:id="@+id/follow_canvas_thumbnail"

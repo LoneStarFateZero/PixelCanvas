@@ -31,14 +31,14 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:textColor="@color/colorFont"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/comment_item_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorFont"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -50,7 +50,7 @@
         android:layout_marginTop="10dp"
         android:lineSpacingMultiplier="1.2"
         android:textColor="@color/colorFont"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
     <View
         android:layout_width="match_parent"

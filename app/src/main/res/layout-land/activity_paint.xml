@@ -34,14 +34,14 @@
                     android:id="@+id/line_canvas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/canvasTransparent" />
+                    android:background="@color/colorTransparent" />
             </FrameLayout>
 
             <pers.lonestar.pixelcanvas.customview.StrokeCanvas
                 android:id="@+id/stroke_canvas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/canvasTransparent" />
+                android:background="@color/colorTransparent" />
 
             <pers.lonestar.pixelcanvas.customview.BorderIndicator
                 android:id="@+id/border"

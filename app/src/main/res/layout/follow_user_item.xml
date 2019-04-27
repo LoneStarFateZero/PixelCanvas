@@ -28,6 +28,7 @@
             android:layout_marginStart="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

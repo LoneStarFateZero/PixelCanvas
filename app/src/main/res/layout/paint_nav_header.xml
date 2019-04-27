@@ -12,7 +12,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="20dp"
-        android:background="#FFF"
+        android:background="@color/materialWhite"
         android:elevation="8dp"
         android:foreground="@drawable/stroke" />
 
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="#FFF"
+            android:textColor="@color/colorFont"
             android:textSize="15sp" />
 
         <TextView
@@ -41,8 +41,8 @@
             android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="#FFF"
-            android:textSize="10sp" />
+            android:textColor="@color/colorFont"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/paint_canvas_create"
@@ -51,8 +51,8 @@
             android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="#FFF"
-            android:textSize="10sp" />
+            android:textColor="@color/colorFont"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/paint_canvas_update"
@@ -62,7 +62,7 @@
             android:layout_marginBottom="5dp"
             android:ellipsize="end"
             android:maxLines="3"
-            android:textColor="#FFF"
-            android:textSize="10sp" />
+            android:textColor="@color/colorFont"
+            android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>

@@ -7,7 +7,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/materialWhite"
     app:cardCornerRadius="10dp"
-    app:cardElevation="5dp">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,6 +23,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="25sp" />
 
         <TextView
@@ -34,17 +35,18 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15sp" />
 
-        <include layout="@layout/stamp" />
+        <include layout="@layout/stamp_large" />
 
         <ImageView
             android:id="@+id/post_canvas_item_thumbnail"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:foreground="@drawable/stroke" />
 
         <View

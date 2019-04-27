@@ -7,13 +7,12 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/materialWhite"
     app:cardCornerRadius="10dp"
-    app:cardElevation="5dp">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <ImageView
@@ -21,28 +20,25 @@
             android:layout_width="140dp"
             android:layout_height="140dp"
             android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
             android:foreground="@drawable/stroke" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_dotted_line"
-            android:layerType="software" />
+        <include layout="@layout/stamp_small" />
 
         <TextView
             android:id="@+id/world_canvas_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_margin="5dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -58,6 +54,7 @@
                 android:layout_marginStart="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
