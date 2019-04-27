@@ -80,7 +80,7 @@
                     app:allow_random_color="true"
                     app:btn_color="@android:color/darker_gray"
                     app:btn_fill_color="@color/colorAccent"
-                    app:siShape="@raw/heart" />
+                    app:siShape="@drawable/ic_like" />
 
                 <TextView
                     android:id="@+id/canvas_info_like_count"
@@ -89,7 +89,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:text="+0 赞"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/colorFont" />
             </LinearLayout>
 
             <LinearLayout
@@ -107,8 +107,8 @@
                     android:src="@android:color/darker_gray"
                     app:allow_random_color="true"
                     app:btn_color="@android:color/darker_gray"
-                    app:btn_fill_color="#FFC107"
-                    app:siShape="@raw/star" />
+                    app:btn_fill_color="@color/colorFavorite"
+                    app:siShape="@drawable/ic_favorite" />
 
                 <TextView
                     android:id="@+id/canvas_info_favorite_count"

@@ -4,63 +4,63 @@
     android:viewportWidth="9"
     android:viewportHeight="9">
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,0h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,1h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,2h1v1h-1z" />
     <path
-        android:fillColor="#585858"
+        android:fillColor="#878787"
         android:pathData="M3,3h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,3h1v1h-1z" />
     <path
-        android:fillColor="#585858"
+        android:fillColor="#878787"
         android:pathData="M5,3h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M0,4h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M1,4h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M2,4h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M3,4h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M5,4h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M6,4h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M7,4h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M8,4h1v1h-1z" />
     <path
-        android:fillColor="#585858"
+        android:fillColor="#878787"
         android:pathData="M3,5h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,5h1v1h-1z" />
     <path
-        android:fillColor="#585858"
+        android:fillColor="#878787"
         android:pathData="M5,5h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,6h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,7h1v1h-1z" />
     <path
-        android:fillColor="#202020"
+        android:fillColor="#282828"
         android:pathData="M4,8h1v1h-1z" />
 </vector>

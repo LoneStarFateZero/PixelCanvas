@@ -776,7 +776,7 @@ public class PaintActivity extends AppCompatActivity {
                         pencilCol.setText("" + x);
                         rectLastCol.setText("" + x);
                         rectLastRow.setText("" + y);
-                        if (pencilShape == SHAPE_RECT || pencilShape == SHAPE_RECT_FILLED) {
+                        if (pencilPreX != -1 && pencilPreY != -1 && (pencilShape == SHAPE_RECT || pencilShape == SHAPE_RECT_FILLED)) {
                             canvasRow.setText("" + (Math.abs(y - pencilPreY) + 1));
                             canvasCol.setText("" + (Math.abs(x - pencilPreX) + 1));
                         }

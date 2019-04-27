@@ -162,8 +162,10 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                                 canvasLikeId = s;
                                 ++canvasLikeCount;
                                 likeCount.setText("+" + canvasLikeCount + " 赞");
+                                likeCount.setTextColor(getColor(R.color.colorAccent));
                             } else {
                                 likeButton.setChecked(false);
+                                likeCount.setTextColor(getColor(R.color.colorFont));
                             }
                         }
                     });
@@ -177,8 +179,10 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                             if (e == null) {
                                 --canvasLikeCount;
                                 likeCount.setText("+" + canvasLikeCount + " 赞");
+                                likeCount.setTextColor(getColor(R.color.colorFont));
                             } else {
                                 likeButton.setChecked(true);
+                                likeCount.setTextColor(getColor(R.color.colorAccent));
                             }
                         }
                     });
@@ -203,8 +207,10 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                                 canvasFavoriteId = s;
                                 ++canvasFavoriteCount;
                                 favoriteCount.setText("+" + canvasFavoriteCount + " 收藏");
+                                favoriteCount.setTextColor(getColor(R.color.colorFavorite));
                             } else {
                                 favoriteButton.setChecked(false);
+                                favoriteCount.setTextColor(getColor(R.color.colorFont));
                             }
                         }
                     });
@@ -218,8 +224,10 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                             if (e == null) {
                                 --canvasFavoriteCount;
                                 favoriteCount.setText("+" + canvasFavoriteCount + " 收藏");
+                                favoriteCount.setTextColor(getColor(R.color.colorFont));
                             } else {
                                 favoriteButton.setChecked(true);
+                                favoriteCount.setTextColor(getColor(R.color.colorFavorite));
                             }
                         }
                     });
@@ -310,12 +318,15 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                 if (e == null) {
                     if (list.isEmpty()) {
                         likeButton.setChecked(false);
+                        likeCount.setTextColor(getColor(R.color.colorFont));
                     } else {
                         likeButton.setChecked(true);
+                        likeCount.setTextColor(getColor(R.color.colorAccent));
                         canvasLikeId = list.get(0).getObjectId();
                     }
                 } else {
                     likeButton.setChecked(false);
+                    likeCount.setTextColor(getColor(R.color.colorFont));
                 }
             }
         });
@@ -346,12 +357,15 @@ public class CanvasInfoActivity extends BaseSwipeBackActivity {
                 if (e == null) {
                     if (list.isEmpty()) {
                         favoriteButton.setChecked(false);
+                        favoriteCount.setTextColor(getColor(R.color.colorFont));
                     } else {
                         favoriteButton.setChecked(true);
+                        favoriteCount.setTextColor(getColor(R.color.colorFavorite));
                         canvasFavoriteId = list.get(0).getObjectId();
                     }
                 } else {
                     favoriteButton.setChecked(false);
+                    favoriteCount.setTextColor(getColor(R.color.colorFont));
                 }
             }
         });
