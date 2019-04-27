@@ -79,6 +79,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                     .into(recyclerViewHolder.avatar);
             recyclerViewHolder.nickName.setText(pixelUser.getNickname());
+            recyclerViewHolder.userEmail.setText(pixelUser.getUsername());
             recyclerViewHolder.userItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -131,12 +132,14 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         View userItem;
         ImageView avatar;
         TextView nickName;
+        TextView userEmail;
 
         RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             userItem = itemView;
             avatar = itemView.findViewById(R.id.follow_user_item_avatar);
             nickName = itemView.findViewById(R.id.follow_user_item_nickname);
+            userEmail = itemView.findViewById(R.id.follow_user_item_email);
         }
     }
 

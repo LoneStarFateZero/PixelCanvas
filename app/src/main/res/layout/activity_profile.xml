@@ -50,8 +50,20 @@
                     android:layout_marginTop="15dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="#FFF"
+                    android:textColor="@color/colorFont"
                     android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/profile_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/colorFont"
+                    android:textSize="20sp" />
+
 
                 <TextView
                     android:id="@+id/profile_intro"
@@ -62,6 +74,7 @@
                     android:ellipsize="end"
                     android:maxWidth="250dp"
                     android:maxLines="3"
+                    android:textColor="@color/colorFont"
                     android:textSize="15sp" />
             </LinearLayout>
 

@@ -43,6 +43,7 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Vi
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                 .into(holder.avatar);
         holder.nickName.setText(pixelUser.getNickname());
+        holder.userEmail.setText(pixelUser.getUsername());
         holder.userItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,12 +64,14 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Vi
         View userItem;
         ImageView avatar;
         TextView nickName;
+        TextView userEmail;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userItem = itemView;
             avatar = itemView.findViewById(R.id.follow_user_item_avatar);
             nickName = itemView.findViewById(R.id.follow_user_item_nickname);
+            userEmail = itemView.findViewById(R.id.follow_user_item_email);
         }
     }
 }

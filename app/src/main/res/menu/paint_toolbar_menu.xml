@@ -24,13 +24,13 @@
     <item
         android:id="@+id/pencil_shape"
         android:icon="@drawable/ic_shape_dot"
-        android:title="形状"
+        android:title="笔刷"
         app:showAsAction="always" />
     <item
         android:id="@+id/colorPicker"
         android:icon="@drawable/ic_picker"
         android:title="取色"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/paint_move"
         android:icon="@drawable/ic_move"

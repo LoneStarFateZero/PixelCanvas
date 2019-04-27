@@ -48,7 +48,9 @@ public class ProfileActivity extends BaseSwipeBackActivity {
     private ImageView avatar;
     //昵称
     private TextView userNickName;
-    //昵称
+    //邮箱|用户名
+    private TextView userEmail;
+    //个人简介
     private TextView userIntroduction;
     //信息编辑浮动按钮
     private FloatingActionButton editFab;
@@ -117,6 +119,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
         followFab = (FloatingActionButton) findViewById(R.id.profile_follow_fab);
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         userNickName = (TextView) findViewById(R.id.profile_nickname);
+        userEmail = (TextView) findViewById(R.id.profile_email);
         userIntroduction = (TextView) findViewById(R.id.profile_intro);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.profile_swipe);
         lvBlazeWood = (LVBlazeWood) findViewById(R.id.profile_loadinganim);
@@ -252,6 +255,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
                 .apply(RequestOptions.bitmapTransform(new BlurTransformation(15, 1)))
                 .into(backgroundImg);
         userNickName.setText(pixelUser.getNickname());
+        userEmail.setText(pixelUser.getUsername());
         userIntroduction.setText(pixelUser.getIntroduction());
 
         //关注状态查询

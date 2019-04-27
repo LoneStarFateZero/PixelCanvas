@@ -108,6 +108,7 @@ public class PaintActivity extends AppCompatActivity {
     private LitePalCanvas litePalCanvas;
     private boolean canvasChangeFlag = false;
     private boolean globalChangeFlag = false;
+    private boolean bucketContiguous = true;
     private Stack<int[][]> pixelColorUndoStack;
     private Stack<int[][]> pixelColorRedoStack;
 
@@ -130,6 +131,19 @@ public class PaintActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.paint_toolbar_menu, menu);
         mMenu = menu;
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                View bucketModeView = findViewById(R.id.paint_bucket);
+                bucketModeView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        changeBucketMode();
+                        return true;
+                    }
+                });
+            }
+        });
         return true;
     }
 
@@ -137,17 +151,22 @@ public class PaintActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         switch (pencilShape) {
             case SHAPE_DOT:
-                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_dot);
+                menu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_dot);
                 break;
 //            case SHAPE_LINE:
 //                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_line);
 //                break;
             case SHAPE_RECT:
-                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect);
+                menu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect);
                 break;
             case SHAPE_RECT_FILLED:
-                mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect_fill);
+                menu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_rect_fill);
                 break;
+        }
+        if (bucketContiguous) {
+            menu.findItem(R.id.paint_bucket).setIcon(R.drawable.ic_bucket);
+        } else {
+            menu.findItem(R.id.paint_bucket).setIcon(R.drawable.ic_bucket_all);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -520,17 +539,19 @@ public class PaintActivity extends AppCompatActivity {
                         canvasCol.setText("" + 1);
                         canvasRow.setText("" + 1);
                     }
-
                     PixelApp.pixelColor[peny][penx] = pencilColor;
                     pixelCanvas.reDrawCanvas();
-                    //保存入栈
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                            pixelColorRedoStack.clear();
-                        }
-                    }).start();
+                    //笔刷为点时，才保存第一次点击绘制结果
+                    if (pencilShape == SHAPE_DOT) {
+                        //保存入栈
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+                                pixelColorRedoStack.clear();
+                            }
+                        }).start();
+                    }
                 } else {
                     switch (pencilShape) {
                         case SHAPE_DOT:
@@ -957,25 +978,41 @@ public class PaintActivity extends AppCompatActivity {
             //PixelApp.pixelColor[y][x];
             int oldColor = PixelApp.pixelColor[y][x];
             int newColor = pencilColor;
-            Stack<Integer> stackRow = new Stack<>();
-            Stack<Integer> stackColumn = new Stack<>();
-            stackRow.push(y);
-            stackColumn.push(x);
-            while (!stackRow.empty()) {
-                int row = stackRow.pop();
-                int col = stackColumn.pop();
-                if (row >= 0 && row < PixelApp.pixelColor.length && col >= 0 && col < PixelApp.pixelColor.length && PixelApp.pixelColor[row][col] == oldColor && PixelApp.pixelColor[row][col] != newColor) {
-                    PixelApp.pixelColor[row][col] = newColor;
-                    stackRow.push(row - 1);
-                    stackColumn.push(col);
-                    stackRow.push(row + 1);
-                    stackColumn.push(col);
-                    stackRow.push(row);
-                    stackColumn.push(col - 1);
-                    stackRow.push(row);
-                    stackColumn.push(col + 1);
+
+            //相邻
+            if (bucketContiguous) {
+                Stack<Integer> stackRow = new Stack<>();
+                Stack<Integer> stackColumn = new Stack<>();
+                stackRow.push(y);
+                stackColumn.push(x);
+                while (!stackRow.empty()) {
+                    int row = stackRow.pop();
+                    int col = stackColumn.pop();
+                    if (row >= 0 && row < PixelApp.pixelColor.length && col >= 0 && col < PixelApp.pixelColor.length && PixelApp.pixelColor[row][col] == oldColor && PixelApp.pixelColor[row][col] != newColor) {
+                        PixelApp.pixelColor[row][col] = newColor;
+                        stackRow.push(row - 1);
+                        stackColumn.push(col);
+                        stackRow.push(row + 1);
+                        stackColumn.push(col);
+                        stackRow.push(row);
+                        stackColumn.push(col - 1);
+                        stackRow.push(row);
+                        stackColumn.push(col + 1);
+                    }
                 }
             }
+            //全局同色填涂
+            else {
+                for (int i = 0; i < PixelApp.pixelColor.length; i++) {
+                    for (int j = 0; j < PixelApp.pixelColor.length; j++) {
+                        if (PixelApp.pixelColor[i][j] == oldColor) {
+                            PixelApp.pixelColor[i][j] = newColor;
+                        }
+                    }
+                }
+            }
+
+
             pixelCanvas.reDrawCanvas();
             //保存入栈
             new Thread(new Runnable() {
@@ -1199,6 +1236,19 @@ public class PaintActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_dot);
                 break;
         }
+    }
+
+    private void changeBucketMode() {
+        if (bucketContiguous) {
+            bucketContiguous = false;
+            mMenu.findItem(R.id.paint_bucket).setIcon(R.drawable.ic_bucket_all);
+            Toast.makeText(this, "切换到全局填色模式", Toast.LENGTH_SHORT).show();
+        } else {
+            bucketContiguous = true;
+            mMenu.findItem(R.id.paint_bucket).setIcon(R.drawable.ic_bucket);
+            Toast.makeText(this, "切换到相邻填色模式", Toast.LENGTH_SHORT).show();
+        }
+        supportInvalidateOptionsMenu();
     }
 
     @Override

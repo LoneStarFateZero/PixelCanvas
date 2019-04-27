@@ -23,22 +23,26 @@
             android:layout_margin="10dp"
             android:foreground="@drawable/stroke" />
 
-        <include layout="@layout/stamp_small" />
-
         <TextView
             android:id="@+id/world_canvas_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/common_stroke_bg"
             android:ellipsize="end"
             android:maxLines="1"
+            android:padding="5dp"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="15sp" />
+
+        <include layout="@layout/stamp_small" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <ImageView
