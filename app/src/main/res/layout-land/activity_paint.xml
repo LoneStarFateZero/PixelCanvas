@@ -99,26 +99,8 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/paint_activity_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:src="@drawable/ic_palette" />
-
-        <Button
-            android:id="@+id/dot_button"
-            android:layout_width="252dp"
-            android:layout_height="63dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/dot_button_bg" />
-
         <LinearLayout
+            android:id="@+id/paint_all_pos_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/paint_toolbar"
@@ -248,6 +230,34 @@
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/dot_button"
+            android:layout_below="@+id/paint_all_pos_text"
+            android:layout_margin="5dp"
+            android:layout_toStartOf="@+id/paint_all_framelayout"
+            android:background="@drawable/common_stroke_bg" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/paint_activity_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/paint_toolbar"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_palette" />
+
+        <Button
+            android:id="@+id/dot_button"
+            android:layout_width="252dp"
+            android:layout_height="63dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/dot_button_bg" />
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView

@@ -379,9 +379,7 @@ public class PaintActivity extends AppCompatActivity {
 //                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][0];
 //                }
                 for (int i = 0; i < pixelCount; i++) {
-                    for (int j = 0; j < pixelCount - 1; j++) {
-                        PixelApp.pixelColor[i][j] = PixelApp.pixelColor[i][j + 1];
-                    }
+                    System.arraycopy(PixelApp.pixelColor[i], 1, PixelApp.pixelColor[i], 0, pixelCount - 1);
                 }
                 for (int i = 0; i < pixelCount; i++) {
                     PixelApp.pixelColor[i][pixelCount - 1] = tmpPixelColorRow[i];
@@ -408,9 +406,7 @@ public class PaintActivity extends AppCompatActivity {
 //                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][pixelCount - 1];
 //                }
                 for (int i = 0; i < pixelCount; i++) {
-                    for (int j = pixelCount - 1; j > 0; j--) {
-                        PixelApp.pixelColor[i][j] = PixelApp.pixelColor[i][j - 1];
-                    }
+                    System.arraycopy(PixelApp.pixelColor[i], 0, PixelApp.pixelColor[i], 1, pixelCount - 1);
                 }
                 for (int i = 0; i < pixelCount; i++) {
                     PixelApp.pixelColor[i][0] = tmpPixelColorRow[i];
@@ -1236,6 +1232,9 @@ public class PaintActivity extends AppCompatActivity {
                 mMenu.findItem(R.id.pencil_shape).setIcon(R.drawable.ic_shape_dot);
                 break;
         }
+        //刷新菜单，回调onPrepareOptionsMenu()
+        //否则油漆桶无法长按切换，只会弹出title的Toast
+        supportInvalidateOptionsMenu();
     }
 
     private void changeBucketMode() {
@@ -1248,6 +1247,8 @@ public class PaintActivity extends AppCompatActivity {
             mMenu.findItem(R.id.paint_bucket).setIcon(R.drawable.ic_bucket);
             Toast.makeText(this, "切换到相邻填色模式", Toast.LENGTH_SHORT).show();
         }
+        //刷新菜单，回调onPrepareOptionsMenu()
+        //否则油漆桶无法长按切换，只会弹出title的Toast
         supportInvalidateOptionsMenu();
     }
 
