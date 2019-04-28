@@ -327,7 +327,7 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
                 //颜色二维数组移动
                 int[] tmpPixelColorRow = new int[pixelCount];
-                System.arraycopy(PixelApp.pixelColor[0], 0, tmpPixelColorRow, 0, pixelCount);
+//                System.arraycopy(PixelApp.pixelColor[0], 0, tmpPixelColorRow, 0, pixelCount);
                 for (int i = 0; i < pixelCount - 1; i++) {
                     System.arraycopy(PixelApp.pixelColor[i + 1], 0, PixelApp.pixelColor[i], 0, pixelCount);
                 }
@@ -352,7 +352,7 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
 
                 int[] tmpPixelColorRow = new int[pixelCount];
-                System.arraycopy(PixelApp.pixelColor[pixelCount - 1], 0, tmpPixelColorRow, 0, pixelCount);
+//                System.arraycopy(PixelApp.pixelColor[pixelCount - 1], 0, tmpPixelColorRow, 0, pixelCount);
                 for (int i = pixelCount - 1; i > 0; i--) {
                     System.arraycopy(PixelApp.pixelColor[i - 1], 0, PixelApp.pixelColor[i], 0, pixelCount);
                 }
@@ -375,9 +375,9 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
 
                 int[] tmpPixelColorRow = new int[pixelCount];
-                for (int i = 0; i < pixelCount; i++) {
-                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][0];
-                }
+//                for (int i = 0; i < pixelCount; i++) {
+//                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][0];
+//                }
                 for (int i = 0; i < pixelCount; i++) {
                     for (int j = 0; j < pixelCount - 1; j++) {
                         PixelApp.pixelColor[i][j] = PixelApp.pixelColor[i][j + 1];
@@ -404,9 +404,9 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
 
                 int[] tmpPixelColorRow = new int[pixelCount];
-                for (int i = 0; i < pixelCount; i++) {
-                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][pixelCount - 1];
-                }
+//                for (int i = 0; i < pixelCount; i++) {
+//                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][pixelCount - 1];
+//                }
                 for (int i = 0; i < pixelCount; i++) {
                     for (int j = pixelCount - 1; j > 0; j--) {
                         PixelApp.pixelColor[i][j] = PixelApp.pixelColor[i][j - 1];
