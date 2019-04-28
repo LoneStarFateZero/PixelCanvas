@@ -36,6 +36,7 @@ import pers.lonestar.pixelcanvas.PixelApp;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.FileCanvas;
 import pers.lonestar.pixelcanvas.infostore.LitePalCanvas;
+import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class ExportDialogFragment extends DialogFragment {
     private static final int FORMAT_SVG = 1;
@@ -223,10 +224,8 @@ public class ExportDialogFragment extends DialogFragment {
                             .append(pixelScaleSize)
                             .append("\" height=\"")
                             .append(pixelScaleSize)
-                            .append("\" fill=\"#")
-                            .append(Integer.toHexString((PixelApp.pixelColor[i][j] & 0xff0000) >> 16))
-                            .append(Integer.toHexString((PixelApp.pixelColor[i][j] & 0x00ff00) >> 8))
-                            .append(Integer.toHexString(PixelApp.pixelColor[i][j] & 0x0000ff))
+                            .append("\" fill=\"")
+                            .append(ParameterUtils.intColortoHexColor(PixelApp.pixelColor[i][j]))
                             .append("\" />\n");
             }
         }
