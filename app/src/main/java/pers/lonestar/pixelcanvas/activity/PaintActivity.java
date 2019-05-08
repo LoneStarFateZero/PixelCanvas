@@ -44,7 +44,7 @@ import com.google.gson.Gson;
 import net.margaritov.preference.colorpicker.ColorPickerDialog;
 
 import java.lang.reflect.Method;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +65,7 @@ import pers.lonestar.pixelcanvas.utils.ParameterUtils;
 
 public class PaintActivity extends AppCompatActivity {
     private static PaintActivity instance;
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final int SHAPE_DOT = 0;
     private static final int SHAPE_LINE = 1;
     private static final int SHAPE_RECT = 2;
@@ -359,7 +360,7 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
                 //颜色二维数组移动
                 int[] tmpPixelColorRow = new int[pixelCount];
-//                System.arraycopy(PixelApp.pixelColor[0], 0, tmpPixelColorRow, 0, pixelCount);
+                System.arraycopy(PixelApp.pixelColor[0], 0, tmpPixelColorRow, 0, pixelCount);
                 for (int i = 0; i < pixelCount - 1; i++) {
                     System.arraycopy(PixelApp.pixelColor[i + 1], 0, PixelApp.pixelColor[i], 0, pixelCount);
                 }
@@ -367,10 +368,7 @@ public class PaintActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        //入撤销栈
-                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                        //清除恢复栈
-                        pixelColorRedoStack.clear();
+                        updateCanvasInfo();
                     }
                 }).start();
                 //画布重绘
@@ -384,7 +382,7 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
 
                 int[] tmpPixelColorRow = new int[pixelCount];
-//                System.arraycopy(PixelApp.pixelColor[pixelCount - 1], 0, tmpPixelColorRow, 0, pixelCount);
+                System.arraycopy(PixelApp.pixelColor[pixelCount - 1], 0, tmpPixelColorRow, 0, pixelCount);
                 for (int i = pixelCount - 1; i > 0; i--) {
                     System.arraycopy(PixelApp.pixelColor[i - 1], 0, PixelApp.pixelColor[i], 0, pixelCount);
                 }
@@ -393,8 +391,7 @@ public class PaintActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                        pixelColorRedoStack.clear();
+                        updateCanvasInfo();
                     }
                 }).start();
                 pixelCanvas.reDrawCanvas();
@@ -407,9 +404,9 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
 
                 int[] tmpPixelColorRow = new int[pixelCount];
-//                for (int i = 0; i < pixelCount; i++) {
-//                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][0];
-//                }
+                for (int i = 0; i < pixelCount; i++) {
+                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][0];
+                }
                 for (int i = 0; i < pixelCount; i++) {
                     System.arraycopy(PixelApp.pixelColor[i], 1, PixelApp.pixelColor[i], 0, pixelCount - 1);
                 }
@@ -420,8 +417,7 @@ public class PaintActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                        pixelColorRedoStack.clear();
+                        updateCanvasInfo();
                     }
                 }).start();
                 pixelCanvas.reDrawCanvas();
@@ -434,9 +430,9 @@ public class PaintActivity extends AppCompatActivity {
                 globalChangeFlag = true;
 
                 int[] tmpPixelColorRow = new int[pixelCount];
-//                for (int i = 0; i < pixelCount; i++) {
-//                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][pixelCount - 1];
-//                }
+                for (int i = 0; i < pixelCount; i++) {
+                    tmpPixelColorRow[i] = PixelApp.pixelColor[i][pixelCount - 1];
+                }
                 for (int i = 0; i < pixelCount; i++) {
                     System.arraycopy(PixelApp.pixelColor[i], 0, PixelApp.pixelColor[i], 1, pixelCount - 1);
                 }
@@ -447,8 +443,7 @@ public class PaintActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                        pixelColorRedoStack.clear();
+                        updateCanvasInfo();
                     }
                 }).start();
                 pixelCanvas.reDrawCanvas();
@@ -821,11 +816,7 @@ public class PaintActivity extends AppCompatActivity {
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                                        pixelColorRedoStack.clear();
-                                        litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
-                                        litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
-                                        litePalCanvas.save();
+                                        updateCanvasInfo();
                                     }
                                 }).start();
                             }
@@ -852,11 +843,7 @@ public class PaintActivity extends AppCompatActivity {
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
-                                    pixelColorRedoStack.clear();
-                                    litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
-                                    litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
-                                    litePalCanvas.save();
+                                    updateCanvasInfo();
                                 }
                             }).start();
                         }
@@ -1146,7 +1133,8 @@ public class PaintActivity extends AppCompatActivity {
     //生成画布文件
     private void createCanvasFile() {
         //获取本地日期时间格式
-        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+//        DateFormat dateFormat = DateFormat.getDateTimeInstance();
+
         //获取当前时间
         Date date = new Date(System.currentTimeMillis());
         if (litePalCanvas == null) {
@@ -1155,8 +1143,10 @@ public class PaintActivity extends AppCompatActivity {
             litePalCanvas.setCanvasName("无题");
             litePalCanvas.setPixelCount(pixelCount);
             litePalCanvas.setCreatorID(BmobUser.getCurrentUser(PixelUser.class).getObjectId());
-            litePalCanvas.setCreatedAt(dateFormat.format(date));
-            litePalCanvas.setUpdatedAt(dateFormat.format(date));
+//            litePalCanvas.setCreatedAt(dateFormat.format(date));
+//            litePalCanvas.setUpdatedAt(dateFormat.format(date));
+            litePalCanvas.setCreatedAt(simpleDateFormat.format(date));
+            litePalCanvas.setUpdatedAt(simpleDateFormat.format(date));
             litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
             litePalCanvas.save();
         }
@@ -1233,6 +1223,8 @@ public class PaintActivity extends AppCompatActivity {
                 String newName = renameText.getText().toString();
                 if (!newName.equals("")) {
                     litePalCanvas.setCanvasName(newName);
+                    Date date = new Date(System.currentTimeMillis());
+                    litePalCanvas.setUpdatedAt(simpleDateFormat.format(date));
                     litePalCanvas.save();
                 } else {
                     Toast.makeText(PaintActivity.this, "名称不能为空", Toast.LENGTH_SHORT).show();
@@ -1284,9 +1276,9 @@ public class PaintActivity extends AppCompatActivity {
     private void backProcess() {
         //如发生修改，才更新作品信息，如更新时间，颜色等等
         if (globalChangeFlag) {
-            DateFormat dateFormat = DateFormat.getDateTimeInstance();
+//            DateFormat dateFormat = DateFormat.getDateTimeInstance();
             Date date = new Date(System.currentTimeMillis());
-            litePalCanvas.setUpdatedAt(dateFormat.format(date));
+            litePalCanvas.setUpdatedAt(simpleDateFormat.format(date));
         }
         //创建后未作出任何修改直接返回
         //不及时保存画布数据可能造成空指针异常
@@ -1335,6 +1327,16 @@ public class PaintActivity extends AppCompatActivity {
         //刷新菜单，回调onPrepareOptionsMenu()
         //否则油漆桶无法长按切换，只会弹出title的Toast
         supportInvalidateOptionsMenu();
+    }
+
+    private void updateCanvasInfo() {
+        pixelColorUndoStack.push(getPixelColor(PixelApp.pixelColor));
+        pixelColorRedoStack.clear();
+        Date date = new Date(System.currentTimeMillis());
+        litePalCanvas.setUpdatedAt(simpleDateFormat.format(date));
+        litePalCanvas.setJsonData(new Gson().toJson(PixelApp.pixelColor));
+        litePalCanvas.setThumbnail(ParameterUtils.bitmapToBytes(loadBitmapFromView(pixelCanvas)));
+        litePalCanvas.save();
     }
 
     @Override
