@@ -1,9 +1,12 @@
 package pers.lonestar.pixelcanvas.listener;
 
-import com.bumptech.glide.Glide;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
+import org.jetbrains.annotations.NotNull;
+
 import pers.lonestar.pixelcanvas.activity.MainActivity;
 
 public abstract class MainEndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
@@ -31,10 +34,10 @@ public abstract class MainEndlessRecyclerOnScrollListener extends RecyclerView.O
     }
 
     @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         // 大于0表示正在向上滑动，小于等于0表示停止或向下滑动
-        isSlidingUpward = dy > 0;
+        isSlidingUpward = dy >= 0;
     }
 
     /**

@@ -8,6 +8,7 @@
     <color name="materialWhite">#F5F5F5</color>
     <color name="buttonStroke">#CA3628</color>
     <color name="graywhite">#CECECE</color>
+    <color name="gray">#A1A1A1</color>
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="borderStroke">#D81B60</color>
     <color name="backgroundColor">#303030</color>

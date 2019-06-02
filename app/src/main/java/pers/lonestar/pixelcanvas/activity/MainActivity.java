@@ -115,27 +115,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
                 pixelUser = BmobUser.getCurrentUser(PixelUser.class);
+                View.OnClickListener profileEditListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                        PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
+                        intent.putExtra("pixel_user", currentUser);
+                        startActivity(intent);
+                        drawerLayout.closeDrawers();
+                    }
+                };
                 if (avatar == null) {
                     avatar = findViewById(R.id.nav_avatar);
-                    avatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                            PixelUser currentUser = BmobUser.getCurrentUser(PixelUser.class);
-                            intent.putExtra("pixel_user", currentUser);
-                            startActivity(intent);
-                            drawerLayout.closeDrawers();
-                        }
-                    });
+                    avatar.setOnClickListener(profileEditListener);
                 }
                 if (avatarBackground == null) {
                     avatarBackground = findViewById(R.id.nav_bg);
                 }
                 if (nickName == null) {
                     nickName = findViewById(R.id.nav_nickname);
+                    nickName.setOnClickListener(profileEditListener);
                 }
                 if (introduction == null) {
                     introduction = findViewById(R.id.nav_introduction);
+                    introduction.setOnClickListener(profileEditListener);
                 }
 
                 //设置昵称

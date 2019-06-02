@@ -36,7 +36,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         // 大于0表示正在向上滑动，小于等于0表示停止或向下滑动
-        isSlidingUpward = dy > 0;
+        isSlidingUpward = dy >= 0;
     }
 
     /**
