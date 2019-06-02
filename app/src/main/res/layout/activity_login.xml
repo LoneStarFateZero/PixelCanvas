@@ -70,23 +70,32 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
+            android:layout_marginTop="30dp"
+            android:padding="10dp">
 
             <Button
                 android:id="@+id/login_button"
                 android:layout_width="120dp"
                 android:layout_height="30dp"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="10dp"
                 android:background="@drawable/ic_signin"
+                android:elevation="8dp" />
+
+            <Button
+                android:id="@+id/retrieve_button"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_retrieve"
                 android:elevation="8dp" />
 
             <Button
                 android:id="@+id/register_button"
                 android:layout_width="120dp"
                 android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp"
+                android:layout_below="@+id/login_button"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/ic_register"
                 android:elevation="8dp" />
         </RelativeLayout>

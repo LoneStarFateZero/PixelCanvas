@@ -12,6 +12,14 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,13 +32,6 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.adapter.LocalCanvasAdapter;
 import pers.lonestar.pixelcanvas.dialog.NewCanvasDialogFragment;
@@ -184,7 +185,6 @@ public class GalleryActivity extends BaseSwipeBackActivity {
         litePalCanvasList.clear();
         litePalCanvasList.addAll(LitePal.order("id desc").find(LitePalCanvas.class));
         localCanvasAdapter.notifyDataSetChanged();
-//        litePalCanvasList = LitePal.order("id desc").find(LitePalCanvas.class);
     }
 
     private void importLocalFile() {

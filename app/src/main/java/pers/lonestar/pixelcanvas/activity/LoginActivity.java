@@ -9,10 +9,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import pers.lonestar.pixelcanvas.R;
 import pers.lonestar.pixelcanvas.infostore.PixelUser;
 
@@ -21,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordText;
     private Button loginButton;
     private Button registerButton;
+    private Button retrieveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.password_text);
         loginButton = findViewById(R.id.login_button);
         registerButton = findViewById(R.id.register_button);
+        retrieveButton = findViewById(R.id.retrieve_button);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +82,45 @@ public class LoginActivity extends AppCompatActivity {
                 intent.putExtra("user_name", usernameText.getText().toString());
                 intent.putExtra("user_password", passwordText.getText().toString());
                 startActivity(intent);
+            }
+        });
+
+        retrieveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String userName = usernameText.getText().toString();
+                if (userName.equals("")) {
+                    Toast.makeText(LoginActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+                    BmobQuery<PixelUser> bmobQuery = new BmobQuery<>();
+                    bmobQuery.addWhereEqualTo("username", userName);
+                    bmobQuery.findObjects(new FindListener<PixelUser>() {
+                        @Override
+                        public void done(List<PixelUser> object, BmobException e) {
+                            if (e == null) {
+                                //用户不存在
+                                if (object.size() == 0) {
+                                    Toast.makeText(LoginActivity.this, "用户不存在", Toast.LENGTH_SHORT).show();
+                                }
+                                //用户存在
+                                else {
+                                    BmobUser.resetPasswordByEmail(userName, new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            if (e == null) {
+                                                Toast.makeText(LoginActivity.this, "重置密码邮件发送成功，请到" + userName + "邮箱进行密码重置操作", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(LoginActivity.this, "重置密码邮件发送失败，请检查网络设置后重试", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            } else {
+                                Toast.makeText(LoginActivity.this, "重置密码邮件发送失败，请检查网络设置后重试", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
             }
         });
     }

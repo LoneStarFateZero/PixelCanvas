@@ -5,16 +5,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.ldoublem.loadingviewlib.view.LVBlazeWood;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.ldoublem.loadingviewlib.view.LVBlazeWood;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -36,7 +37,7 @@ public class FavoriteActivity extends BaseSwipeBackActivity {
     private List<CanvasFavorite> favoriteList;
     //用于查询收藏列表
     private BmobQuery<CanvasFavorite> loadMoreFavoriteQuery;
-    private int pageLimit = 10;
+    private int pageLimit = 4;
     private int querySkip = 0;
 
     public static FavoriteActivity getInstance() {

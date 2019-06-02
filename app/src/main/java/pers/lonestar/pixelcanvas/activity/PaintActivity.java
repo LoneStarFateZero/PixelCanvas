@@ -1152,7 +1152,7 @@ public class PaintActivity extends AppCompatActivity {
         }
     }
 
-    //分享功能，考虑生成多种格式分享
+    //分享功能
     private void shareCanvas() {
         Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), loadBitmapFromView(pixelFramelayout), null, null));
         Intent imageIntent = new Intent(Intent.ACTION_SEND);

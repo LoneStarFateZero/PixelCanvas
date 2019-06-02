@@ -72,7 +72,7 @@ public class ProfileActivity extends BaseSwipeBackActivity {
     //Bmob数据查询
     private BmobQuery<BmobCanvas> loadMoreQuery;
     private int querySkip;
-    private int pageLimit = 5;
+    private int pageLimit = 4;
     private Boolean isFollowing;
     private String userID;
 

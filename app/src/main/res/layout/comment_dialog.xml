@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:background="@color/materialWhite"
         android:gravity="top"
-        android:hint="想说点什么"
+        android:hint="想说点什么（400字符以内）"
         android:imeOptions="flagNoExtractUi"
         android:lineSpacingMultiplier="1.2"
         android:maxLength="400"

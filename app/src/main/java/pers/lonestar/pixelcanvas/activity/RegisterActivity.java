@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
@@ -79,6 +82,14 @@ public class RegisterActivity extends AppCompatActivity {
         if (userName.equals("")) {
             Toast.makeText(this, "用户名不能为空", Toast.LENGTH_SHORT).show();
             return false;
+        } else {
+            String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+            Pattern regex = Pattern.compile(check);
+            Matcher matcher = regex.matcher(userName);
+            if (!matcher.matches()) {
+                Toast.makeText(this, "用户名邮箱地址不合法", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
         //密码为空
         if (password.equals("")) {
