@@ -47,6 +47,7 @@ import pers.lonestar.pixelcanvas.infostore.PixelUser;
 public class ProfileEditActivity extends AppCompatActivity {
     private boolean changeFlag = false;
     private boolean avatarChangeFlag = false;
+    private boolean saveButtonFlag = false;
     private int REQUEST_CODE_IMAGE = 9527;
     private int REQUEST_CODE_PERMISSION = 1997;
     private ImageView avatar;
@@ -132,6 +133,12 @@ public class ProfileEditActivity extends AppCompatActivity {
                 requestMatissePermissions();
             }
         });
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestMatissePermissions();
+            }
+        });
     }
 
     private void chooseAvatar() {
@@ -160,6 +167,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             Toast.makeText(this, "用户昵称不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
+
         currentUser.setNickname(nickNameEdit.getText().toString());
         currentUser.setIntroduction(introductionEdit.getText().toString());
 
@@ -197,6 +205,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         });
                     } else {
                         Toast.makeText(ProfileEditActivity.this, "用户头像上传失败，请检查网络设置", Toast.LENGTH_SHORT).show();
+                        saveButtonFlag = false;
                     }
                 }
             });
@@ -208,6 +217,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         Toast.makeText(ProfileEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
+                        saveButtonFlag = false;
                         Toast.makeText(ProfileEditActivity.this, "用户信息保存失败，请检查网络设置", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -301,8 +311,11 @@ public class ProfileEditActivity extends AppCompatActivity {
                 exitEdit();
                 break;
             case R.id.edit_save:
-                saveInfo();
-                finish();
+                if (!saveButtonFlag) {
+                    saveButtonFlag = true;
+                    saveInfo();
+                    finish();
+                }
                 break;
         }
         return true;

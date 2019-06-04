@@ -49,6 +49,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:maxLines="1"
+                    android:textColor="@color/colorFont"
                     android:textSize="20sp" />
 
                 <TextView
@@ -60,6 +61,7 @@
                     android:ellipsize="end"
                     android:maxWidth="250dp"
                     android:maxLines="3"
+                    android:textColor="@color/colorFont"
                     android:textSize="15sp" />
             </LinearLayout>
 
@@ -93,6 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="昵称（至多12个字符）"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15sp" />
 
         <EditText
@@ -100,13 +103,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:maxLength="12" />
+            android:maxLength="12"
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="个人简介（至多45个字符）"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15sp" />
 
         <EditText
@@ -114,7 +119,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:maxLength="45" />
+            android:maxLength="45"
+            android:textColor="@color/colorPrimaryDark" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
